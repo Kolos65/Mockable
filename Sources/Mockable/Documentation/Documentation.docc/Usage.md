@@ -67,7 +67,7 @@ When constructing mockable clauses, you have to **specify parameter conditions**
 
 * **`.any`**: Matches every call to the specified function, disregarding the actual parameter values.
 * **`.value(Value)`**: Matches to calls with an identical value in the specified parameter.
-* **`matching((Value) -> Bool)`**: Uses the provided closure to filter functions calls.
+* **`.matching((Value) -> Bool)`**: Uses the provided closure to filter functions calls.
 
 > Computed properties have no parameters, but mutable properties get a `(newValue:)` parameter in function builders that can be used 
 to constraint functionality on property assignment with a match condition. These `newValue` conditions will only effect the `performOnGet`, `performOnSet`, `getterCalled` and `setterCalled`

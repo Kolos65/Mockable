@@ -1,6 +1,6 @@
 # @Mockable
 
-**@Mockable** is a [Swift macro](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/macros/) driven testing framework that provides automatic mock implementations for your protocols. Mockable offers an intuitive **declarative syntax** that simplifies the process of mocking services in unit tests. The generated mock implementations can be excluded from release builds using compile conditions. 
+**Mockable** is a [Swift macro](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/macros/) driven testing framework that provides automatic mock implementations for your protocols. Mockable offers an intuitive **declarative syntax** that simplifies the process of mocking services in unit tests. The generated mock implementations can be excluded from release builds using compile conditions. 
 
 ## Table of Contents
 - [Documentation](#Documentation)
@@ -21,7 +21,7 @@
 
 ## Documentation
 
-Read **@Mockable**'s [documentation](https://kolos65.github.io/Mockable/documentation/mockable) for detailed installation and configuration guides as well as usage examples.
+Read **Mockable**'s [documentation](https://kolos65.github.io/Mockable/documentation/mockable) for detailed installation and configuration guides as well as usage examples.
 
 ## Installation
 
@@ -143,7 +143,7 @@ When constructing mockable clauses, you have to **specify parameter conditions**
 
 * **`.any`**: Matches every call to the specified function, disregarding the actual parameter values.
 * **`.value(Value)`**: Matches to calls with an identical value in the specified parameter.
-* **`matching((Value) -> Bool)`**: Uses the provided closure to filter functions calls.
+* **`.matching((Value) -> Bool)`**: Uses the provided closure to filter functions calls.
 
 > Computed properties have no parameters, but mutable properties get a `(newValue:)` parameter in function builders that can be used 
 to constraint functionality on property assignment with a match condition. These `newValue` conditions will only effect the `performOnGet`, `performOnSet`, `getterCalled` and `setterCalled`
