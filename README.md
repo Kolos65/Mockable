@@ -1,6 +1,9 @@
-# @Mockable
+</br>
+<img width="300" src="https://github.com/Kolos65/Mockable/assets/26504214/4e19e4fc-8453-4320-a061-e672dcc95023"/>
+</br>
+</br>
 
-**Mockable** is a [Swift macro](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/macros/) driven testing framework that provides automatic mock implementations for your protocols. Mockable offers an intuitive **declarative syntax** that simplifies the process of mocking services in unit tests. The generated mock implementations can be excluded from release builds using compile conditions. 
+**Mockable** is a [Swift macro](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/macros/) driven testing framework that provides automatic mock implementations for your protocols. It offers an intuitive **declarative syntax** that simplifies the process of mocking services in unit tests. The generated mock implementations can be excluded from release builds using compile conditions. 
 
 ## Table of Contents
 - [Documentation](#Documentation)
