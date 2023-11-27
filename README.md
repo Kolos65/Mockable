@@ -1,13 +1,9 @@
 # @Mockable
 
-**@Mockable** is a [Swift macro](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/macros/) driven testing framework that provides automatic mock implementations for your protocols. Mockable offers an intuitive **declarative syntax** that simplifies the process of mocking services in unit tests. The key features are:
-* **No External Dependencies**: Mockable utilizes the new Swift macro system to generate code that eliminates the need for external dependencies like [Sourcery](https://github.com/krzysztofzablocki/Sourcery).
-* **Declarative API**: Mockable has a declarative API that enables you to rapidly specify return values and verify invocations in a readable format.
-* **Efficiency**: Using the built in macro system greatly increases code generation efficiency by leveraging the build system for code generation.
-* **Generic Support**: Associated types, generic functions, where clauses and constrained generic arguments are all supported.
-* **Exclusion from Release Builds**: The generated mock implementations can be excluded from release builds.
+**@Mockable** is a [Swift macro](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/macros/) driven testing framework that provides automatic mock implementations for your protocols. Mockable offers an intuitive **declarative syntax** that simplifies the process of mocking services in unit tests. The generated mock implementations can be excluded from release builds using compile conditions. 
 
 ## Table of Contents
+- [Documentation](#Documentation)
 - [Installation](#Installation)
 - [Configuration](#Configuration)
 - [Usage](#Usage)
@@ -23,6 +19,10 @@
 - [Contribution](#Contribution)
 - [License](#License)
 
+## Documentation
+
+Read **@Mockable**'s [documentation](https://kolos65.github.io/Mockable/documentation/mockable) for detailed installation and configuration guides as well as usage examples.
+
 ## Installation
 
 The library can be installed using Swift Package Manager.
@@ -34,6 +34,8 @@ The library can be installed using Swift Package Manager.
 To use the library:
 1. Add **Mockable** to all of your targets that contain protocols you want to mock.
 2. Add **MockableTest** to your test targets.
+
+Read the [installation guide](https://kolos65.github.io/Mockable/documentation/mockable/installation/) of the documentation for more details on how to integrate **Mockable** with your project.
 
 ## Configuration
 
@@ -71,6 +73,8 @@ settings:
     debug:
       SWIFT_ACTIVE_COMPILATION_CONDITIONS: MOCKING
 ```
+
+Read the [configuration guide](https://kolos65.github.io/Mockable/documentation/mockable/configuration/) of the documentation for more details on how to setup the **`MOCKING`** flag in your project.
 
 ## Usage
 
@@ -286,8 +290,6 @@ Remember to add the noted type to your `Matcher` using the `register()` function
 ## Contribution
 
 If you encounter any issues with the project or have suggestions for improvement, please feel free to open an issue. I value your feedback and am committed to making this project as robust and user-friendly as possible.
-
-I welcome and appreciate contributions from the community! If you would like to contribute to this project, please follow these steps:
 
 ## License
 
