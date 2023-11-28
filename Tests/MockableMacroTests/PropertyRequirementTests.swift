@@ -15,14 +15,14 @@ final class PropertyRequirementTests: MockableMacroTestCase {
           @Mockable
           protocol Test {
               var computedInt: Int { get }
-              var computedString: String { get }
+              var computedString: String! { get }
           }
           """
         } expansion: {
             """
             protocol Test {
                 var computedInt: Int { get }
-                var computedString: String { get }
+                var computedString: String! { get }
             }
 
             #if MOCKING
@@ -54,7 +54,7 @@ final class PropertyRequirementTests: MockableMacroTestCase {
                         }
                     }
                 }
-                var computedString: String {
+                var computedString: String! {
                     get {
                         let member: Member = .m2_computedString
                         return try! mocker.mock(member) { producer in

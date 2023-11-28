@@ -135,7 +135,7 @@ extension BuilderStructs {
 
     private func variableMembers(kind: Builder) throws -> [String] {
         try variables.map {
-            let propType = try $0.type.trimmedDescription
+            let propType = try $0.trimmedType.trimmedDescription
             let propName = try $0.name
             let returnType = try builderReturnType(for: $0, kind: kind)
             let signature = if $0.isComputed || kind == .return {

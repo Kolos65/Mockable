@@ -147,7 +147,7 @@ extension VariableDeclaration {
 
     private var wrappedType: TypeSyntax {
         get throws {
-            let description = try type.trimmedDescription
+            let description = try trimmedType.trimmedDescription
             let typeName = "\(Constants.parameterWrapperName)<\(description)>"
             return .init(stringLiteral: typeName)
         }
