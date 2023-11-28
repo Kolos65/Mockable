@@ -53,7 +53,7 @@ protocol TestProtocol {
     var computedInt: Int { get }
     var computedString: String { get }
     var mutableInt: Int { get set }
-    var mutableString: String { get set }
+    var mutableUnwrappedString: String! { get set }
     var throwingProperty: Int { get throws }
     var asyncProperty: String { get async }
     var asyncThrowingProperty: String { get async throws }

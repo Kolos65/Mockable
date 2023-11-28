@@ -11,7 +11,7 @@ import XCTest
 /// Creates a proxy for building return values for members of the given service.
 ///
 /// Example usage of `given(_ service:)`:
-///```swift
+/// ```swift
 /// // Throw an error for the first call and then return 'product' for every other call
 /// given(productService)
 ///     .fetch(for: .any).willThrow(error)
