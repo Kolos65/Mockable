@@ -18,6 +18,8 @@ jobs:
   
     - name: Checkout main branch
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
     - name: Checkout documentation branch
       run: |
