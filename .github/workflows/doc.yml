@@ -21,14 +21,10 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Checkout documentation branch
+    - name: Checkout and rebase documentation branch
       run: |
-        git checkout -b documentation
-
-    - name: Rebase documentation branch to main
-      run: |
-        git fetch origin main
-        git rebase origin/main
+        git checkout -B documentation
+        git rebase main
 
     - name: Update documentation
       run: |
