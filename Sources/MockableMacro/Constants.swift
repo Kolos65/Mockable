@@ -1,6 +1,6 @@
 //
 //  Constants.swift
-//  
+//  MockableMacro
 //
 //  Created by Kolos Foltanyi on 2023. 11. 24..
 //
