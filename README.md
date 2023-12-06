@@ -294,6 +294,10 @@ Remember to add the noted type to your `Matcher` using the `register()` function
 
 If you encounter any issues with the project or have suggestions for improvement, please feel free to open an issue. I value your feedback and am committed to making this project as robust and user-friendly as possible.
 
+The package manifest is set up to contain only test targets and test dependencies if an environment variable named `MOCKABLE_DEV` is set to true. This is done to prevent the overly zealous Swift Package Manager from downloading test dependencies and plugins, such as `swift-macro-testing` or `SwiftLint`, when someone uses Mockable as a package dependency.
+
+To open the package with Xcode in 'development mode,' you need the `MOCKABLE_DEV=true` environment variable to be set. Use `Scripts/open.sh` to open the project (or copy its contents into your terminal) to be able to run tests and lint your code when contributing.
+
 ## License
 
 **Mockable** is made available under the MIT License. Please see the [LICENSE](https://raw.githubusercontent.com/Kolos65/Mockable/main/LICENSE) file for more details.
