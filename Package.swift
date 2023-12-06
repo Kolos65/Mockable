@@ -3,6 +3,40 @@
 import PackageDescription
 import CompilerPluginSupport
 
+let isDev = Context.environment["MOCKABLE_DEV"].flatMap(Bool.init) ?? false
+
+func ifDev<T>(add list: [T]) -> [T] { isDev ? list : [] }
+
+let devDependencies: [Package.Dependency] = [
+    .package(url: "https://github.com/pointfreeco/swift-macro-testing", from: "0.2.2"),
+    .package(url: "https://github.com/realm/SwiftLint", from: "0.54.0"),
+    .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.3.0")
+]
+
+let devPlugins: [Target.PluginUsage] = [
+    .plugin(name: "SwiftLintPlugin", package: "SwiftLint")
+]
+
+let devTargets: [Target] = [
+    .testTarget(
+        name: "MockableTests",
+        dependencies: ["MockableTest"],
+        swiftSettings: [.define("MOCKING")],
+        plugins: [
+            .plugin(name: "SwiftLintPlugin", package: "SwiftLint")
+        ]
+    ),
+    .testTarget(
+        name: "MockableMacroTests",
+        dependencies: [
+            "MockableMacro",
+            .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
+            .product(name: "MacroTesting", package: "swift-macro-testing"),
+        ],
+        swiftSettings: [.define("MOCKING")]
+    )
+]
+
 let package = Package(
     name: "Mockable",
     platforms: [.macOS(.v12), .iOS(.v13), .tvOS(.v13), .watchOS(.v6), .macCatalyst(.v13)],
@@ -16,24 +50,27 @@ let package = Package(
             targets: ["MockableTest"]
         ),
     ],
-    dependencies: [
+    dependencies: ifDev(add: devDependencies) + [
         .package(url: "https://github.com/apple/swift-syntax.git", from: "509.0.0")
     ],
-    targets: [
+    targets: ifDev(add: devTargets) + [
         .target(
             name: "Mockable",
-            dependencies: ["MockableMacro"]
+            dependencies: ["MockableMacro"],
+            plugins: ifDev(add: devPlugins)
         ),
         .target(
             name: "MockableTest",
-            dependencies: ["Mockable"]
+            dependencies: ["Mockable"],
+            plugins: ifDev(add: devPlugins)
         ),
         .macro(
             name: "MockableMacro",
             dependencies: [
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
-            ]
+            ],
+            plugins: ifDev(add: devPlugins)
         )
     ]
 )
