@@ -17,7 +17,7 @@ jobs:
         swift-version: '5.9'
   
     - name: Checkout main branch
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Checkout documentation branch
       run: |
@@ -31,6 +31,8 @@ jobs:
     - name: Update documentation
       run: |
         Scripts/doc.sh
+        git config user.name github-actions
+        git config user.email github-actions@github.com
         git add docs
         git commit --amend --no-edit
         git push origin documentation --force
