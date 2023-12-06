@@ -99,10 +99,6 @@ force_try:
   severity: error
 force_unwrapping:
   severity: error
-function_body_length:
-  ignores_comments: true
-  warning: 50
-  error: 70
 function_parameter_count:
   warning: 5
   error: 6

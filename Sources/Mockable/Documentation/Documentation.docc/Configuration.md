@@ -27,7 +27,7 @@ If your porject relies on Xcode build settings, define the flag in your target's
 4. Add the **MOCKING** flag under the debug build configuration(s).
 5. Repeat these steps for all of your targets where you want to use the `@Mockable` macro.
 
-## Using a Pakcage.swift manifest
+## Using a Package.swift manifest
 If you are using SPM modules or working with a package, define the **`MOCKING`** compile-time condition in your package manifest. Using a `.when(configuration:)` build setting condition you can define the flag only if the build configuration is set to `debug`.
 ```swift
 .target(

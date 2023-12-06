@@ -1,6 +1,6 @@
 //
 //  Parameter.swift
-//
+//  Mockable
 //
 //  Created by Kolos Foltanyi on 2023. 11. 13..
 //

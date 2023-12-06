@@ -27,7 +27,7 @@ It provides two library products:
 > If you have multiple targets or multiple test targets:
 > Navigate to each target's **General** settings and add the appropriate Mockable library under the **Frameworks and Libraries** settings.
 
-### Using a Pakcage.swift manifest:
+### Using a Package.swift manifest:
 If you have SPM modules or you want to test an SPM package, add **Mockable** as a package dependency in the manifest file.
 
 In you target definitions add the **Mockable** product to your main target and the **MockableTest** product to your test target.

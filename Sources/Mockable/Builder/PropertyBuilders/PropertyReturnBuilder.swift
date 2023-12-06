@@ -1,6 +1,6 @@
 //
 //  PropertyReturnBuilder.swift
-//  
+//  Mockable
 //
 //  Created by Kolos Foltanyi on 2023. 11. 22..
 //
@@ -8,7 +8,7 @@
 /// A builder for specifying return values or producers when mocking the getter of a mutable property.
 ///
 /// This builder is typically used within the context of a higher-level builder (e.g., a `ReturnBuilder`)
-/// to specify the desired return value or a return value producer for the getter 
+/// to specify the desired return value or a return value producer for the getter
 /// of a particular property of a mock.
 public struct PropertyReturnBuilder<T: Mockable, ParentBuilder: EffectBuilder<T>, ReturnType> {
 
