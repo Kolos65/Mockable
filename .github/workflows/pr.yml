@@ -1,0 +1,23 @@
+name: pull-request-validation
+
+on:
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  test:
+    name: Build Package and Run Tests
+    runs-on: macOS-13
+    steps:          
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Swift
+        uses: swift-actions/setup-swift@v1
+        with:
+          swift-version: '5.9'
+
+      - name: Run Tests
+        run: |
+          Scripts/test.sh
