@@ -1,0 +1,35 @@
+name: update-documentation
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update_docs:
+    name: Update Documentation
+    runs-on: macOS-13
+
+    steps:
+    - name: Set up Swift
+      uses: swift-actions/setup-swift@v1
+      with:
+        swift-version: '5.9'
+  
+    - name: Checkout main branch
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Checkout documentation branch
+      run: |
+        git checkout -b documentation
+
+    - name: Update documentation
+      run: |
+        Scripts/doc.sh
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git add docs
+        git commit -m 'chore: update documentation'
+        git push origin documentation --force
