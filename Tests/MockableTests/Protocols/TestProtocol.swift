@@ -8,7 +8,7 @@
 import MockableTest
 
 @Mockable
-protocol TestProtocol {
+protocol TestProtocol where Item2: Identifiable {
 
     // MARK: Associated Types
 
@@ -39,7 +39,9 @@ protocol TestProtocol {
 
     func foo<T>(item: (Array<[(Set<T>, String)]>, Int))
     func genericFunc<T, V>(item: T) -> V
-    func method<T: Hashable, E, C, I>(p1: T, p2: E, p3: C, p4: I) where E: Equatable, E: Hashable, C: Codable
+    func method<T: Hashable, E, C, I>(
+        prop1: T, prop2: E, prop3: C, prop4: I
+    ) where E: Equatable, E: Hashable, C: Codable
 
     // MARK: Name Collision
 

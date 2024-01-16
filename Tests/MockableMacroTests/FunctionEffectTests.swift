@@ -29,15 +29,15 @@ final class FunctionEffectTests: MockableMacroTestCase {
             #if MOCKING
             final class MockTest: Test, Mockable {
                 private var mocker = Mocker<MockTest>()
-                @available(*, deprecated, message: "Use given(_ service:) of MockableTest instead.")
+                @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
                 func given() -> ReturnBuilder {
                     .init(mocker: mocker)
                 }
-                @available(*, deprecated, message: "Use when(_ service:) of MockableTest instead.")
+                @available(*, deprecated, message: "Use when(_ service:) of Mockable instead. ")
                 func when() -> ActionBuilder {
                     .init(mocker: mocker)
                 }
-                @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead.")
+                @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead. ")
                 func verify(with assertion: @escaping MockableAssertion) -> VerifyBuilder {
                     .init(mocker: mocker, assertion: assertion)
                 }
@@ -135,15 +135,15 @@ final class FunctionEffectTests: MockableMacroTestCase {
             #if MOCKING
             final class MockTest: Test, Mockable {
                 private var mocker = Mocker<MockTest>()
-                @available(*, deprecated, message: "Use given(_ service:) of MockableTest instead.")
+                @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
                 func given() -> ReturnBuilder {
                     .init(mocker: mocker)
                 }
-                @available(*, deprecated, message: "Use when(_ service:) of MockableTest instead.")
+                @available(*, deprecated, message: "Use when(_ service:) of Mockable instead. ")
                 func when() -> ActionBuilder {
                     .init(mocker: mocker)
                 }
-                @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead.")
+                @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead. ")
                 func verify(with assertion: @escaping MockableAssertion) -> VerifyBuilder {
                     .init(mocker: mocker, assertion: assertion)
                 }
@@ -165,7 +165,6 @@ final class FunctionEffectTests: MockableMacroTestCase {
                         switch (self, other) {
                         case (.m1_execute(operation: let leftOperation), .m1_execute(operation: let rightOperation)):
                             return leftOperation.match(rightOperation)
-
                         }
                     }
                 }
@@ -225,15 +224,15 @@ final class FunctionEffectTests: MockableMacroTestCase {
             #if MOCKING
             final class MockTest: Test, Mockable {
                 private var mocker = Mocker<MockTest>()
-                @available(*, deprecated, message: "Use given(_ service:) of MockableTest instead.")
+                @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
                 func given() -> ReturnBuilder {
                     .init(mocker: mocker)
                 }
-                @available(*, deprecated, message: "Use when(_ service:) of MockableTest instead.")
+                @available(*, deprecated, message: "Use when(_ service:) of Mockable instead. ")
                 func when() -> ActionBuilder {
                     .init(mocker: mocker)
                 }
-                @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead.")
+                @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead. ")
                 func verify(with assertion: @escaping MockableAssertion) -> VerifyBuilder {
                     .init(mocker: mocker, assertion: assertion)
                 }

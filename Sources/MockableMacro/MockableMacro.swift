@@ -14,50 +14,24 @@ public enum MockableMacro: PeerMacro {
         providingPeersOf declaration: some DeclSyntaxProtocol,
         in _: some MacroExpansionContext
     ) throws -> [DeclSyntax] {
-        guard let declaration = declaration.as(ProtocolDeclSyntax.self) else {
+        guard let protocolDecl = declaration.as(ProtocolDeclSyntax.self) else {
             throw MockableMacroError.notAProtocol
         }
 
-        let classDefinition = ClassDeclaration(declaration)
-        let privateMembers = PrivateMembers(declaration)
-        let publicMembers = PublicMembers(declaration)
-        let members = try MemberDeclarations(declaration)
-        let memberEnum = MemberEnum(declaration, members)
-        let inits = InitConformances(declaration, members.inits)
-        let functions = FunctionConformances(declaration, members.functions)
-        let variables = VariableConformances(declaration, members.variables)
-        let builderStructs = BuilderStructs(declaration, members.variables, members.functions)
+        let requirements = try Requirements(protocolDecl)
+        let declaration = try MockFacotry.build(from: requirements)
+        let codeblock = CodeBlockItemListSyntax {
+            CodeBlockItemSyntax(item: .decl(declaration))
+        }
 
-        let classDeclaration = ClassDeclSyntax(
-            leadingTrivia: classDefinition.leadingTrivia,
-            modifiers: classDefinition.modifiers,
-            name: classDefinition.name,
-            genericParameterClause: classDefinition.genericParameterClause,
-            inheritanceClause: classDefinition.inheritanceClause,
-            genericWhereClause: classDefinition.genericWhereClause,
-            memberBlock: try .init {
-                privateMembers.mocker
-                publicMembers.given
-                publicMembers.when
-                publicMembers.verify
-                publicMembers.reset
-                for initializer in inits.members {
-                    initializer
-                }
-                for function in try functions.members {
-                    function
-                }
-                for variable in try variables.members {
-                    variable
-                }
-                try memberEnum.memberBlockItem
-                try builderStructs.givenBuilder
-                try builderStructs.actionBuilder
-                try builderStructs.verifyBuilder
-            },
-            trailingTrivia: classDefinition.trailingTrivia
-        )
+        let ifClause = IfConfigClauseListSyntax {
+            IfConfigClauseSyntax(
+                poundKeyword: .poundIfToken(),
+                condition: DeclReferenceExprSyntax(baseName: NS.MOCKING),
+                elements: .statements(codeblock)
+            )
+        }
 
-        return [DeclSyntax(classDeclaration)]
+        return [IfConfigDeclSyntax(clauses: ifClause).cast(DeclSyntax.self)]
     }
 }

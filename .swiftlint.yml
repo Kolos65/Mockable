@@ -6,6 +6,7 @@ disabled_rules:
   - function_default_parameter_at_end
   - nesting
   - switch_case_alignment
+  - void_function_in_ternary
 opt_in_rules:
   - closure_spacing
   - convenience_type
@@ -155,15 +156,13 @@ trailing_whitespace:
   severity: warning
 unused_closure_parameter:
   severity: error
+type_name:
+  excluded:
+    - NS
 identifier_name:
-  min_length: 2
-  severity: error
-  excluded: 
-    - x
-    - y
-    - z
-    - w
-    - h
+  excluded:
+    - to
+    - id
 vertical_parameter_alignment:
   severity: error
 vertical_whitespace:
