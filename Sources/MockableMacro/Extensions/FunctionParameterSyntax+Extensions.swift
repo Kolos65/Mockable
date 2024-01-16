@@ -1,5 +1,5 @@
 //
-//  TypeSyntax+Extensions.swift
+//  FunctionParameterSyntax+Extensions.swift
 //  MockableMacro
 //
 //  Created by Kolos Foltanyi on 2023. 11. 20..
@@ -8,7 +8,7 @@
 import SwiftSyntax
 
 extension FunctionParameterSyntax {
-    public var resolvedTypeName: String {
+    var resolvedType: TypeSyntax {
         let type = if let type = type.as(AttributedTypeSyntax.self) {
             type.baseType
         } else {
@@ -16,9 +16,9 @@ extension FunctionParameterSyntax {
         }
 
         guard ellipsis == nil else {
-            return "[\(type.trimmedDescription)]"
+            return ArrayTypeSyntax(element: type).cast(TypeSyntax.self)
         }
 
-        return type.trimmedDescription
+        return type.cast(TypeSyntax.self)
     }
 }

@@ -12,7 +12,7 @@ final class GivenTests: XCTestCase {
 
     // MARK: Properties
 
-    private let mock = MockUserService<String>()
+    private let mock = MockTestService<String>()
 
     // MARK: Overrides
 

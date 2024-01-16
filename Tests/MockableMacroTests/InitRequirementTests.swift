@@ -28,15 +28,15 @@ final class InitRequirementTests: MockableMacroTestCase {
             #if MOCKING
             final class MockTest: Test, Mockable {
                 private var mocker = Mocker<MockTest>()
-                @available(*, deprecated, message: "Use given(_ service:) of MockableTest instead.")
+                @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
                 func given() -> ReturnBuilder {
                     .init(mocker: mocker)
                 }
-                @available(*, deprecated, message: "Use when(_ service:) of MockableTest instead.")
+                @available(*, deprecated, message: "Use when(_ service:) of Mockable instead. ")
                 func when() -> ActionBuilder {
                     .init(mocker: mocker)
                 }
-                @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead.")
+                @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead. ")
                 func verify(with assertion: @escaping MockableAssertion) -> VerifyBuilder {
                     .init(mocker: mocker, assertion: assertion)
                 }
@@ -50,7 +50,6 @@ final class InitRequirementTests: MockableMacroTestCase {
                 enum Member: Matchable, CaseIdentifiable {
                     func match(_ other: Member) -> Bool {
                         switch (self, other) {
-
                         }
                     }
                 }
@@ -59,14 +58,12 @@ final class InitRequirementTests: MockableMacroTestCase {
                     init(mocker: Mocker<MockTest>) {
                         self.mocker = mocker
                     }
-
                 }
                 struct ActionBuilder: EffectBuilder {
                     private let mocker: Mocker<MockTest>
                     init(mocker: Mocker<MockTest>) {
                         self.mocker = mocker
                     }
-
                 }
                 struct VerifyBuilder: AssertionBuilder {
                     private let mocker: Mocker<MockTest>
@@ -75,7 +72,6 @@ final class InitRequirementTests: MockableMacroTestCase {
                         self.mocker = mocker
                         self.assertion = assertion
                     }
-
                 }
             }
             #endif
@@ -104,20 +100,22 @@ final class InitRequirementTests: MockableMacroTestCase {
             #if MOCKING
             final class MockTest: Test, Mockable {
                 private var mocker = Mocker<MockTest>()
-                @available(*, deprecated, message: "Use given(_ service:) of MockableTest instead.")
+                @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
                 func given() -> ReturnBuilder {
                     .init(mocker: mocker)
                 }
-                @available(*, deprecated, message: "Use when(_ service:) of MockableTest instead.")
+                @available(*, deprecated, message: "Use when(_ service:) of Mockable instead. ")
                 func when() -> ActionBuilder {
                     .init(mocker: mocker)
                 }
-                @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead.")
+                @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead. ")
                 func verify(with assertion: @escaping MockableAssertion) -> VerifyBuilder {
                     .init(mocker: mocker, assertion: assertion)
                 }
                 func reset(_ scopes: Set<MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
+                }
+                init() {
                 }
                 init?() async throws {
                 }
@@ -125,12 +123,9 @@ final class InitRequirementTests: MockableMacroTestCase {
                 }
                 init(name value: String, _ index: Int) {
                 }
-                init() {
-                }
                 enum Member: Matchable, CaseIdentifiable {
                     func match(_ other: Member) -> Bool {
                         switch (self, other) {
-
                         }
                     }
                 }
@@ -139,14 +134,12 @@ final class InitRequirementTests: MockableMacroTestCase {
                     init(mocker: Mocker<MockTest>) {
                         self.mocker = mocker
                     }
-
                 }
                 struct ActionBuilder: EffectBuilder {
                     private let mocker: Mocker<MockTest>
                     init(mocker: Mocker<MockTest>) {
                         self.mocker = mocker
                     }
-
                 }
                 struct VerifyBuilder: AssertionBuilder {
                     private let mocker: Mocker<MockTest>
@@ -155,7 +148,6 @@ final class InitRequirementTests: MockableMacroTestCase {
                         self.mocker = mocker
                         self.assertion = assertion
                     }
-
                 }
             }
             #endif

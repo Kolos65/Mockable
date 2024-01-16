@@ -52,28 +52,28 @@ final class AttributesTests: MockableMacroTestCase {
             #if MOCKING
             final class MockAttributeTest: AttributeTest, Mockable {
                 private var mocker = Mocker<MockAttributeTest>()
-                @available(*, deprecated, message: "Use given(_ service:) of MockableTest instead.")
+                @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
                 func given() -> ReturnBuilder {
                     .init(mocker: mocker)
                 }
-                @available(*, deprecated, message: "Use when(_ service:) of MockableTest instead.")
+                @available(*, deprecated, message: "Use when(_ service:) of Mockable instead. ")
                 func when() -> ActionBuilder {
                     .init(mocker: mocker)
                 }
-                @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead.")
+                @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead. ")
                 func verify(with assertion: @escaping MockableAssertion) -> VerifyBuilder {
                     .init(mocker: mocker, assertion: assertion)
                 }
                 func reset(_ scopes: Set<MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
+                init() {
+                }
                 @available(iOS 15, *)
                 init(name: String) {
                 }
                 @available(iOS 15, *)
                 init(name2: String) {
-                }
-                init() {
                 }
                 @available(iOS 15, *)
                 func test() {

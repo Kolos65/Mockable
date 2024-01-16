@@ -1,5 +1,5 @@
 //
-//  UserService.swift
+//  TestService.swift
 //
 //
 //  Created by Kolos Foltanyi on 2023. 11. 24..
@@ -9,7 +9,7 @@ import MockableTest
 import Foundation
 
 @Mockable
-protocol UserService {
+protocol TestService {
 
     // MARK: Associated Type
 
@@ -19,6 +19,7 @@ protocol UserService {
     // MARK: Properties
 
     var name: String { get set }
+    var computed: String { get }
 
     // MARK: Functions
 
