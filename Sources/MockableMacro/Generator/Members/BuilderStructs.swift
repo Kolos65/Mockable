@@ -183,7 +183,15 @@ extension BuilderStructs {
         let throwsPrefix = try variable.isThrowing ? "Throwing" : ""
         let propType = try variable.trimmedType.trimmedDescription
         let produceType = kind == .return ? ", \(try variable.closureType)" : ""
-        let returnType = kind == .return ? ", \(propType)" : ""
+        let returnType: String = {
+            if kind == .return {
+                ", \(propType)"
+            } else if variable.isComputed {
+                ", \(propType)"
+            } else {
+                ""
+            }
+        }()
         return if variable.isComputed {
             "\(throwsPrefix)Function\(kind.name)<\(mockName), \(kind.name)\(returnType)\(produceType)>"
         } else {
@@ -195,7 +203,7 @@ extension BuilderStructs {
         let throwsPrefix = function.isThrowing ? "Throwing" : ""
         let functionReturnType = function.returnType?.trimmedDescription ?? "Void"
         let produceType = kind == .return ? ", \(function.closureType)" : ""
-        let returnType = kind == .return ? ", \(functionReturnType)" : ""
+        let returnType = ", \(functionReturnType)"
         return "\(throwsPrefix)Function\(kind.name)<\(mockName), \(kind.name)\(returnType)\(produceType)>"
     }
 

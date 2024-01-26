@@ -74,7 +74,7 @@ final class ExoticParameterTests: MockableMacroTestCase {
                     init(mocker: Mocker<MockTest>) {
                         self.mocker = mocker
                     }
-                    func modifyValue(_ value: Parameter<Int>) -> FunctionActionBuilder<MockTest, ActionBuilder> {
+                    func modifyValue(_ value: Parameter<Int>) -> FunctionActionBuilder<MockTest, ActionBuilder, Void> {
                         .init(mocker, kind: .m1_modifyValue(value))
                     }
                 }
@@ -85,7 +85,7 @@ final class ExoticParameterTests: MockableMacroTestCase {
                         self.mocker = mocker
                         self.assertion = assertion
                     }
-                    func modifyValue(_ value: Parameter<Int>) -> FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    func modifyValue(_ value: Parameter<Int>) -> FunctionVerifyBuilder<MockTest, VerifyBuilder, Void> {
                         .init(mocker, kind: .m1_modifyValue(value), assertion: assertion)
                     }
                 }
@@ -160,7 +160,7 @@ final class ExoticParameterTests: MockableMacroTestCase {
                     init(mocker: Mocker<MockTest>) {
                         self.mocker = mocker
                     }
-                    func printValues(_ values: Parameter<[Int]>) -> FunctionActionBuilder<MockTest, ActionBuilder> {
+                    func printValues(_ values: Parameter<[Int]>) -> FunctionActionBuilder<MockTest, ActionBuilder, Void> {
                         .init(mocker, kind: .m1_printValues(values))
                     }
                 }
@@ -171,7 +171,7 @@ final class ExoticParameterTests: MockableMacroTestCase {
                         self.mocker = mocker
                         self.assertion = assertion
                     }
-                    func printValues(_ values: Parameter<[Int]>) -> FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    func printValues(_ values: Parameter<[Int]>) -> FunctionVerifyBuilder<MockTest, VerifyBuilder, Void> {
                         .init(mocker, kind: .m1_printValues(values), assertion: assertion)
                     }
                 }
@@ -246,7 +246,7 @@ final class ExoticParameterTests: MockableMacroTestCase {
                     init(mocker: Mocker<MockTest>) {
                         self.mocker = mocker
                     }
-                    func execute(operation: Parameter<() throws -> Void>) -> FunctionActionBuilder<MockTest, ActionBuilder> {
+                    func execute(operation: Parameter<() throws -> Void>) -> FunctionActionBuilder<MockTest, ActionBuilder, Void> {
                         .init(mocker, kind: .m1_execute(operation: operation))
                     }
                 }
@@ -257,7 +257,7 @@ final class ExoticParameterTests: MockableMacroTestCase {
                         self.mocker = mocker
                         self.assertion = assertion
                     }
-                    func execute(operation: Parameter<() throws -> Void>) -> FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    func execute(operation: Parameter<() throws -> Void>) -> FunctionVerifyBuilder<MockTest, VerifyBuilder, Void> {
                         .init(mocker, kind: .m1_execute(operation: operation), assertion: assertion)
                     }
                 }

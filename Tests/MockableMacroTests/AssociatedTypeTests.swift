@@ -76,7 +76,7 @@ final class AssociatedTypeTests: MockableMacroTestCase {
                     init(mocker: Mocker<MockTest>) {
                         self.mocker = mocker
                     }
-                    func foo(item: Parameter<Item>) -> FunctionActionBuilder<MockTest, ActionBuilder> {
+                    func foo(item: Parameter<Item>) -> FunctionActionBuilder<MockTest, ActionBuilder, Item> {
                         .init(mocker, kind: .m1_foo(item: item))
                     }
                 }
@@ -87,7 +87,7 @@ final class AssociatedTypeTests: MockableMacroTestCase {
                         self.mocker = mocker
                         self.assertion = assertion
                     }
-                    func foo(item: Parameter<Item>) -> FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    func foo(item: Parameter<Item>) -> FunctionVerifyBuilder<MockTest, VerifyBuilder, Item> {
                         .init(mocker, kind: .m1_foo(item: item), assertion: assertion)
                     }
                 }
@@ -164,7 +164,7 @@ final class AssociatedTypeTests: MockableMacroTestCase {
                     init(mocker: Mocker<MockTest>) {
                         self.mocker = mocker
                     }
-                    func foo(item: Parameter<Item>) -> FunctionActionBuilder<MockTest, ActionBuilder> {
+                    func foo(item: Parameter<Item>) -> FunctionActionBuilder<MockTest, ActionBuilder, Item> {
                         .init(mocker, kind: .m1_foo(item: item))
                     }
                 }
@@ -175,7 +175,7 @@ final class AssociatedTypeTests: MockableMacroTestCase {
                         self.mocker = mocker
                         self.assertion = assertion
                     }
-                    func foo(item: Parameter<Item>) -> FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    func foo(item: Parameter<Item>) -> FunctionVerifyBuilder<MockTest, VerifyBuilder, Item> {
                         .init(mocker, kind: .m1_foo(item: item), assertion: assertion)
                     }
                 }
@@ -252,7 +252,7 @@ final class AssociatedTypeTests: MockableMacroTestCase {
                     init(mocker: Mocker<MockTest>) {
                         self.mocker = mocker
                     }
-                    func foo(item: Parameter<Item>) -> FunctionActionBuilder<MockTest, ActionBuilder> {
+                    func foo(item: Parameter<Item>) -> FunctionActionBuilder<MockTest, ActionBuilder, Item> {
                         .init(mocker, kind: .m1_foo(item: item))
                     }
                 }
@@ -263,7 +263,7 @@ final class AssociatedTypeTests: MockableMacroTestCase {
                         self.mocker = mocker
                         self.assertion = assertion
                     }
-                    func foo(item: Parameter<Item>) -> FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    func foo(item: Parameter<Item>) -> FunctionVerifyBuilder<MockTest, VerifyBuilder, Item> {
                         .init(mocker, kind: .m1_foo(item: item), assertion: assertion)
                     }
                 }

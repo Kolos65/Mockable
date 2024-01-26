@@ -91,10 +91,10 @@ final class FunctionEffectTests: MockableMacroTestCase {
                     init(mocker: Mocker<MockTest>) {
                         self.mocker = mocker
                     }
-                    func returnsAndThrows() -> ThrowingFunctionActionBuilder<MockTest, ActionBuilder> {
+                    func returnsAndThrows() -> ThrowingFunctionActionBuilder<MockTest, ActionBuilder, String> {
                         .init(mocker, kind: .m1_returnsAndThrows)
                     }
-                    func canThrowError() -> ThrowingFunctionActionBuilder<MockTest, ActionBuilder> {
+                    func canThrowError() -> ThrowingFunctionActionBuilder<MockTest, ActionBuilder, Void> {
                         .init(mocker, kind: .m2_canThrowError)
                     }
                 }
@@ -105,10 +105,10 @@ final class FunctionEffectTests: MockableMacroTestCase {
                         self.mocker = mocker
                         self.assertion = assertion
                     }
-                    func returnsAndThrows() -> ThrowingFunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    func returnsAndThrows() -> ThrowingFunctionVerifyBuilder<MockTest, VerifyBuilder, String> {
                         .init(mocker, kind: .m1_returnsAndThrows, assertion: assertion)
                     }
-                    func canThrowError() -> ThrowingFunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    func canThrowError() -> ThrowingFunctionVerifyBuilder<MockTest, VerifyBuilder, Void> {
                         .init(mocker, kind: .m2_canThrowError, assertion: assertion)
                     }
                 }
@@ -183,7 +183,7 @@ final class FunctionEffectTests: MockableMacroTestCase {
                     init(mocker: Mocker<MockTest>) {
                         self.mocker = mocker
                     }
-                    func execute(operation: Parameter<() throws -> Void>) -> FunctionActionBuilder<MockTest, ActionBuilder> {
+                    func execute(operation: Parameter<() throws -> Void>) -> FunctionActionBuilder<MockTest, ActionBuilder, Void> {
                         .init(mocker, kind: .m1_execute(operation: operation))
                     }
                 }
@@ -194,7 +194,7 @@ final class FunctionEffectTests: MockableMacroTestCase {
                         self.mocker = mocker
                         self.assertion = assertion
                     }
-                    func execute(operation: Parameter<() throws -> Void>) -> FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    func execute(operation: Parameter<() throws -> Void>) -> FunctionVerifyBuilder<MockTest, VerifyBuilder, Void> {
                         .init(mocker, kind: .m1_execute(operation: operation), assertion: assertion)
                     }
                 }
@@ -300,13 +300,13 @@ final class FunctionEffectTests: MockableMacroTestCase {
                     init(mocker: Mocker<MockTest>) {
                         self.mocker = mocker
                     }
-                    func asyncFunction() -> FunctionActionBuilder<MockTest, ActionBuilder> {
+                    func asyncFunction() -> FunctionActionBuilder<MockTest, ActionBuilder, Void> {
                         .init(mocker, kind: .m1_asyncFunction)
                     }
-                    func asyncThrowingFunction() -> ThrowingFunctionActionBuilder<MockTest, ActionBuilder> {
+                    func asyncThrowingFunction() -> ThrowingFunctionActionBuilder<MockTest, ActionBuilder, Void> {
                         .init(mocker, kind: .m2_asyncThrowingFunction)
                     }
-                    func asyncParamFunction(param: Parameter<() async throws -> Void>) -> ThrowingFunctionActionBuilder<MockTest, ActionBuilder> {
+                    func asyncParamFunction(param: Parameter<() async throws -> Void>) -> ThrowingFunctionActionBuilder<MockTest, ActionBuilder, Void> {
                         .init(mocker, kind: .m3_asyncParamFunction(param: param))
                     }
                 }
@@ -317,13 +317,13 @@ final class FunctionEffectTests: MockableMacroTestCase {
                         self.mocker = mocker
                         self.assertion = assertion
                     }
-                    func asyncFunction() -> FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    func asyncFunction() -> FunctionVerifyBuilder<MockTest, VerifyBuilder, Void> {
                         .init(mocker, kind: .m1_asyncFunction, assertion: assertion)
                     }
-                    func asyncThrowingFunction() -> ThrowingFunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    func asyncThrowingFunction() -> ThrowingFunctionVerifyBuilder<MockTest, VerifyBuilder, Void> {
                         .init(mocker, kind: .m2_asyncThrowingFunction, assertion: assertion)
                     }
-                    func asyncParamFunction(param: Parameter<() async throws -> Void>) -> ThrowingFunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    func asyncParamFunction(param: Parameter<() async throws -> Void>) -> ThrowingFunctionVerifyBuilder<MockTest, VerifyBuilder, Void> {
                         .init(mocker, kind: .m3_asyncParamFunction(param: param), assertion: assertion)
                     }
                 }

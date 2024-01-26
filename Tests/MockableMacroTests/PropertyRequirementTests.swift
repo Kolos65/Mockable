@@ -94,10 +94,10 @@ final class PropertyRequirementTests: MockableMacroTestCase {
                     init(mocker: Mocker<MockTest>) {
                         self.mocker = mocker
                     }
-                    var computedInt: FunctionActionBuilder<MockTest, ActionBuilder> {
+                    var computedInt: FunctionActionBuilder<MockTest, ActionBuilder, Int> {
                         .init(mocker, kind: .m1_computedInt)
                     }
-                    var computedString: FunctionActionBuilder<MockTest, ActionBuilder> {
+                    var computedString: FunctionActionBuilder<MockTest, ActionBuilder, String> {
                         .init(mocker, kind: .m2_computedString)
                     }
                 }
@@ -108,10 +108,10 @@ final class PropertyRequirementTests: MockableMacroTestCase {
                         self.mocker = mocker
                         self.assertion = assertion
                     }
-                    var computedInt: FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    var computedInt: FunctionVerifyBuilder<MockTest, VerifyBuilder, Int> {
                         .init(mocker, kind: .m1_computedInt, assertion: assertion)
                     }
-                    var computedString: FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    var computedString: FunctionVerifyBuilder<MockTest, VerifyBuilder, String> {
                         .init(mocker, kind: .m2_computedString, assertion: assertion)
                     }
                 }
@@ -351,13 +351,13 @@ final class PropertyRequirementTests: MockableMacroTestCase {
                     init(mocker: Mocker<MockTest>) {
                         self.mocker = mocker
                     }
-                    var throwingProperty: ThrowingFunctionActionBuilder<MockTest, ActionBuilder> {
+                    var throwingProperty: ThrowingFunctionActionBuilder<MockTest, ActionBuilder, Int> {
                         .init(mocker, kind: .m1_throwingProperty)
                     }
-                    var asyncProperty: FunctionActionBuilder<MockTest, ActionBuilder> {
+                    var asyncProperty: FunctionActionBuilder<MockTest, ActionBuilder, String> {
                         .init(mocker, kind: .m2_asyncProperty)
                     }
-                    var asyncThrowingProperty: ThrowingFunctionActionBuilder<MockTest, ActionBuilder> {
+                    var asyncThrowingProperty: ThrowingFunctionActionBuilder<MockTest, ActionBuilder, String> {
                         .init(mocker, kind: .m3_asyncThrowingProperty)
                     }
                 }
@@ -368,13 +368,13 @@ final class PropertyRequirementTests: MockableMacroTestCase {
                         self.mocker = mocker
                         self.assertion = assertion
                     }
-                    var throwingProperty: ThrowingFunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    var throwingProperty: ThrowingFunctionVerifyBuilder<MockTest, VerifyBuilder, Int> {
                         .init(mocker, kind: .m1_throwingProperty, assertion: assertion)
                     }
-                    var asyncProperty: FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    var asyncProperty: FunctionVerifyBuilder<MockTest, VerifyBuilder, String> {
                         .init(mocker, kind: .m2_asyncProperty, assertion: assertion)
                     }
-                    var asyncThrowingProperty: ThrowingFunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    var asyncThrowingProperty: ThrowingFunctionVerifyBuilder<MockTest, VerifyBuilder, String> {
                         .init(mocker, kind: .m3_asyncThrowingProperty, assertion: assertion)
                     }
                 }

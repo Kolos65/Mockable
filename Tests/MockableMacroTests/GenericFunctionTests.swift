@@ -74,7 +74,7 @@ final class GenericFunctionTests: MockableMacroTestCase {
                     init(mocker: Mocker<MockTest>) {
                         self.mocker = mocker
                     }
-                    func foo<T>(item: Parameter<(Array<[(Set<T>, String)]>, Int)>) -> FunctionActionBuilder<MockTest, ActionBuilder> {
+                    func foo<T>(item: Parameter<(Array<[(Set<T>, String)]>, Int)>) -> FunctionActionBuilder<MockTest, ActionBuilder, Void> {
                         .init(mocker, kind: .m1_foo(item: item.eraseToGenericValue()))
                     }
                 }
@@ -85,7 +85,7 @@ final class GenericFunctionTests: MockableMacroTestCase {
                         self.mocker = mocker
                         self.assertion = assertion
                     }
-                    func foo<T>(item: Parameter<(Array<[(Set<T>, String)]>, Int)>) -> FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    func foo<T>(item: Parameter<(Array<[(Set<T>, String)]>, Int)>) -> FunctionVerifyBuilder<MockTest, VerifyBuilder, Void> {
                         .init(mocker, kind: .m1_foo(item: item.eraseToGenericValue()), assertion: assertion)
                     }
                 }
@@ -160,7 +160,7 @@ final class GenericFunctionTests: MockableMacroTestCase {
                     init(mocker: Mocker<MockTest>) {
                         self.mocker = mocker
                     }
-                    func genericFunc<T>(item: Parameter<T>) -> FunctionActionBuilder<MockTest, ActionBuilder> {
+                    func genericFunc<T, V>(item: Parameter<T>) -> FunctionActionBuilder<MockTest, ActionBuilder, V> {
                         .init(mocker, kind: .m1_genericFunc(item: item.eraseToGenericValue()))
                     }
                 }
@@ -171,7 +171,7 @@ final class GenericFunctionTests: MockableMacroTestCase {
                         self.mocker = mocker
                         self.assertion = assertion
                     }
-                    func genericFunc<T>(item: Parameter<T>) -> FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    func genericFunc<T, V>(item: Parameter<T>) -> FunctionVerifyBuilder<MockTest, VerifyBuilder, V> {
                         .init(mocker, kind: .m1_genericFunc(item: item.eraseToGenericValue()), assertion: assertion)
                     }
                 }
@@ -256,7 +256,7 @@ final class GenericFunctionTests: MockableMacroTestCase {
                         self.mocker = mocker
                     }
                     func method1<T: Hashable, E, C, I>(
-                            p1: Parameter<T>, p2: Parameter<E>, p3: Parameter<C>, p4: Parameter<I>) -> FunctionActionBuilder<MockTest, ActionBuilder> where E: Equatable, E: Hashable, C: Codable {
+                            p1: Parameter<T>, p2: Parameter<E>, p3: Parameter<C>, p4: Parameter<I>) -> FunctionActionBuilder<MockTest, ActionBuilder, Void> where E: Equatable, E: Hashable, C: Codable {
                         .init(mocker, kind: .m1_method1(p1:
                                 p1.eraseToGenericValue(), p2: p2.eraseToGenericValue(), p3: p3.eraseToGenericValue(), p4: p4.eraseToGenericValue()))
                     }
@@ -269,7 +269,7 @@ final class GenericFunctionTests: MockableMacroTestCase {
                         self.assertion = assertion
                     }
                     func method1<T: Hashable, E, C, I>(
-                            p1: Parameter<T>, p2: Parameter<E>, p3: Parameter<C>, p4: Parameter<I>) -> FunctionVerifyBuilder<MockTest, VerifyBuilder> where E: Equatable, E: Hashable, C: Codable {
+                            p1: Parameter<T>, p2: Parameter<E>, p3: Parameter<C>, p4: Parameter<I>) -> FunctionVerifyBuilder<MockTest, VerifyBuilder, Void> where E: Equatable, E: Hashable, C: Codable {
                         .init(mocker, kind: .m1_method1(p1:
                                 p1.eraseToGenericValue(), p2: p2.eraseToGenericValue(), p3: p3.eraseToGenericValue(), p4: p4.eraseToGenericValue()), assertion: assertion)
                     }

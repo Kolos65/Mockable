@@ -113,7 +113,9 @@ extension FunctionDeclaration {
     var filteredGenericParameterClause: GenericParameterClauseSyntax? {
         guard let generics = syntax.genericParameterClause else { return nil }
         var parameters = generics.parameters.filter { generic in
-            hasParameter(containing: generic.name.trimmedDescription)
+            let hasParameter = hasParameter(containing: generic.name.trimmedDescription)
+            let hasReturn = hasReturn(containing: generic.name.trimmedDescription)
+            return hasParameter || hasReturn
         }
         if let lastIndex = parameters.indices.last {
             var last = parameters[lastIndex]
@@ -181,6 +183,21 @@ extension FunctionDeclaration {
             return found
         }
         tokenFinder.walk(syntax.signature.parameterClause)
+        return found
+    }
+    
+    private func hasReturn(containing identifier: String) -> Bool {
+        guard let returnClause = syntax.signature.returnClause else {
+            return false
+        }
+        var found = false
+        let identifier: TokenKind = .identifier(identifier)
+        let tokenFinder = TokenFinder {
+            guard !found else { return true }
+            found = found || $0.tokenKind == identifier
+            return found
+        }
+        tokenFinder.walk(returnClause)
         return found
     }
 
