@@ -47,9 +47,9 @@ the generated code will always be at the same scope as the protocol it is attach
 
 To solve this, the macro expansion is enclosed in a pre-defined compile-time flag called **`MOCKING`** that can be leveraged to exclude generated mock implementations from release builds.
 
-> ⚠️ Since the **`MOCKING`** flag is not defined in your project by defaut, you won't be able to use mock implementations unless you configure it.
+> ⚠️ Since the **`MOCKING`** flag is not defined in your project by default, you won't be able to use mock implementations unless you configure it.
 
-### When using framework modules or a non-mudular project:
+### When using framework modules or a non-modular project:
 Define the flag in your target's build settings for debug build configuration(s):
 1. Open your **Xcode project**.
 2. Go to your target's **Build Settings**.
@@ -60,10 +60,10 @@ Define the flag in your target's build settings for debug build configuration(s)
 In your module's package manifest under the target definition, you can define the **`MOCKING`** compile-time condition if the build configuration is set to **`debug`**:
 ```swift
 .target(
-    ...
-    swiftSettings: [
-        .define("MOCKING", .when(configuration: .debug))
-    ]
+	...
+	swiftSettings: [
+		.define("MOCKING", .when(configuration: .debug))
+	]
 )
 ```
 
@@ -73,8 +73,8 @@ Define the flag in your **XcodeGen** specification:
 settings:
   ...
   configs:
-    debug:
-      SWIFT_ACTIVE_COMPILATION_CONDITIONS: MOCKING
+	debug:
+	  SWIFT_ACTIVE_COMPILATION_CONDITIONS: MOCKING
 ```
 
 Read the [configuration guide](https://kolos65.github.io/Mockable/documentation/mockable/configuration/) of the documentation for more details on how to setup the **`MOCKING`** flag in your project.
@@ -89,9 +89,9 @@ import Mockable
 
 @Mockable
 protocol ProductService {
-    var url: URL? { get set }
-    func fetch(for id: UUID) async throws -> Product
-    func checkout(with product: Product) throws
+	var url: URL? { get set }
+	func fetch(for id: UUID) async throws -> Product
+	func checkout(with product: Product) throws
 }
 ```
 A mock implementation named `MockProductService` will be generated, that can be used in unit tests like:
@@ -102,20 +102,20 @@ lazy var productService = MockProductService()
 lazy var cartService = CartServiceImpl(productService: productService)
 
 func testCartService() async throws {
-    let mockURL = URL(string: "apple.com")
-    let mockError: ProductError = .notFound
-    let mockProduct = Product(name: "iPhone 15 Pro")
+	let mockURL = URL(string: "apple.com")
+	let mockError: ProductError = .notFound
+	let mockProduct = Product(name: "iPhone 15 Pro")
 
-    given(productService)
-        .fetch(for: .any).willReturn(mockProduct)
-        .checkout(with: .any).willThrow(mockError)
+	given(productService)
+		.fetch(for: .any).willReturn(mockProduct)
+		.checkout(with: .any).willThrow(mockError)
 
-    try await cartService.checkout(with: mockProduct, using: mockURL)
+	try await cartService.checkout(with: mockProduct, using: mockURL)
 
-    verify(productService)
-        .fetch(for: .value(mockProduct.id)).called(count: .atLeastOnce)
-        .checkout(with: .value(mockProduct)).called(count: .once)
-        .url(newValue: .value(mockURL)).setterCalled(count: .once)
+	verify(productService)
+		.fetch(for: .value(mockProduct.id)).called(count: .atLeastOnce)
+		.checkout(with: .value(mockProduct)).called(count: .once)
+		.url(newValue: .value(mockURL)).setterCalled(count: .once)
 }
 ```
 
@@ -179,18 +179,18 @@ The provided return values are used up in FIFO order and the last one is always 
 ```swift
 // Throw an error for the first call and then return 'product' for every other call
 given(productService)
-    .fetch(for: .any).willThrow(error)
-    .fetch(for: .any).willReturn(product)
+	.fetch(for: .any).willThrow(error)
+	.fetch(for: .any).willReturn(product)
 
 // Throw an error if the id parameter ends with a 0, return a product otherwise
 given(productService)
-    .fetch(for: .any).willProduce { id in
-        if id.uuidString.last == "0" {
-            throw error
-        } else {
-            return product
-        }
-    }
+	.fetch(for: .any).willProduce { id in
+		if id.uuidString.last == "0" {
+			throw error
+		} else {
+			return product
+		}
+	}
 ```
 
 ### When
@@ -204,17 +204,17 @@ Some examples of using side effects are:
 ```swift
 // log calls to fetch(for:)
 when(productService).fetch(for: .any).perform {
-    print("fetch(for:) was called")
+	print("fetch(for:) was called")
 }
 
 // log when url is accessed
 when(productService).url().performOnGet {
-    print("url accessed")
+	print("url accessed")
 }
 
 // log when url is set to nil
 when(productService).url(newValue: .value(nil)).performOnSet {
-    print("url set to nil")
+	print("url set to nil")
 }
 ```
 
@@ -228,14 +228,14 @@ There are three kind of verifications:
 Here are some example assertions:
 ```swift
 verify(productService)
-    // assert fetch(for:) was called between 1 and 5 times
-    .fetch(for: .any).called(count: .from(1, to: 5))
-    // assert checkout(with:) was called between exactly 10 times
-    .checkout(with: .any).called(count: 10)
-    // assert url property was accessed at least 2 times
-    .url().getterCalled(count: .moreOrEqual(to: 2))
-    // assert url property was never set to nil
-    .url(newValue: .value(nil)).setterCalled(count: .never)
+	// assert fetch(for:) was called between 1 and 5 times
+	.fetch(for: .any).called(count: .from(1, to: 5))
+	// assert checkout(with:) was called between exactly 10 times
+	.checkout(with: .any).called(count: 10)
+	// assert url property was accessed at least 2 times
+	.url().getterCalled(count: .moreOrEqual(to: 2))
+	// assert url property was never set to nil
+	.url(newValue: .value(nil)).setterCalled(count: .never)
 ```
 
 ### Working with non-equatable Types
@@ -249,10 +249,10 @@ In special cases, when you
 you can register your custom types with the `Matcher.register()` functions.
 Here is how to do it:
 ```swift
-// register an equtable type to the matcher because we use it in a generic function
+// register an equatable type to the matcher because we use it in a generic function
 Matcher.register(SomeEquatableType.self)
 
-// register a non-equtable type to the matcher
+// register a non-equatable type to the matcher
 Matcher.register(Product.self, match: { $0.name == $1.name })
 
 // register a meta-type to the matcher
@@ -301,4 +301,3 @@ To open the package with Xcode in "development mode", you need the `MOCKABLE_DEV
 ## License
 
 **Mockable** is made available under the MIT License. Please see the [LICENSE](https://raw.githubusercontent.com/Kolos65/Mockable/main/LICENSE) file for more details.
-
