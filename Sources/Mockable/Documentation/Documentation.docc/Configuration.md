@@ -15,7 +15,7 @@ public final class MockService: Service, Mockable {
 #endif
 ```
 
-> Since the **`MOCKING`** flag is not defined in your project by defaut, you won't be able to use mock implementations unless you configure it.
+> Since the **`MOCKING`** flag is not defined in your project by default, you won't be able to use mock implementations unless you configure it.
 
 There are many ways to define the flag depending on how your project is set up or what tool you use for build setting generation. Below you can find how to define the `MOCKING` flag in three common scenarios.
 

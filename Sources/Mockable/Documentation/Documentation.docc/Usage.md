@@ -170,10 +170,10 @@ In special cases, when you
 you can register your custom types with the `Matcher.register()` functions.
 Here is how to do it:
 ```swift
-// register an equtable type to the matcher because we use it in a generic function
+// register an equatable type to the matcher because we use it in a generic function
 Matcher.register(SomeEquatableType.self)
 
-// register a non-equtable type to the matcher
+// register a non-equatable type to the matcher
 Matcher.register(Product.self, match: { $0.name == $1.name })
 
 // register a meta-type to the matcher
