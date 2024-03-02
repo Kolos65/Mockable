@@ -10,5 +10,6 @@ enum Constants {
     static let baseProtocolName = "Mockable"
     static let parameterWrapperName = "Parameter"
     static let genericParameterWrapper = "GenericValue"
+    static let scopeEnumName = "MockerScope"
     static let compileCondition = "MOCKING"
 }

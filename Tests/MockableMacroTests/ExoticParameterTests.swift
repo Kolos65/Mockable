@@ -38,7 +38,7 @@ final class ExoticParameterTests: MockableMacroTestCase {
                 func verify(with assertion: @escaping MockableAssertion) -> VerifyBuilder {
                     .init(mocker: mocker, assertion: assertion)
                 }
-                func reset(_ scopes: Set<Scope> = .all) {
+                func reset(_ scopes: Set<MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
                 init() {
@@ -124,7 +124,7 @@ final class ExoticParameterTests: MockableMacroTestCase {
                 func verify(with assertion: @escaping MockableAssertion) -> VerifyBuilder {
                     .init(mocker: mocker, assertion: assertion)
                 }
-                func reset(_ scopes: Set<Scope> = .all) {
+                func reset(_ scopes: Set<MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
                 init() {
@@ -210,7 +210,7 @@ final class ExoticParameterTests: MockableMacroTestCase {
                 func verify(with assertion: @escaping MockableAssertion) -> VerifyBuilder {
                     .init(mocker: mocker, assertion: assertion)
                 }
-                func reset(_ scopes: Set<Scope> = .all) {
+                func reset(_ scopes: Set<MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
                 init() {
