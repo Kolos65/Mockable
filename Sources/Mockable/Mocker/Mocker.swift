@@ -93,8 +93,8 @@ public class Mocker<T: Mockable> {
     /// Resets the state of the mocker.
     ///
     /// - Parameter scopes: The set of scopes to reset (given, effect, verify).
-    public func reset(scopes: Set<Scope>) {
-        Scope.allCases.forEach { scope in
+    public func reset(scopes: Set<MockerScope>) {
+        MockerScope.allCases.forEach { scope in
             guard scopes.contains(scope) else { return }
             switch scope {
             case .given:

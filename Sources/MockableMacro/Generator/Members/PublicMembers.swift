@@ -52,7 +52,9 @@ struct PublicMembers {
     }
     var reset: MemberBlockItemSyntax {
         let declaration = DeclSyntax(
-            stringLiteral: "\(modifier)func reset(_ scopes: Set<Scope> = .all) { mocker.reset(scopes: scopes) }"
+            stringLiteral: """
+            \(modifier)func reset(_ scopes: Set<\(Constants.scopeEnumName)> = .all) { mocker.reset(scopes: scopes) }
+            """
         )
         return .init(decl: declaration)
     }
