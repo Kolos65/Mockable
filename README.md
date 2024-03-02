@@ -47,9 +47,9 @@ the generated code will always be at the same scope as the protocol it is attach
 
 To solve this, the macro expansion is enclosed in a pre-defined compile-time flag called **`MOCKING`** that can be leveraged to exclude generated mock implementations from release builds.
 
-> ⚠️ Since the **`MOCKING`** flag is not defined in your project by defaut, you won't be able to use mock implementations unless you configure it.
+> ⚠️ Since the **`MOCKING`** flag is not defined in your project by default, you won't be able to use mock implementations unless you configure it.
 
-### When using framework modules or a non-mudular project:
+### When using framework modules or a non-modular project:
 Define the flag in your target's build settings for debug build configuration(s):
 1. Open your **Xcode project**.
 2. Go to your target's **Build Settings**.
@@ -249,10 +249,10 @@ In special cases, when you
 you can register your custom types with the `Matcher.register()` functions.
 Here is how to do it:
 ```swift
-// register an equtable type to the matcher because we use it in a generic function
+// register an equatable type to the matcher because we use it in a generic function
 Matcher.register(SomeEquatableType.self)
 
-// register a non-equtable type to the matcher
+// register a non-equatable type to the matcher
 Matcher.register(Product.self, match: { $0.name == $1.name })
 
 // register a meta-type to the matcher
