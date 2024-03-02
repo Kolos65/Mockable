@@ -52,4 +52,16 @@ final class VerifyTests: XCTestCase {
             .name().getterCalled(count: 2)
             .name().setterCalled(count: .once)
     }
+
+    func test_givenGenericParamAndReturnFunc_whenVerifyUsed_OnlyParamIsInferred() {
+        given(mock)
+            .retrieveItem(item: Parameter<Int>.any)
+            .willReturn(0)
+
+        let _: Int = mock.retrieveItem(item: 0)
+
+        verify(mock)
+            .retrieveItem(item: Parameter<Int>.any)
+            .called(count: .atLeastOnce)
+    }
 }

@@ -240,4 +240,14 @@ final class GivenTests: XCTestCase {
         XCTAssertEqual(mock.update(products: [.test]), 2)
         XCTAssertEqual(mock.update(products: [.test]), 3)
     }
+
+    func test_givenGenericParamAndReturnFunc_whenValueGiven_genericsAreInferred() {
+        given(mock)
+            .retrieveItem(item: Parameter<Int>.any)
+            .willReturn(1234)
+
+        let result: Int = mock.retrieveItem(item: 0)
+
+        XCTAssertEqual(result, 1234)
+    }
 }
