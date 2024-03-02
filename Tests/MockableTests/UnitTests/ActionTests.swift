@@ -114,4 +114,20 @@ final class ActionTests: XCTestCase {
         XCTAssertTrue(secondCalled)
         XCTAssertFalse(thirdCalled)
     }
+
+    func test_givenGenericParamAndReturnFunc_whenActionUsed_onlyParamIsInfered() {
+        var called = false
+
+        given(mock)
+            .retrieveItem(item: Parameter<Int>.any)
+            .willReturn(0)
+
+        when(mock)
+            .retrieveItem(item: Parameter<Int>.any)
+            .perform { called = true }
+
+        let _: Int = mock.retrieveItem(item: 0)
+
+        XCTAssertTrue(called)
+    }
 }

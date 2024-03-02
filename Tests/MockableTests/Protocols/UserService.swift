@@ -34,4 +34,5 @@ protocol UserService {
     func getUserAndValue<Value>(for id: UUID, value: Value) -> (User, Value)
     func delete<T>(for value: T) -> Int
     func retrieve<V>() -> V
+    func retrieveItem<T, V>(item: T) -> V
 }
