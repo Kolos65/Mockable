@@ -6,9 +6,30 @@ on:
       - '*'
 
 jobs:
+  build:
+    name: Release build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-13]
+    steps:          
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Swift
+        uses: swift-actions/setup-swift@v1
+        with:
+          swift-version: '5.9'
+
+      - name: Build for release
+        run: |
+          Scripts/build.sh
   test:
-    name: Build Package and Run Tests
-    runs-on: macOS-13
+    name: Test on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-13]
     steps:          
       - name: Checkout code
         uses: actions/checkout@v4
