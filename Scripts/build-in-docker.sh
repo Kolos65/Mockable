@@ -8,4 +8,4 @@ docker run --rm \
     -e MOCKABLE_DEV='false' \
     swift:5.9 \
     /bin/bash -c \
-    "swift package fetch && swift build --configuration release"
+    "swift package fetch && swift build release"

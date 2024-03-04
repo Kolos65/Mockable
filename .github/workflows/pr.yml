@@ -21,7 +21,7 @@ jobs:
         with:
           swift-version: '5.9'
 
-      - name: Build for release
+      - name: Build
         run: |
           Scripts/build.sh
   test:
