@@ -67,7 +67,7 @@ In your module's package manifest under the target definition, you can define th
 )
 ```
 
-### When using XcodeGen:
+### When using [XcodeGen](https://github.com/yonaskolb/XcodeGen):
 Define the flag in your **XcodeGen** specification:
 ```yml
 settings:
@@ -78,6 +78,26 @@ settings:
 ```
 
 Read the [configuration guide](https://kolos65.github.io/Mockable/documentation/mockable/configuration/) of the documentation for more details on how to setup the **`MOCKING`** flag in your project.
+
+### When using [Tuist](https://tuist.io/):
+
+Add the dependency to your project's `Package.swift` and then include it as a dependency of your target:
+
+```swift
+.target(
+        name: "MyTarget",
+        // ... Target attributes
+        dependencies: [
+            .external(name: "Mockable")
+        ],
+        settings: .settings(configurations: [
+            // This is important to exclude the mock implementations from release builds
+            .debug(name: .debug, settings: ["SWIFT_ACTIVE_COMPILATION_CONDITIONS": "$(inherited) MOCKING"]),
+            .release(name: .release, settings: [:])
+        ])
+    )
+```
+
 
 ## Usage
 
