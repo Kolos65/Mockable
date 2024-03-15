@@ -19,6 +19,7 @@ protocol UserService {
     // MARK: Properties
 
     var name: String { get set }
+    var optional: String? { get set }
 
     // MARK: Functions
 

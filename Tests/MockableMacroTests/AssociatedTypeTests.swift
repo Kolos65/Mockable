@@ -45,6 +45,9 @@ final class AssociatedTypeTests: MockableMacroTestCase {
                 }
                 init() {
                 }
+                init(strict: Bool) {
+                    mocker.strict = strict
+                }
                 func foo(item: Item) -> Item {
                     let member: Member = .m1_foo(item: .value(item))
                     return try! mocker.mock(member) { producer in
@@ -133,6 +136,9 @@ final class AssociatedTypeTests: MockableMacroTestCase {
                 }
                 init() {
                 }
+                init(strict: Bool) {
+                    mocker.strict = strict
+                }
                 func foo(item: Item) -> Item {
                     let member: Member = .m1_foo(item: .value(item))
                     return try! mocker.mock(member) { producer in
@@ -220,6 +226,9 @@ final class AssociatedTypeTests: MockableMacroTestCase {
                     mocker.reset(scopes: scopes)
                 }
                 init() {
+                }
+                init(strict: Bool) {
+                    mocker.strict = strict
                 }
                 func foo(item: Item) -> Item {
                     let member: Member = .m1_foo(item: .value(item))

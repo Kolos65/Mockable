@@ -26,6 +26,9 @@ public class Mocker<T: Mockable> {
     /// Array to store invocations of members.
     var invocations = [Member]()
 
+    /// defines if the mocker behaves in strict mode or not
+    public var strict = false
+
     /// A serial dispatch queue for thread safety when handling invocations.
     var queue = DispatchQueue(label: "com.mockable.invocations", qos: .userInteractive)
 
@@ -163,6 +166,66 @@ public class Mocker<T: Mockable> {
         fatalError(message)
     }
 
+    /// Mocks an optional member, performing associated actions and providing the expected return value.
+    ///
+    /// - Parameters:
+    ///   - member: The member to mock.
+    ///   - producerResolver: A closure resolving the produced value.
+    /// - Returns: The expected return value.
+    @discardableResult
+    public func mock<V>(_ member: Member, producerResolver: (Any) throws -> V?) throws -> V? {
+        addInvocation(for: member)
+        performActions(for: member)
+
+        let candidates = returns[member]?.filter {
+            member.match($0.member)
+        }
+        let others = returns[member]?.filter {
+            !member.match($0.member)
+        }
+
+        guard var candidates = candidates, !candidates.isEmpty else {
+            if strict {
+                let message = notMockedMessage(member, value: V.self)
+                fatalError(message)
+            } else {
+                return nil
+            }
+        }
+
+        for index in candidates.indices {
+            let match = candidates[index]
+            let removeMatch: () -> Void = {
+                candidates.remove(at: index)
+                let updated = candidates.isEmpty ? [match] : candidates
+                self.returns[member] = (others ?? []) + updated
+            }
+            switch match.returnValue {
+            case .return(let value):
+                guard let value = value as? V else { continue }
+                removeMatch()
+                return value
+            case .throw(let error):
+                removeMatch()
+                throw error
+            case .produce(let producer):
+                do {
+                    let value = try producerResolver(producer)
+                    removeMatch()
+                    return value
+                } catch ProducerCastError.typeMismatch {
+                    continue
+                } catch {
+                    removeMatch()
+                    throw error
+                }
+            }
+        }
+
+        let message = genericNotMockedMessage(member, value: V.self)
+        fatalError(message)
+    }
+
     /// Mocks a void member, performing associated actions.
     ///
     /// - Parameters:
@@ -173,7 +236,13 @@ public class Mocker<T: Mockable> {
         addInvocation(for: member)
         performActions(for: member)
 
-        guard var candidates = returns[member], !returns.isEmpty else { return }
+        guard var candidates = returns[member], !returns.isEmpty else {
+            if strict {
+                let message = notMockedVoidMessage(member)
+                fatalError(message)
+            }
+            return
+        }
         let matchIndex = candidates.firstIndex {
             member.match($0.member)
         }
@@ -194,6 +263,13 @@ public class Mocker<T: Mockable> {
 }
 
 extension Mocker {
+    private func notMockedVoidMessage(_ member: Member) -> String {
+        """
+        Member "\(member.name)" with parameter conditions: \(member.parameters) was not mocked. \
+        Use "given" with "justRuns" to mock a void returning member.
+        """
+    }
+    
     private func notMockedMessage<V>(_ member: Member, value: V.Type) -> String {
         """
         No return value found for member "\(member.name)" of "\(T.self)" \

@@ -45,6 +45,9 @@ final class PropertyRequirementTests: MockableMacroTestCase {
                 }
                 init() {
                 }
+                init(strict: Bool) {
+                    mocker.strict = strict
+                }
                 var computedInt: Int {
                     get {
                         let member: Member = .m1_computedInt
@@ -156,6 +159,9 @@ final class PropertyRequirementTests: MockableMacroTestCase {
                     mocker.reset(scopes: scopes)
                 }
                 init() {
+                }
+                init(strict: Bool) {
+                    mocker.strict = strict
                 }
                 var mutableInt: Int {
                     get {
@@ -286,6 +292,9 @@ final class PropertyRequirementTests: MockableMacroTestCase {
                     mocker.reset(scopes: scopes)
                 }
                 init() {
+                }
+                init(strict: Bool) {
+                    mocker.strict = strict
                 }
                 var throwingProperty: Int {
                     get throws {

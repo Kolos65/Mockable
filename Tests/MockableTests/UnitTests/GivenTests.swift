@@ -250,4 +250,49 @@ final class GivenTests: XCTestCase {
 
         XCTAssertEqual(result, 1234)
     }
+
+    func test_givenStrictVoidFunc() throws {
+        let mock = MockUserService<String>(strict: true)
+        given(mock)
+            .print()
+            .justRuns()
+
+        try mock.print()
+
+        verify(mock)
+            .print()
+            .called(count: 1)
+    }
+
+//    This test should throw a fatal error. Fatal errors are notoriously hard to catch.
+//    func test_givenStrictVoidFunc_missing_mock() throws {
+//        let mock = MockUserService<String>(strict: true)
+//
+//        try mock.print()
+//
+//        verify(mock)
+//            .print()
+//            .called(count: 1)
+//    }
+
+    func test_givenNonStrictOptional() throws {
+        let mock = MockUserService<String>()
+
+        XCTAssertNil(mock.optional)
+
+        verify(mock)
+            .optional()
+            .getterCalled(count: 1)
+    }
+
+//    This test should throw a fatal error. Fatal errors are notoriously hard to catch.
+//    func test_givenStrictOptional() throws {
+//        let mock = MockUserService<String>(strict: true)
+//
+//        XCTAssertNil(mock.optional)
+//
+//        verify(mock)
+//            .optional()
+//            .getterCalled(count: 1)
+//    }
 }

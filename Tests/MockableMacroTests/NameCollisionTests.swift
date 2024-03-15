@@ -45,6 +45,9 @@ final class NameCollisionTests: MockableMacroTestCase {
                 }
                 init() {
                 }
+                init(strict: Bool) {
+                    mocker.strict = strict
+                }
                 func fetchData(for name: Int) -> String {
                     let member: Member = .m1_fetchData(for: .value(name))
                     return try! mocker.mock(member) { producer in
@@ -152,6 +155,9 @@ final class NameCollisionTests: MockableMacroTestCase {
                     mocker.reset(scopes: scopes)
                 }
                 init() {
+                }
+                init(strict: Bool) {
+                    mocker.strict = strict
                 }
                 func fetchData(forA name: String) -> String {
                     let member: Member = .m1_fetchData(forA: .value(name))

@@ -43,6 +43,9 @@ final class GenericFunctionTests: MockableMacroTestCase {
                 }
                 init() {
                 }
+                init(strict: Bool) {
+                    mocker.strict = strict
+                }
                 func foo<T>(item: (Array<[(Set<T>, String)]>, Int)) {
                     let member: Member = .m1_foo(item: .generic(item))
                     try! mocker.mock(member) { producer in
@@ -128,6 +131,9 @@ final class GenericFunctionTests: MockableMacroTestCase {
                     mocker.reset(scopes: scopes)
                 }
                 init() {
+                }
+                init(strict: Bool) {
+                    mocker.strict = strict
                 }
                 func genericFunc<T, V>(item: T) -> V {
                     let member: Member = .m1_genericFunc(item: .generic(item))
@@ -218,6 +224,9 @@ final class GenericFunctionTests: MockableMacroTestCase {
                     mocker.reset(scopes: scopes)
                 }
                 init() {
+                }
+                init(strict: Bool) {
+                    mocker.strict = strict
                 }
                 func method1<T: Hashable, E, C, I>(
                         p1: T, p2: E, p3: C, p4: I

@@ -43,6 +43,9 @@ final class ExoticParameterTests: MockableMacroTestCase {
                 }
                 init() {
                 }
+                init(strict: Bool) {
+                    mocker.strict = strict
+                }
                 func modifyValue(_ value: inout Int) {
                     let member: Member = .m1_modifyValue(.value(value))
                     try! mocker.mock(member) { producer in
@@ -129,6 +132,9 @@ final class ExoticParameterTests: MockableMacroTestCase {
                 }
                 init() {
                 }
+                init(strict: Bool) {
+                    mocker.strict = strict
+                }
                 func printValues(_ values: Int...) {
                     let member: Member = .m1_printValues(.value(values))
                     try! mocker.mock(member) { producer in
@@ -214,6 +220,9 @@ final class ExoticParameterTests: MockableMacroTestCase {
                     mocker.reset(scopes: scopes)
                 }
                 init() {
+                }
+                init(strict: Bool) {
+                    mocker.strict = strict
                 }
                 func execute(operation: @escaping () throws -> Void) {
                     let member: Member = .m1_execute(operation: .value(operation))

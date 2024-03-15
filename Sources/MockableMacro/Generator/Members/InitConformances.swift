@@ -35,19 +35,27 @@ struct InitConformances {
         }
         let hasDefault = inits.contains {
             $0.signature.effectSpecifiers == nil
-            && $0.signature.parameterClause.parameters.isEmpty
-            && $0.optionalMark == nil
-            && $0.genericWhereClause == nil
-            && $0.genericParameterClause == nil
+                && $0.signature.parameterClause.parameters.isEmpty
+                && $0.optionalMark == nil
+                && $0.genericWhereClause == nil
+                && $0.genericParameterClause == nil
         }
+        let strictInit = InitializerDeclSyntax(
+            modifiers: protocolDeclaration.modifiers,
+            signature: .init(parameterClause: .init(parameters: [.init(
+                firstName: "strict",
+                type: IdentifierTypeSyntax(name: "Bool")
+            )])),
+            body: .init(statements: [.init(stringLiteral: "mocker.strict = strict")])
+        )
         guard hasDefault else {
             let defaultInit = InitializerDeclSyntax(
                 modifiers: protocolDeclaration.modifiers,
                 signature: .init(parameterClause: .init(parameters: [])),
                 body: .init(statements: [])
             )
-            return initConformances + [.init(decl: defaultInit)]
+            return initConformances + [.init(decl: defaultInit), .init(decl: strictInit)]
         }
-        return initConformances
+        return initConformances + [.init(decl: strictInit)]
     }
 }

@@ -46,6 +46,9 @@ final class FunctionEffectTests: MockableMacroTestCase {
                 }
                 init() {
                 }
+                init(strict: Bool) {
+                    mocker.strict = strict
+                }
                 func returnsAndThrows() throws -> String {
                     let member: Member = .m1_returnsAndThrows
                     return try mocker.mock(member) { producer in
@@ -152,6 +155,9 @@ final class FunctionEffectTests: MockableMacroTestCase {
                 }
                 init() {
                 }
+                init(strict: Bool) {
+                    mocker.strict = strict
+                }
                 func execute(operation: @escaping () throws -> Void) rethrows {
                     let member: Member = .m1_execute(operation: .value(operation))
                     try! mocker.mock(member) { producer in
@@ -241,6 +247,9 @@ final class FunctionEffectTests: MockableMacroTestCase {
                     mocker.reset(scopes: scopes)
                 }
                 init() {
+                }
+                init(strict: Bool) {
+                    mocker.strict = strict
                 }
                 func asyncFunction() async {
                     let member: Member = .m1_asyncFunction

@@ -60,3 +60,10 @@ public struct ThrowingFunctionReturnBuilder<T: Mockable, ParentBuilder: EffectBu
         return .init(mocker: mocker)
     }
 }
+
+extension ThrowingFunctionReturnBuilder where ReturnType == () {
+    @discardableResult
+    public func justRuns() -> ParentBuilder {
+        willReturn(())
+    }
+}

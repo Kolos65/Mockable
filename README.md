@@ -286,6 +286,34 @@ If you see an error during tests like:
 
 Remember to add the noted type to your `Matcher` using the `register()` function.
 
+## Strict Mode
+Mockable supports a strict mode which requires every optional property and void returning member to be mocked instead of implicitly returning nil or just running.
+This can be enabled by calling the `init(strict: Bool)` constructor of the mock.
+
+Here is an example how to do this:
+```swift
+func testProductService_strict() async throws {
+    let productService = MockProductService(strict: true)
+
+    // given(productService)
+    //     .url.willReturn(nil)
+
+    // This will throw a fatal error in strict mode, 
+    // as the result of url is not mocked
+    XCTAssertNil(productService.url)
+
+    // given(productService)
+    //     .checkout(with: .any)
+    //     .justRuns()
+
+    // This will throw a fatal error in strict mode,
+    // as the method call was not mocked.
+    productSerivce.checkout(with: Product(name: "iPhone 15 Pro"))
+}
+```
+
+Mocking methods returning void can be done by calling `.willReturn(())` or by using the shorthand `.justRuns()`.
+
 ## Supported Features
 
 - [x] **Zero-boilerplate** mock generation</br>

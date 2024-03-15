@@ -47,6 +47,9 @@ final class InitRequirementTests: MockableMacroTestCase {
                 }
                 init(name: String) {
                 }
+                init(strict: Bool) {
+                    mocker.strict = strict
+                }
                 enum Member: Matchable, CaseIdentifiable {
                     func match(_ other: Member) -> Bool {
                         switch (self, other) {
@@ -126,6 +129,9 @@ final class InitRequirementTests: MockableMacroTestCase {
                 init(name value: String, _ index: Int) {
                 }
                 init() {
+                }
+                init(strict: Bool) {
+                    mocker.strict = strict
                 }
                 enum Member: Matchable, CaseIdentifiable {
                     func match(_ other: Member) -> Bool {
