@@ -35,7 +35,17 @@ struct FunctionConformances {
 
 extension FunctionConformances {
     private func implement(_ function: FunctionDeclaration) throws -> FunctionDeclSyntax {
-        var decl = function.syntax.trimmed
+        var attributes = function.syntax.attributes.trimmed
+        attributes.trailingTrivia = .newline
+        var decl = FunctionDeclSyntax(
+            attributes: attributes,
+            modifiers: protocolDeclaration.modifiers.trimmed,
+            funcKeyword: function.syntax.funcKeyword.trimmed,
+            name: function.syntax.name.trimmed,
+            genericParameterClause: function.syntax.genericParameterClause?.trimmed,
+            signature: function.syntax.signature.trimmed,
+            genericWhereClause: function.syntax.genericWhereClause?.trimmed
+        )
         decl.modifiers = protocolDeclaration.modifiers
         for parameter in decl.signature.parameterClause.parameters {
             guard parameter.type.as(FunctionTypeSyntax.self) == nil else {

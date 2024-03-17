@@ -26,11 +26,18 @@ struct InitConformances {
 
     var members: [MemberBlockItemSyntax] {
         let initConformances: [MemberBlockItemSyntax] = inits.map {
-            var decl = $0
-            decl.leadingTrivia = ""
-            decl.modifiers = protocolDeclaration.modifiers
-            decl.body = .init(statements: [])
-            decl.trailingTrivia = ""
+            var attributes = $0.attributes.trimmed
+            attributes.trailingTrivia = .newline
+            let decl = InitializerDeclSyntax(
+                attributes: attributes,
+                modifiers: protocolDeclaration.modifiers,
+                initKeyword: $0.initKeyword.trimmed,
+                optionalMark: $0.optionalMark?.trimmed,
+                genericParameterClause: $0.genericParameterClause?.trimmed,
+                signature: $0.signature.trimmed,
+                genericWhereClause: $0.genericWhereClause?.trimmed,
+                body: .init(statements: [])
+            )
             return .init(decl: decl)
         }
         let hasDefault = inits.contains {

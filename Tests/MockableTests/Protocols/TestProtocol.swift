@@ -63,4 +63,15 @@ protocol TestProtocol {
     init?() async throws
     init(index: Int)
     init(name value: String, index: Int)
+
+    // MARK: Attributes
+
+    @available(iOS 15, *)
+    init(attributed: String)
+
+    @available(iOS 15, *)
+    var attributedProp: Int { get }
+
+    @available(iOS 15, *)
+    func attributedTest()
 }
