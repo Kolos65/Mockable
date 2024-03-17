@@ -138,10 +138,14 @@ extension BuilderStructs {
             let propType = try $0.trimmedType.trimmedDescription
             let propName = try $0.name
             let returnType = try builderReturnType(for: $0, kind: kind)
+            var attributes = $0.syntax.attributes.trimmedDescription
+            if !$0.syntax.attributes.isEmpty {
+                attributes.append("\n")
+            }
             let signature = if $0.isComputed || kind == .return {
-                "\(modifier)var \(propName): \(returnType)"
+                "\(attributes)\(modifier)var \(propName): \(returnType)"
             } else {
-                "\(modifier)func \(propName)(newValue: Parameter<\(propType)> = .any) -> \(returnType)"
+                "\(attributes)\(modifier)func \(propName)(newValue: Parameter<\(propType)> = .any) -> \(returnType)"
             }
             var setterParam = ""
             if let setterEnumName = try $0.setterEnumName, !$0.isComputed && kind != .return {
@@ -173,7 +177,10 @@ extension BuilderStructs {
                 returnType,
                 whereClause
             ]
-            let signature = components.compactMap { $0 }.joined(separator: " ")
+            var signature = components.compactMap { $0 }.joined(separator: " ")
+            var attributes = $0.syntax.attributes.trimmed
+            attributes.trailingTrivia = .newline
+            signature = attributes.description + signature
             let assertionParam = kind == .verify ? ", assertion: assertion" : ""
             return "\(signature) { .init(mocker, kind: \(memberSpecifier(for: $0))\(assertionParam)) }"
         }

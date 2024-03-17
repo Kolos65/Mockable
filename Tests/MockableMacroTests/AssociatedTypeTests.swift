@@ -1,5 +1,5 @@
 //
-//  ProtocolRequirementTests.swift
+//  AssociatedTypeTests.swift
 //
 //
 //  Created by Kolos Foltanyi on 2023. 11. 21..

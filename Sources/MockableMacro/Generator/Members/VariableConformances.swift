@@ -37,7 +37,9 @@ extension VariableConformances {
     private func implement(_ variable: VariableDeclaration) throws -> VariableDeclSyntax {
         let baseModifiers = protocolDeclaration.modifiers
         let modifiers = baseModifiers.isEmpty ? "" : baseModifiers.trimmedDescription.appending(" ")
+        let attributes = variable.syntax.attributes.trimmedDescription
         let declaration = """
+        \(attributes)
         \(modifiers)var \(try variable.name): \(try variable.type.trimmedDescription) {
             \(try variable.getAccessor.trimmedDescription) {
                 let member: Member = .\(try variable.getterEnumName)
