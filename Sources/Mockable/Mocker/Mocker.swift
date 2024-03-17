@@ -118,24 +118,23 @@ public class Mocker<T: Mockable> {
         addInvocation(for: member)
         performActions(for: member)
 
-        let candidates = returns[member]?.filter {
-            member.match($0.member)
-        }
-        let others = returns[member]?.filter {
-            !member.match($0.member)
-        }
+        let matchCount = returns[member]?
+            .filter { member.match($0.member) }
+            .count ?? 0
 
-        guard var candidates = candidates, !candidates.isEmpty else {
+        guard var candidates = returns[member], matchCount != 0  else {
             let message = notMockedMessage(member, value: V.self)
             fatalError(message)
         }
 
         for index in candidates.indices {
             let match = candidates[index]
+            guard member.match(match.member) else { continue }
+
             let removeMatch: () -> Void = {
+                guard matchCount > 1 else { return }
                 candidates.remove(at: index)
-                let updated = candidates.isEmpty ? [match] : candidates
-                self.returns[member] = (others ?? []) + updated
+                self.returns[member] = candidates
             }
             switch match.returnValue {
             case .return(let value):
