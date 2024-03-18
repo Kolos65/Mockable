@@ -82,8 +82,8 @@ conditional_returns_on_newline:
 control_statement:
   severity: error
 cyclomatic_complexity:
-  warning: 7
-  error: 8
+  warning: 8
+  error: 9
   ignores_case_statements: true
 empty_parameters:
   severity: error

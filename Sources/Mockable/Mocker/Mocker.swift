@@ -115,6 +115,34 @@ public class Mocker<T: Mockable> {
     /// - Returns: The expected return value.
     @discardableResult
     public func mock<V>(_ member: Member, producerResolver: (Any) throws -> V) throws -> V {
+        return try tryMock(member: member, producerResolver: producerResolver)
+    }
+
+    /// Mocks a void member, performing associated actions.
+    ///
+    /// - Parameters:
+    ///   - member: The member to mock.
+    ///   - producerResolver: A closure resolving the produced value.
+    /// - Throws: An error if the mock encounters an issue.
+    public func mock(
+        _ member: Member, producerResolver: (Any) throws -> Void
+    ) throws {
+        return try tryMock(
+            member: member,
+            producerResolver: producerResolver,
+            fallback: .value(())
+        )
+    }
+}
+
+// MARK: - Helpers
+
+extension Mocker {
+    private func tryMock<V>(
+        member: Member,
+        producerResolver: (Any) throws -> V,
+        fallback: MockerFallback<V> = .none
+    ) throws -> V {
         addInvocation(for: member)
         performActions(for: member)
 
@@ -122,9 +150,13 @@ public class Mocker<T: Mockable> {
             .filter { member.match($0.member) }
             .count ?? 0
 
-        guard var candidates = returns[member], matchCount != 0  else {
-            let message = notMockedMessage(member, value: V.self)
-            fatalError(message)
+        guard var candidates = returns[member], matchCount != 0 else {
+            if case .value(let value) = fallback {
+                return value
+            } else {
+                let message = notMockedMessage(member, value: V.self)
+                fatalError(message)
+            }
         }
 
         for index in candidates.indices {
@@ -161,36 +193,9 @@ public class Mocker<T: Mockable> {
         let message = genericNotMockedMessage(member, value: V.self)
         fatalError(message)
     }
-
-    /// Mocks a void member, performing associated actions.
-    ///
-    /// - Parameters:
-    ///   - member: The member to mock.
-    ///   - producerResolver: A closure resolving the produced value.
-    /// - Throws: An error if the mock encounters an issue.
-    public func mock(_ member: Member, producerResolver: (Any) throws -> Void) throws {
-        addInvocation(for: member)
-        performActions(for: member)
-
-        guard var candidates = returns[member], !returns.isEmpty else { return }
-        let matchIndex = candidates.firstIndex {
-            member.match($0.member)
-        }
-        guard let matchIndex else { return }
-
-        let match = candidates[matchIndex]
-        candidates.remove(at: matchIndex)
-
-        returns[member] = candidates.isEmpty ? [match] : candidates
-
-        switch match.returnValue {
-        case .return: return
-        case .throw(let error): throw error
-        case .produce(let producer):
-            return try producerResolver(producer)
-        }
-    }
 }
+
+// MARK: - Error Messages
 
 extension Mocker {
     private func notMockedMessage<V>(_ member: Member, value: V.Type) -> String {
