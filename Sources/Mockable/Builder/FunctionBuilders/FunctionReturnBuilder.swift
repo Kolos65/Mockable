@@ -50,3 +50,12 @@ public struct FunctionReturnBuilder<T: Mockable, ParentBuilder: EffectBuilder<T>
         return .init(mocker: mocker)
     }
 }
+
+extension FunctionReturnBuilder where ReturnType == Void {
+    /// Specifies that the void function will return normally when the mocked member is called.
+    @discardableResult
+    public func willReturn() -> ParentBuilder {
+        mocker.given(member, returnValue: .return(()))
+        return .init(mocker: mocker)
+    }
+}
