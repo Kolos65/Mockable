@@ -75,3 +75,37 @@ targets:
         product: MockableTest
         
 ```
+
+### Using Tuist
+
+Add Mockable to your `Package.swift` file:
+
+```swift
+let package = Package(
+    ...
+    dependencies: [
+        .package(url: "https://github.com/Kolos65/Mockable", from: "0.0.1"),
+    ]
+)
+```
+
+Then edit your project to include the `MOCKING` Swift compiler directive for the configuration you'd like to generate mocks for:
+
+```swift
+let project = Project(
+  ...
+  settings: .settings(
+                configurations: [
+                    .debug(
+                        name: "Debug",
+                        settings: ["SWIFT_ACTIVE_COMPILATION_CONDITIONS": "$(inherited) MOCKING"],
+                        xcconfig: nil
+                    ),
+                    .release(name: "Release", settings: [:], xcconfig: nil),
+                ]
+            )
+  ...
+)
+```
+
+After that, run `tuist install` to install the dependencies, and `tuist generate` to generate an open the Xcode project. Make sure the generated project contains the `MOCKING` Swift compiler directive for the configuration you'd like to generate mocks for.
