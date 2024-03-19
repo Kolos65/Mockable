@@ -117,22 +117,6 @@ public class Mocker<T: Mockable> {
     public func mock<V>(_ member: Member, producerResolver: (Any) throws -> V) throws -> V {
         return try tryMock(member: member, producerResolver: producerResolver)
     }
-
-    /// Mocks a void member, performing associated actions.
-    ///
-    /// - Parameters:
-    ///   - member: The member to mock.
-    ///   - producerResolver: A closure resolving the produced value.
-    /// - Throws: An error if the mock encounters an issue.
-    public func mock(
-        _ member: Member, producerResolver: (Any) throws -> Void
-    ) throws {
-        return try tryMock(
-            member: member,
-            producerResolver: producerResolver,
-            fallback: .value(())
-        )
-    }
 }
 
 // MARK: - Helpers
