@@ -19,15 +19,33 @@ public class Mocker<T: Mockable> {
     /// The associated type representing an action to be performed on a member.
     public typealias Action = T.Action
 
-    /// Dictionary to store expected return values for each member.
-    var returns = [Member: [Return]]()
-    /// Dictionary to store actions to be performed on each member.
-    var actions = [Member: [Action]]()
-    /// Array to store invocations of members.
-    var invocations = [Member]()
+    /// A serial dispatch queue for thread safety when accessing mutable properties.
+    let queue = DispatchQueue(label: "com.mockable.returns")
 
-    /// A serial dispatch queue for thread safety when handling invocations.
-    var queue = DispatchQueue(label: "com.mockable.invocations", qos: .userInteractive)
+    /// Dictionary to store expected return values for each member.
+    private var _returns = [Member: [Return]]()
+    /// Dictionary to store actions to be performed on each member.
+    private var _actions = [Member: [Action]]()
+    /// Array to store invocations of members.
+    private var _invocations = [Member]()
+
+    /// Synchornized access to return values
+    var returns: [Member: [Return]] {
+        get { queue.sync { _returns } }
+        set { queue.sync { _returns = newValue } }
+    }
+
+    /// Synchornized access to actions
+    var actions: [Member: [Action]] {
+        get { queue.sync { _actions } }
+        set { queue.sync { _actions = newValue } }
+    }
+
+    /// Synchornized access to invocations
+    var invocations: [Member] {
+        get { queue.sync { _invocations } }
+        set { queue.sync { _invocations = newValue } }
+    }
 
     /// Initializes a new instance of `Mocker`.
     public init() {}
@@ -36,7 +54,7 @@ public class Mocker<T: Mockable> {
     ///
     /// - Parameter member: The member for which the invocation is added.
     public func addInvocation(for member: Member) {
-        queue.sync { invocations.append(member) }
+        invocations.append(member)
     }
 
     /// Performs actions associated with a member.
