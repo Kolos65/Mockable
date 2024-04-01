@@ -1,7 +1,7 @@
-</br>
-<img width="300" src="https://github.com/Kolos65/Mockable/assets/26504214/4e19e4fc-8453-4320-a061-e672dcc95023"/>
-</br>
-</br>
+
+<p>
+<img width="300" src="https://github.com/Kolos65/Mockable/assets/26504214/4e19e4fc-8453-4320-a061-e672dcc95023" alt="@Mockable"/>
+</p>
 
 **Mockable** is a [Swift macro](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/macros/) driven testing framework that provides automatic mock implementations for your protocols. It offers an intuitive **declarative syntax** that simplifies the process of mocking services in unit tests. The generated mock implementations can be excluded from release builds using compile conditions. 
 
@@ -77,27 +77,27 @@ settings:
       SWIFT_ACTIVE_COMPILATION_CONDITIONS: MOCKING
 ```
 
-Read the [configuration guide](https://kolos65.github.io/Mockable/documentation/mockable/configuration/) of the documentation for more details on how to setup the **`MOCKING`** flag in your project.
-
 ### When using [Tuist](https://tuist.io/):
 
-Add the dependency to your project's `Package.swift` and then include it as a dependency of your target:
+If you use Tuist, you can define the `MOCKING` flag in your target's settings under `configurations`.  
 
 ```swift
 .target(
-        name: "MyTarget",
-        // ... Target attributes
-        dependencies: [
-            .external(name: "Mockable")
-        ],
-        settings: .settings(configurations: [
-            // This is important to exclude the mock implementations from release builds
-            .debug(name: .debug, settings: ["SWIFT_ACTIVE_COMPILATION_CONDITIONS": "$(inherited) MOCKING"]),
-            .release(name: .release, settings: [:])
-        ])
+    ...
+    settings: .settings(
+        configurations: [
+            .debug(
+                name: .debug, 
+                settings: [
+                    "SWIFT_ACTIVE_COMPILATION_CONDITIONS": "$(inherited) MOCKING"
+                ]
+            )
+        ]
     )
+)
 ```
 
+Read the [configuration guide](https://kolos65.github.io/Mockable/documentation/mockable/configuration/) of the documentation for more details on how to setup the **`MOCKING`** flag in your project.
 
 ## Usage
 

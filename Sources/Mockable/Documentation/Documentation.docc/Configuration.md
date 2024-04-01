@@ -48,6 +48,25 @@ settings:
       SWIFT_ACTIVE_COMPILATION_CONDITIONS: MOCKING
 ```
 
+## Using [Tuist](https://tuist.io/):
+
+If you use Tuist, you can define the `MOCKING` flag in your target's settings under `configurations`.  
+```swift
+.target(
+    ...
+    settings: .settings(
+        configurations: [
+            .debug(
+                name: .debug, 
+                settings: [
+                    "SWIFT_ACTIVE_COMPILATION_CONDITIONS": "$(inherited) MOCKING"
+                ]
+            )
+        ]
+    )
+)
+```
+
 ## Summary
 
 By defining the `MOCKING` condition in the debug build configuration you ensured that generated mock implementations are excluded from release builds and kept available for your unit tests that use the debug configuration to build tested targets. 
