@@ -35,10 +35,12 @@ enum NS {
     static let initializer: TokenSyntax = "init"
     static let member: TokenSyntax = "member"
     static let mock: TokenSyntax = "mock"
+    static let mockThrowing: TokenSyntax = "mockThrowing"
     static let producer: TokenSyntax = "producer"
     static let cast: TokenSyntax = "cast"
     static let addInvocation: TokenSyntax = "addInvocation"
     static let performActions: TokenSyntax = "performActions"
+    static let policy: TokenSyntax = "policy"
 
     static let _andSign: String = "&&"
     static let _init: TokenSyntax = "init"
@@ -65,6 +67,7 @@ enum NS {
     static let ActionBuilder: TokenSyntax = "ActionBuilder"
     static let VerifyBuilder: TokenSyntax = "VerifyBuilder"
     static let MockerScope: TokenSyntax = "MockerScope"
+    static let MockerPolicy: TokenSyntax = "MockerPolicy"
     static let Set: TokenSyntax = "Set"
     static let Void: TokenSyntax = "Void"
 

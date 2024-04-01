@@ -41,11 +41,14 @@ final class ExoticParameterTests: MockableMacroTestCase {
                 func reset(_ scopes: Set<MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                init() {
+                init(policy: MockerPolicy? = nil) {
+                    if let policy {
+                        mocker.policy = policy
+                    }
                 }
                 func modifyValue(_ value: inout Int) {
                     let member: Member = .m1_modifyValue(.value(value))
-                    try! mocker.mock(member) { producer in
+                    mocker.mock(member) { producer in
                         let producer = try cast(producer) as (Int) -> Void
                         return producer(value)
                     }
@@ -126,11 +129,14 @@ final class ExoticParameterTests: MockableMacroTestCase {
                 func reset(_ scopes: Set<MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                init() {
+                init(policy: MockerPolicy? = nil) {
+                    if let policy {
+                        mocker.policy = policy
+                    }
                 }
                 func printValues(_ values: Int...) {
                     let member: Member = .m1_printValues(.value(values))
-                    try! mocker.mock(member) { producer in
+                    mocker.mock(member) { producer in
                         let producer = try cast(producer) as ([Int]) -> Void
                         return producer(values)
                     }
@@ -211,11 +217,14 @@ final class ExoticParameterTests: MockableMacroTestCase {
                 func reset(_ scopes: Set<MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                init() {
+                init(policy: MockerPolicy? = nil) {
+                    if let policy {
+                        mocker.policy = policy
+                    }
                 }
                 func execute(operation: @escaping () throws -> Void) {
                     let member: Member = .m1_execute(operation: .value(operation))
-                    try! mocker.mock(member) { producer in
+                    mocker.mock(member) { producer in
                         let producer = try cast(producer) as (() throws -> Void) -> Void
                         return producer(operation)
                     }

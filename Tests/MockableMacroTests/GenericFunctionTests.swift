@@ -41,11 +41,14 @@ final class GenericFunctionTests: MockableMacroTestCase {
                 func reset(_ scopes: Set<MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                init() {
+                init(policy: MockerPolicy? = nil) {
+                    if let policy {
+                        mocker.policy = policy
+                    }
                 }
                 func foo<T>(item: (Array<[(Set<T>, String)]>, Int)) {
                     let member: Member = .m1_foo(item: .generic(item))
-                    try! mocker.mock(member) { producer in
+                    mocker.mock(member) { producer in
                         let producer = try cast(producer) as ((Array<[(Set<T>, String)]>, Int)) -> Void
                         return producer(item)
                     }
@@ -126,11 +129,14 @@ final class GenericFunctionTests: MockableMacroTestCase {
                 func reset(_ scopes: Set<MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                init() {
+                init(policy: MockerPolicy? = nil) {
+                    if let policy {
+                        mocker.policy = policy
+                    }
                 }
                 func genericFunc<T, V>(item: T) -> V {
                     let member: Member = .m1_genericFunc(item: .generic(item))
-                    return try! mocker.mock(member) { producer in
+                    return mocker.mock(member) { producer in
                         let producer = try cast(producer) as (T) -> V
                         return producer(item)
                     }
@@ -215,14 +221,17 @@ final class GenericFunctionTests: MockableMacroTestCase {
                 func reset(_ scopes: Set<MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                init() {
+                init(policy: MockerPolicy? = nil) {
+                    if let policy {
+                        mocker.policy = policy
+                    }
                 }
                 func method1<T: Hashable, E, C, I>(
                         p1: T, p2: E, p3: C, p4: I
                     ) where E: Equatable, E: Hashable, C: Codable {
                     let member: Member = .m1_method1(p1: .generic(
                             p1), p2: .generic(p2), p3: .generic(p3), p4: .generic(p4))
-                    try! mocker.mock(member) { producer in
+                    mocker.mock(member) { producer in
                         let producer = try cast(producer) as (T, E, C, I) -> Void
                         return producer(p1, p2, p3, p4)
                     }

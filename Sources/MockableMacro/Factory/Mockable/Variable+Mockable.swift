@@ -46,7 +46,7 @@ extension VariableRequirement {
     private var getterDecl: AccessorDeclSyntax {
         get throws {
             let caseSpecifier = try caseSpecifier(wrapParams: true)
-            let mockerCall = try tryMockerCall
+            let mockerCall = try mockerCall
             let body = CodeBlockSyntax(
                 statements: CodeBlockItemListSyntax {
                     memberDeclaration(caseSpecifier)
@@ -72,21 +72,14 @@ extension VariableRequirement {
         }
     }
 
-    private var tryMockerCall: TryExprSyntax {
+    private var mockerCall: ExprSyntax {
         get throws {
-            TryExprSyntax(
-                questionOrExclamationMark: try syntax.isThrowing ? nil : .exclamationMarkToken(),
-                expression: try mockerCall
-            )
-        }
-    }
-
-    private var mockerCall: FunctionCallExprSyntax {
-        get throws {
-            FunctionCallExprSyntax(
+            let call = FunctionCallExprSyntax(
                 calledExpression: MemberAccessExprSyntax(
                     base: DeclReferenceExprSyntax(baseName: NS.mocker),
-                    declName: DeclReferenceExprSyntax(baseName: NS.mock)
+                    declName: DeclReferenceExprSyntax(
+                        baseName: try syntax.isThrowing ? NS.mockThrowing : NS.mock
+                    )
                 ),
                 leftParen: .leftParenToken(),
                 arguments: LabeledExprListSyntax {
@@ -97,6 +90,11 @@ extension VariableRequirement {
                 rightParen: .rightParenToken(),
                 trailingClosure: try mockerClosure
             )
+            return if try syntax.isThrowing {
+                TryExprSyntax(expression: call).cast(ExprSyntax.self)
+            } else {
+                call.cast(ExprSyntax.self)
+            }
         }
     }
 

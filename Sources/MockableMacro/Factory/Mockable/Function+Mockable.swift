@@ -38,7 +38,7 @@ extension FunctionRequirement {
             try CodeBlockItemListSyntax {
                 try memberDeclaration
                 if syntax.isVoid {
-                    tryMockerCall
+                    mockerCall
                 } else {
                     returnStatement
                 }
@@ -66,22 +66,16 @@ extension FunctionRequirement {
     }
 
     private var returnStatement: StmtSyntax {
-        ReturnStmtSyntax(expression: tryMockerCall).cast(StmtSyntax.self)
+        ReturnStmtSyntax(expression: mockerCall).cast(StmtSyntax.self)
     }
 
-    private var tryMockerCall: ExprSyntax {
-        TryExprSyntax(
-            questionOrExclamationMark: syntax.isThrowing ? nil : .exclamationMarkToken(),
-            expression: mockerCall
-        )
-        .cast(ExprSyntax.self)
-    }
-
-    private var mockerCall: FunctionCallExprSyntax {
-        FunctionCallExprSyntax(
+    private var mockerCall: ExprSyntax {
+        let call = FunctionCallExprSyntax(
             calledExpression: MemberAccessExprSyntax(
                 base: DeclReferenceExprSyntax(baseName: NS.mocker),
-                declName: DeclReferenceExprSyntax(baseName: NS.mock)
+                declName: DeclReferenceExprSyntax(
+                    baseName: syntax.isThrowing ? NS.mockThrowing : NS.mock
+                )
             ),
             leftParen: .leftParenToken(),
             arguments: LabeledExprListSyntax {
@@ -92,6 +86,11 @@ extension FunctionRequirement {
             rightParen: .rightParenToken(),
             trailingClosure: mockerClosure
         )
+        return if syntax.isThrowing {
+            TryExprSyntax(expression: call).cast(ExprSyntax.self)
+        } else {
+            call.cast(ExprSyntax.self)
+        }
     }
 
     private var mockerClosure: ClosureExprSyntax {

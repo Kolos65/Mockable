@@ -43,11 +43,14 @@ final class AssociatedTypeTests: MockableMacroTestCase {
                 func reset(_ scopes: Set<MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                init() {
+                init(policy: MockerPolicy? = nil) {
+                    if let policy {
+                        mocker.policy = policy
+                    }
                 }
                 func foo(item: Item) -> Item {
                     let member: Member = .m1_foo(item: .value(item))
-                    return try! mocker.mock(member) { producer in
+                    return mocker.mock(member) { producer in
                         let producer = try cast(producer) as (Item) -> Item
                         return producer(item)
                     }
@@ -130,11 +133,14 @@ final class AssociatedTypeTests: MockableMacroTestCase {
                 func reset(_ scopes: Set<MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                init() {
+                init(policy: MockerPolicy? = nil) {
+                    if let policy {
+                        mocker.policy = policy
+                    }
                 }
                 func foo(item: Item) -> Item {
                     let member: Member = .m1_foo(item: .value(item))
-                    return try! mocker.mock(member) { producer in
+                    return mocker.mock(member) { producer in
                         let producer = try cast(producer) as (Item) -> Item
                         return producer(item)
                     }
@@ -217,11 +223,14 @@ final class AssociatedTypeTests: MockableMacroTestCase {
                 func reset(_ scopes: Set<MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                init() {
+                init(policy: MockerPolicy? = nil) {
+                    if let policy {
+                        mocker.policy = policy
+                    }
                 }
                 func foo(item: Item) -> Item {
                     let member: Member = .m1_foo(item: .value(item))
-                    return try! mocker.mock(member) { producer in
+                    return mocker.mock(member) { producer in
                         let producer = try cast(producer) as (Item) -> Item
                         return producer(item)
                     }
