@@ -6,10 +6,30 @@ on:
       - '*'
 
 jobs:
+  lint:
+    name: Lint Commit Messages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Node.js and NPM
+        uses: actions/setup-node@v4
+        with:
+          node-version: '14'
+
+      - name: Install commitlint
+        run: npm install -g @commitlint/cli@11.0.0 @commitlint/config-conventional@11.0.0
+
+      - name: Run commitlint
+        run: commitlint -x @commitlint/config-conventional --from=${{ github.event.pull_request.base.sha }} --to=${{ github.event.pull_request.head.sha }}
+
   test:
     name: Build Package and Run Tests
     runs-on: macOS-13
-    steps:          
+    steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
