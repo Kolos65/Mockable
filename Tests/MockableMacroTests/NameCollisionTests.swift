@@ -43,18 +43,21 @@ final class NameCollisionTests: MockableMacroTestCase {
                 func reset(_ scopes: Set<MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                init() {
+                init(policy: MockerPolicy? = nil) {
+                    if let policy {
+                        mocker.policy = policy
+                    }
                 }
                 func fetchData(for name: Int) -> String {
                     let member: Member = .m1_fetchData(for: .value(name))
-                    return try! mocker.mock(member) { producer in
+                    return mocker.mock(member) { producer in
                         let producer = try cast(producer) as (Int) -> String
                         return producer(name)
                     }
                 }
                 func fetchData(for name: String) -> String {
                     let member: Member = .m2_fetchData(for: .value(name))
-                    return try! mocker.mock(member) { producer in
+                    return mocker.mock(member) { producer in
                         let producer = try cast(producer) as (String) -> String
                         return producer(name)
                     }
@@ -151,18 +154,21 @@ final class NameCollisionTests: MockableMacroTestCase {
                 func reset(_ scopes: Set<MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                init() {
+                init(policy: MockerPolicy? = nil) {
+                    if let policy {
+                        mocker.policy = policy
+                    }
                 }
                 func fetchData(forA name: String) -> String {
                     let member: Member = .m1_fetchData(forA: .value(name))
-                    return try! mocker.mock(member) { producer in
+                    return mocker.mock(member) { producer in
                         let producer = try cast(producer) as (String) -> String
                         return producer(name)
                     }
                 }
                 func fetchData(forB name: String) -> String {
                     let member: Member = .m2_fetchData(forB: .value(name))
-                    return try! mocker.mock(member) { producer in
+                    return mocker.mock(member) { producer in
                         let producer = try cast(producer) as (String) -> String
                         return producer(name)
                     }

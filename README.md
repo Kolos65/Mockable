@@ -16,6 +16,7 @@
   - [Given](#Given)
   - [When](#When)
   - [Verify](#Verify)
+  - [Relaxed Mode](#Relaxed-Mode)
   - [Non-equatable Types](#Working-with-non-equatable-Types)
 - [Supported Features](#Supported-Features)
 - [Limitations](#Limitations)
@@ -257,6 +258,30 @@ verify(productService)
     // assert url property was never set to nil
     .url(newValue: .value(nil)).setterCalled(count: .never)
 ```
+
+### Relaxed Mode
+By default, you must specify a return value for all requirements; otherwise, a fatal error will be thrown. The reason for this is to aid in the discovery (and thus the verification) of every called function when writing unit tests. 
+
+However, it is common to prefer avoiding this strict default behavior in favor of a more relaxed setting, where, 
+for example, void or optional return values do not need explicit `given` registration.
+
+Use the **MockerPolicy** [option set](https://developer.apple.com/documentation/swift/optionset) to implicitly mock:
+* only one kind of return value: `.relaxedOptional`
+* construct a custom set of policies: `[.relaxedVoid, .relaxedOptional, .relaxedArray]`
+* or opt for a fully relaxed mode: `.relaxed`.
+
+You have two options to override the default strict behavior of the library:
+* at **mock implementation level** you can override the mocker policy for each individual mock implementation in the initializer: 
+    ```swift
+    let relaxedMock = MockService(policy: [.relaxedOptional, .relaxedVoid])
+    ```
+* at **project level** you can set a custom default policy to use in every scenario by changing the default property of **MockerPolicy**: 
+    ```swift
+    MockerPolicy.default = .relaxedVoid
+    ```
+
+> ⚠️ Relaxed mode will not work with generic functions as the type system is unable to locate the appropriate generic overload.
+
 
 ### Working with non-equatable Types
 **Mockable** uses a `Matcher` internally to compare parameters. 

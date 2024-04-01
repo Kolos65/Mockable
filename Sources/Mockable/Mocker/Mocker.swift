@@ -7,6 +7,7 @@
 
 import Foundation
 
+// swiftlint:disable force_try
 /// A class responsible for mocking and verifying interactions with a mockable service.
 ///
 /// The `Mocker` class keeps track of invocations, expected return values, and actions associated with
@@ -19,8 +20,16 @@ public class Mocker<T: Mockable> {
     /// The associated type representing an action to be performed on a member.
     public typealias Action = T.Action
 
+    /// Custom relaxation policy to use when missing return values.
+    public var policy: MockerPolicy?
+
+    /// Resolved relaxation policy to use when missing return values.
+    private var currentPolicy: MockerPolicy {
+        policy ?? .default
+    }
+
     /// A serial dispatch queue for thread safety when accessing mutable properties.
-    let queue = DispatchQueue(label: "com.mockable.returns")
+    private let queue = DispatchQueue(label: "com.mockable.mocker")
 
     /// Dictionary to store expected return values for each member.
     private var _returns = [Member: [Return]]()
@@ -48,7 +57,9 @@ public class Mocker<T: Mockable> {
     }
 
     /// Initializes a new instance of `Mocker`.
-    public init() {}
+    public init(policy: MockerPolicy? = nil) {
+        self.policy = policy
+    }
 
     /// Adds an invocation for a member to the list of invocations.
     ///
@@ -132,18 +143,29 @@ public class Mocker<T: Mockable> {
     ///   - producerResolver: A closure resolving the produced value.
     /// - Returns: The expected return value.
     @discardableResult
-    public func mock<V>(_ member: Member, producerResolver: (Any) throws -> V) throws -> V {
-        return try tryMock(member: member, producerResolver: producerResolver)
+    public func mock<V>(_ member: Member, producerResolver: (Any) throws -> V) -> V {
+        return try! mock(member, producerResolver, .none)
+    }
+
+    /// Mocks a throwing member, performing associated actions and providing the expected return value.
+    ///
+    /// - Parameters:
+    ///   - member: The member to mock.
+    ///   - producerResolver: A closure resolving the produced value.
+    /// - Returns: The expected return value.
+    @discardableResult
+    public func mockThrowing<V>(_ member: Member, producerResolver: (Any) throws -> V) throws -> V {
+        return try mock(member, producerResolver, .none)
     }
 }
 
 // MARK: - Helpers
 
 extension Mocker {
-    private func tryMock<V>(
-        member: Member,
-        producerResolver: (Any) throws -> V,
-        fallback: MockerFallback<V> = .none
+    private func mock<V>(
+        _ member: Member,
+        _ producerResolver: (Any) throws -> V,
+        _ fallback: MockerFallback<V>
     ) throws -> V {
         addInvocation(for: member)
         performActions(for: member)
@@ -218,3 +240,234 @@ extension Mocker {
         """
     }
 }
+
+// MARK: - Void
+
+extension Mocker {
+    /// Mocks a member, performing associated actions and providing the expected return value.
+    ///
+    /// - Parameters:
+    ///   - member: The member to mock.
+    ///   - producerResolver: A closure resolving the produced value.
+    /// - Returns: The expected return value.
+    public func mock(_ member: Member, producerResolver: (Any) throws -> Void) {
+        let relaxed = currentPolicy.contains(.relaxedNonThrowingVoid)
+        return try! mock(member, producerResolver, relaxed ? .value(()) : .none)
+    }
+
+    /// Mocks a throwing member, performing associated actions and providing the expected return value.
+    ///
+    /// - Parameters:
+    ///   - member: The member to mock.
+    ///   - producerResolver: A closure resolving the produced value.
+    /// - Returns: The expected return value.
+    public func mockThrowing(_ member: Member, producerResolver: (Any) throws -> Void) throws {
+        let relaxed = currentPolicy.contains(.relaxedThrowingVoid)
+        return try mock(member, producerResolver, relaxed ? .value(()) : .none)
+    }
+}
+
+// MARK: - Optional
+
+extension Mocker {
+    /// Mocks a member, performing associated actions and providing the expected return value.
+    ///
+    /// - Parameters:
+    ///   - member: The member to mock.
+    ///   - producerResolver: A closure resolving the produced value.
+    /// - Returns: The expected return value.
+    @discardableResult
+    public func mock<V>(
+        _ member: Member,
+        producerResolver: (Any) throws -> V
+    ) -> V where V: ExpressibleByNilLiteral {
+        let relaxed = currentPolicy.contains(.relaxedOptional)
+        return try! mock(member, producerResolver, relaxed ? .value(nil) : .none)
+    }
+
+    /// Mocks a throwing member, performing associated actions and providing the expected return value.
+    ///
+    /// - Parameters:
+    ///   - member: The member to mock.
+    ///   - producerResolver: A closure resolving the produced value.
+    /// - Returns: The expected return value.
+    @discardableResult
+    public func mockThrowing<V>(
+        _ member: Member,
+        producerResolver: (Any) throws -> V
+    ) throws -> V where V: ExpressibleByNilLiteral {
+        let relaxed = currentPolicy.contains(.relaxedOptional)
+        return try mock(member, producerResolver, relaxed ? .value(nil) : .none)
+    }
+}
+
+// MARK: - String
+
+extension Mocker {
+    /// Mocks a member, performing associated actions and providing the expected return value.
+    ///
+    /// - Parameters:
+    ///   - member: The member to mock.
+    ///   - producerResolver: A closure resolving the produced value.
+    /// - Returns: The expected return value.
+    @discardableResult
+    public func mock<V>(
+        _ member: Member,
+        producerResolver: (Any) throws -> V
+    ) -> V where V: ExpressibleByStringLiteral {
+        let relaxed = currentPolicy.contains(.relaxedString)
+        return try! mock(member, producerResolver, relaxed ? .value("") : .none)
+    }
+
+    /// Mocks a throwing member, performing associated actions and providing the expected return value.
+    ///
+    /// - Parameters:
+    ///   - member: The member to mock.
+    ///   - producerResolver: A closure resolving the produced value.
+    /// - Returns: The expected return value.
+    @discardableResult
+    public func mockThrowing<V>(
+        _ member: Member,
+        producerResolver: (Any) throws -> V
+    ) throws -> V where V: ExpressibleByStringLiteral {
+        let relaxed = currentPolicy.contains(.relaxedString)
+        return try mock(member, producerResolver, relaxed ? .value("") : .none)
+    }
+}
+
+// MARK: - Boolean
+
+extension Mocker {
+    /// Mocks a member, performing associated actions and providing the expected return value.
+    ///
+    /// - Parameters:
+    ///   - member: The member to mock.
+    ///   - producerResolver: A closure resolving the produced value.
+    /// - Returns: The expected return value.
+    @discardableResult
+    public func mock<V>(
+        _ member: Member,
+        producerResolver: (Any) throws -> V
+    ) -> V where V: ExpressibleByBooleanLiteral {
+        let relaxed = currentPolicy.contains(.relaxedBoolean)
+        return try! mock(member, producerResolver, relaxed ? .value(true) : .none)
+    }
+
+    /// Mocks a throwing member, performing associated actions and providing the expected return value.
+    ///
+    /// - Parameters:
+    ///   - member: The member to mock.
+    ///   - producerResolver: A closure resolving the produced value.
+    /// - Returns: The expected return value.
+    @discardableResult
+    public func mockThrowing<V>(
+        _ member: Member,
+        producerResolver: (Any) throws -> V
+    ) throws -> V where V: ExpressibleByBooleanLiteral {
+        let relaxed = currentPolicy.contains(.relaxedBoolean)
+        return try mock(member, producerResolver, relaxed ? .value(true) : .none)
+    }
+}
+
+// MARK: - Integer
+
+extension Mocker {
+    /// Mocks a member, performing associated actions and providing the expected return value.
+    ///
+    /// - Parameters:
+    ///   - member: The member to mock.
+    ///   - producerResolver: A closure resolving the produced value.
+    /// - Returns: The expected return value.
+    @discardableResult
+    public func mock<V>(
+        _ member: Member,
+        producerResolver: (Any) throws -> V
+    ) -> V where V: ExpressibleByIntegerLiteral {
+        let relaxed = currentPolicy.contains(.relaxedInteger)
+        return try! mock(member, producerResolver, relaxed ? .value(1) : .none)
+    }
+
+    /// Mocks a throwing member, performing associated actions and providing the expected return value.
+    ///
+    /// - Parameters:
+    ///   - member: The member to mock.
+    ///   - producerResolver: A closure resolving the produced value.
+    /// - Returns: The expected return value.
+    @discardableResult
+    public func mockThrowing<V>(
+        _ member: Member,
+        producerResolver: (Any) throws -> V
+    ) throws -> V where V: ExpressibleByIntegerLiteral {
+        let relaxed = currentPolicy.contains(.relaxedInteger)
+        return try mock(member, producerResolver, relaxed ? .value(1) : .none)
+    }
+}
+
+// MARK: - Array
+
+extension Mocker {
+    /// Mocks a member, performing associated actions and providing the expected return value.
+    ///
+    /// - Parameters:
+    ///   - member: The member to mock.
+    ///   - producerResolver: A closure resolving the produced value.
+    /// - Returns: The expected return value.
+    @discardableResult
+    public func mock<V>(
+        _ member: Member,
+        producerResolver: (Any) throws -> V
+    ) -> V where V: ExpressibleByArrayLiteral {
+        let relaxed = currentPolicy.contains(.relaxedArray)
+        return try! mock(member, producerResolver, relaxed ? .value([]) : .none)
+    }
+
+    /// Mocks a throwing member, performing associated actions and providing the expected return value.
+    ///
+    /// - Parameters:
+    ///   - member: The member to mock.
+    ///   - producerResolver: A closure resolving the produced value.
+    /// - Returns: The expected return value.
+    @discardableResult
+    public func mockThrowing<V>(
+        _ member: Member,
+        producerResolver: (Any) throws -> V
+    ) throws -> V where V: ExpressibleByArrayLiteral {
+        let relaxed = currentPolicy.contains(.relaxedArray)
+        return try mock(member, producerResolver, relaxed ? .value([]) : .none)
+    }
+}
+
+// MARK: - Dictionary
+
+extension Mocker {
+    /// Mocks a member, performing associated actions and providing the expected return value.
+    ///
+    /// - Parameters:
+    ///   - member: The member to mock.
+    ///   - producerResolver: A closure resolving the produced value.
+    /// - Returns: The expected return value.
+    @discardableResult
+    public func mock<V>(
+        _ member: Member,
+        producerResolver: (Any) throws -> V
+    ) -> V where V: ExpressibleByDictionaryLiteral {
+        let relaxed = currentPolicy.contains(.relaxedDictionary)
+        return try! mock(member, producerResolver, relaxed ? .value([:]) : .none)
+    }
+
+    /// Mocks a throwing member, performing associated actions and providing the expected return value.
+    ///
+    /// - Parameters:
+    ///   - member: The member to mock.
+    ///   - producerResolver: A closure resolving the produced value.
+    /// - Returns: The expected return value.
+    @discardableResult
+    public func mockThrowing<V>(
+        _ member: Member,
+        producerResolver: (Any) throws -> V
+    ) throws -> V where V: ExpressibleByDictionaryLiteral {
+        let relaxed = currentPolicy.contains(.relaxedDictionary)
+        return try mock(member, producerResolver, relaxed ? .value([:]) : .none)
+    }
+}
+// swiftlint:enable force_try

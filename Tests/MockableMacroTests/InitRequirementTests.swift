@@ -43,6 +43,11 @@ final class InitRequirementTests: MockableMacroTestCase {
                 func reset(_ scopes: Set<MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
+                init(policy: MockerPolicy? = nil) {
+                    if let policy {
+                        mocker.policy = policy
+                    }
+                }
                 init() {
                 }
                 init(name: String) {
@@ -115,7 +120,10 @@ final class InitRequirementTests: MockableMacroTestCase {
                 func reset(_ scopes: Set<MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                init() {
+                init(policy: MockerPolicy? = nil) {
+                    if let policy {
+                        mocker.policy = policy
+                    }
                 }
                 init?() async throws {
                 }

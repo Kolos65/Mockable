@@ -43,12 +43,15 @@ final class PropertyRequirementTests: MockableMacroTestCase {
                 func reset(_ scopes: Set<MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                init() {
+                init(policy: MockerPolicy? = nil) {
+                    if let policy {
+                        mocker.policy = policy
+                    }
                 }
                 var computedInt: Int {
                     get {
                         let member: Member = .m1_computedInt
-                        return try! mocker.mock(member) { producer in
+                        return mocker.mock(member) { producer in
                             let producer = try cast(producer) as () -> Int
                             return producer()
                         }
@@ -57,7 +60,7 @@ final class PropertyRequirementTests: MockableMacroTestCase {
                 var computedString: String! {
                     get {
                         let member: Member = .m2_computedString
-                        return try! mocker.mock(member) { producer in
+                        return mocker.mock(member) { producer in
                             let producer = try cast(producer) as () -> String
                             return producer()
                         }
@@ -155,12 +158,15 @@ final class PropertyRequirementTests: MockableMacroTestCase {
                 func reset(_ scopes: Set<MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                init() {
+                init(policy: MockerPolicy? = nil) {
+                    if let policy {
+                        mocker.policy = policy
+                    }
                 }
                 var mutableInt: Int {
                     get {
                         let member: Member = .m1_get_mutableInt
-                        return try! mocker.mock(member) { producer in
+                        return mocker.mock(member) { producer in
                             let producer = try cast(producer) as () -> Int
                             return producer()
                         }
@@ -174,7 +180,7 @@ final class PropertyRequirementTests: MockableMacroTestCase {
                 var mutableString: String {
                     get {
                         let member: Member = .m2_get_mutableString
-                        return try! mocker.mock(member) { producer in
+                        return mocker.mock(member) { producer in
                             let producer = try cast(producer) as () -> String
                             return producer()
                         }
@@ -285,12 +291,15 @@ final class PropertyRequirementTests: MockableMacroTestCase {
                 func reset(_ scopes: Set<MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                init() {
+                init(policy: MockerPolicy? = nil) {
+                    if let policy {
+                        mocker.policy = policy
+                    }
                 }
                 var throwingProperty: Int {
                     get throws {
                         let member: Member = .m1_throwingProperty
-                        return try mocker.mock(member) { producer in
+                        return try mocker.mockThrowing(member) { producer in
                             let producer = try cast(producer) as () throws -> Int
                             return try producer()
                         }
@@ -299,7 +308,7 @@ final class PropertyRequirementTests: MockableMacroTestCase {
                 var asyncProperty: String {
                     get async {
                         let member: Member = .m2_asyncProperty
-                        return try! mocker.mock(member) { producer in
+                        return mocker.mock(member) { producer in
                             let producer = try cast(producer) as () -> String
                             return producer()
                         }
@@ -308,7 +317,7 @@ final class PropertyRequirementTests: MockableMacroTestCase {
                 var asyncThrowingProperty: String {
                     get async throws {
                         let member: Member = .m3_asyncThrowingProperty
-                        return try mocker.mock(member) { producer in
+                        return try mocker.mockThrowing(member) { producer in
                             let producer = try cast(producer) as () throws -> String
                             return try producer()
                         }

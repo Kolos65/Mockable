@@ -67,7 +67,10 @@ final class AttributesTests: MockableMacroTestCase {
                 func reset(_ scopes: Set<MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                init() {
+                init(policy: MockerPolicy? = nil) {
+                    if let policy {
+                        mocker.policy = policy
+                    }
                 }
                 @available(iOS 15, *)
                 init(name: String) {
@@ -78,7 +81,7 @@ final class AttributesTests: MockableMacroTestCase {
                 @available(iOS 15, *)
                 func test() {
                     let member: Member = .m3_test
-                    try! mocker.mock(member) { producer in
+                    mocker.mock(member) { producer in
                         let producer = try cast(producer) as () -> Void
                         return producer()
                     }
@@ -86,7 +89,7 @@ final class AttributesTests: MockableMacroTestCase {
                 @available(iOS 15, *)
                 func test2() {
                     let member: Member = .m4_test2
-                    try! mocker.mock(member) { producer in
+                    mocker.mock(member) { producer in
                         let producer = try cast(producer) as () -> Void
                         return producer()
                     }
@@ -95,7 +98,7 @@ final class AttributesTests: MockableMacroTestCase {
                 var prop: Int {
                     get {
                         let member: Member = .m1_prop
-                        return try! mocker.mock(member) { producer in
+                        return mocker.mock(member) { producer in
                             let producer = try cast(producer) as () -> Int
                             return producer()
                         }
@@ -105,7 +108,7 @@ final class AttributesTests: MockableMacroTestCase {
                 var prop2: Int {
                     get {
                         let member: Member = .m2_prop2
-                        return try! mocker.mock(member) { producer in
+                        return mocker.mock(member) { producer in
                             let producer = try cast(producer) as () -> Int
                             return producer()
                         }

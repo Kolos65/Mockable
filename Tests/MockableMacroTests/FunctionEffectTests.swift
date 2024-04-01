@@ -44,18 +44,21 @@ final class FunctionEffectTests: MockableMacroTestCase {
                 func reset(_ scopes: Set<MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                init() {
+                init(policy: MockerPolicy? = nil) {
+                    if let policy {
+                        mocker.policy = policy
+                    }
                 }
                 func returnsAndThrows() throws -> String {
                     let member: Member = .m1_returnsAndThrows
-                    return try mocker.mock(member) { producer in
+                    return try mocker.mockThrowing(member) { producer in
                         let producer = try cast(producer) as () throws -> String
                         return try producer()
                     }
                 }
                 func canThrowError() throws {
                     let member: Member = .m2_canThrowError
-                    try mocker.mock(member) { producer in
+                    try mocker.mockThrowing(member) { producer in
                         let producer = try cast(producer) as () throws -> Void
                         return try producer()
                     }
@@ -150,11 +153,14 @@ final class FunctionEffectTests: MockableMacroTestCase {
                 func reset(_ scopes: Set<MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                init() {
+                init(policy: MockerPolicy? = nil) {
+                    if let policy {
+                        mocker.policy = policy
+                    }
                 }
                 func execute(operation: @escaping () throws -> Void) rethrows {
                     let member: Member = .m1_execute(operation: .value(operation))
-                    try! mocker.mock(member) { producer in
+                    mocker.mock(member) { producer in
                         let producer = try cast(producer) as (() throws -> Void) -> Void
                         return producer(operation)
                     }
@@ -239,25 +245,28 @@ final class FunctionEffectTests: MockableMacroTestCase {
                 func reset(_ scopes: Set<MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                init() {
+                init(policy: MockerPolicy? = nil) {
+                    if let policy {
+                        mocker.policy = policy
+                    }
                 }
                 func asyncFunction() async {
                     let member: Member = .m1_asyncFunction
-                    try! mocker.mock(member) { producer in
+                    mocker.mock(member) { producer in
                         let producer = try cast(producer) as () -> Void
                         return producer()
                     }
                 }
                 func asyncThrowingFunction() async throws {
                     let member: Member = .m2_asyncThrowingFunction
-                    try mocker.mock(member) { producer in
+                    try mocker.mockThrowing(member) { producer in
                         let producer = try cast(producer) as () throws -> Void
                         return try producer()
                     }
                 }
                 func asyncParamFunction(param: @escaping () async throws -> Void) async throws {
                     let member: Member = .m3_asyncParamFunction(param: .value(param))
-                    try mocker.mock(member) { producer in
+                    try mocker.mockThrowing(member) { producer in
                         let producer = try cast(producer) as (() async throws -> Void) throws -> Void
                         return try producer(param)
                     }

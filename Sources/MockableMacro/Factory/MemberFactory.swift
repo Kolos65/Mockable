@@ -19,9 +19,7 @@ enum MemberFactory: Factory {
             when(requirements)
             verify(requirements)
             reset(requirements)
-            if let defaultInit = defaultInit(requirements) {
-                defaultInit
-            }
+            defaultInit(requirements)
         }
     }
 }
@@ -29,21 +27,12 @@ enum MemberFactory: Factory {
 // MARK: - Helpers
 
 extension MemberFactory {
-    private static func defaultInit(_ requirements: Requirements) -> MemberBlockItemSyntax? {
-        let hasDefault = requirements.initializers.contains {
-            $0.syntax.signature.effectSpecifiers == nil
-            && $0.syntax.signature.parameterClause.parameters.isEmpty
-            && $0.syntax.optionalMark == nil
-            && $0.syntax.genericWhereClause == nil
-            && $0.syntax.genericParameterClause == nil
-        }
-        guard !hasDefault else { return nil }
-        let defaultInit = InitializerDeclSyntax(
+    private static func defaultInit(_ requirements: Requirements) -> InitializerDeclSyntax {
+        InitializerDeclSyntax(
             modifiers: requirements.syntax.modifiers.trimmed,
-            signature: .init(parameterClause: .init(parameters: [])),
-            body: .init(statements: [])
+            signature: .init(parameterClause: defaultInitParameters),
+            body: .init { CodeBlockItemSyntax(item: .expr(mockerAssignmentWithPolicy)) }
         )
-        return .init(decl: defaultInit)
     }
 
     private static func mocker(_ requirements: Requirements) -> VariableDeclSyntax {
@@ -241,5 +230,47 @@ extension MemberFactory {
             trailingTrivia: .newline
         )
         return AttributeListSyntax { attribute }
+    }
+
+    private static var defaultInitParameters: FunctionParameterClauseSyntax {
+        FunctionParameterClauseSyntax(
+            parameters: FunctionParameterListSyntax {
+                FunctionParameterSyntax(
+                    firstName: NS.policy,
+                    type: OptionalTypeSyntax(
+                        wrappedType: IdentifierTypeSyntax(name: NS.MockerPolicy)
+                    ),
+                    defaultValue: InitializerClauseSyntax(
+                        value: NilLiteralExprSyntax()
+                    )
+                )
+            }
+        )
+    }
+
+    private static var mockerAssignmentWithPolicy: ExprSyntax {
+        IfExprSyntax(
+            conditions: ConditionElementListSyntax {
+                OptionalBindingConditionSyntax(
+                    bindingSpecifier: .keyword(.let),
+                    pattern: IdentifierPatternSyntax(
+                        identifier: NS.policy
+                    )
+                )
+            },
+            body: CodeBlockSyntax(
+                statements: CodeBlockItemListSyntax {
+                    InfixOperatorExprSyntax(
+                        leftOperand: MemberAccessExprSyntax(
+                            base: DeclReferenceExprSyntax(baseName: NS.mocker),
+                            declName: DeclReferenceExprSyntax(baseName: NS.policy)
+                        ),
+                        operator: AssignmentExprSyntax(),
+                        rightOperand: DeclReferenceExprSyntax(baseName: NS.policy)
+                    )
+                }
+            )
+        )
+        .cast(ExprSyntax.self)
     }
 }
