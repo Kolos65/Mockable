@@ -9,7 +9,7 @@
 ///
 /// This builder is typically used within the context of a higher-level builder (e.g., a `ReturnBuilder`)
 /// to specify the desired return value or a return value producer for a throwing function of a mock service.
-public struct ThrowingFunctionReturnBuilder<T: Mockable, ParentBuilder: EffectBuilder<T>, ReturnType, ProduceType> {
+public struct ThrowingFunctionReturnBuilder<T: MockService, ParentBuilder: EffectBuilder<T>, ReturnType, ProduceType> {
 
     /// Convenient type for the associated service's Member.
     public typealias Member = T.Member

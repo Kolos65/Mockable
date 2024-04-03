@@ -18,7 +18,7 @@ public enum TimeoutDuration {
     case miliseconds(UInt)
 
     /// Converts the duration to TimeInterval.
-    @inlinable public var duration: TimeInterval {
+    public var duration: TimeInterval {
         switch self {
         case .seconds(let value): value
         case .miliseconds(let value): TimeInterval(value) / 1000
@@ -31,5 +31,13 @@ public enum TimeoutDuration {
 extension TimeoutDuration: ExpressibleByFloatLiteral {
     public init(floatLiteral value: Double) {
         self = .seconds(value)
+    }
+}
+
+// MARK: - ExpressibleByIntegerLiteral
+
+extension TimeoutDuration: ExpressibleByIntegerLiteral {
+    public init(integerLiteral value: Int) {
+        self = .seconds(Double(value))
     }
 }

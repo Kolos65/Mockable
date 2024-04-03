@@ -27,7 +27,7 @@
 ///
 /// - Parameter service: The mockable service for which return values are specified.
 /// - Returns: The service's return value builder.
-public func given<T: Mockable>(_ service: T) -> T.ReturnBuilder { service.given() }
+public func given<T: MockService>(_ service: T) -> T.ReturnBuilder { service.given() }
 
 /// Creates a proxy for building actions for members of the given service.
 ///
@@ -51,4 +51,4 @@ public func given<T: Mockable>(_ service: T) -> T.ReturnBuilder { service.given(
 ///
 /// - Parameter service: The mockable service for which actions are specified.
 /// - Returns: The service's action builder.
-public func when<T: Mockable>(_ service: T) -> T.ActionBuilder { service.when() }
+public func when<T: MockService>(_ service: T) -> T.ActionBuilder { service.when() }
