@@ -246,6 +246,11 @@ There are three kind of verifications:
 * **`getterCalled(count:)`**: Available for mutable properties only, asserts property access count.
 * **`setterCalled(count:)`**: Available for mutable properties only, asserts property assignment count.
 
+And three kind of its async counterpart:
+* **`eventuallyCalled(count:timeout:)`**: Wait until timeout or invocation count satisfied.
+* **`getterEventuallyCalled(count:timeout:)`**: Wait until timeout or property access count satisfied.
+* **`setterEventuallyCalled(count:timeout:)`**: Wait until timeout or property assignment count satisfied.
+
 Here are some example assertions:
 ```swift
 verify(productService)
@@ -257,6 +262,19 @@ verify(productService)
     .url().getterCalled(count: .moreOrEqual(to: 2))
     // assert url property was never set to nil
     .url(newValue: .value(nil)).setterCalled(count: .never)
+```
+
+And same thing in async:
+```swift
+await verify(productService)
+    // assert fetch(for:) was called between 1 and 5 times before default timeout (1 second)
+    .fetch(for: .any).eventuallyCalled(count: .from(1, to: 5))
+    // assert checkout(with:) was called between exactly 10 times before default timeout (1 second)
+    .checkout(with: .any).eventuallyCalled(count: 10)
+    // assert url property was accessed at least 2 times before default timeout (1 second)
+    .url().getterEventuallyCalled(count: .moreOrEqual(to: 2))
+    // assert url property was set to nil once
+    .url(newValue: .value(nil)).setterEventuallyCalled(count: .once)
 ```
 
 ### Relaxed Mode

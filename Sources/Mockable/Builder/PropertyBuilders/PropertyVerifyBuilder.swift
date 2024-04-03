@@ -52,6 +52,26 @@ public struct PropertyVerifyBuilder<T: Mockable, ParentBuilder: AssertionBuilder
         return .init(mocker: mocker, assertion: assertion)
     }
 
+    /// Specifies the expected number of times the getter of the property should be called.
+    ///
+    /// - Parameters:
+    ///   - count: Specifies the expected invocation count.
+    ///   - timeout: The maximum time it will wait for assertion to be true. Default 1 second.
+    /// - Returns: The parent builder, used for chaining additional specifications.
+    @discardableResult
+    public func getterEventuallyCalled(count: Count,
+                                       before timeout: Timeout = .seconds(1),
+                                       file: StaticString = #file,
+                                       line: UInt = #line) async -> ParentBuilder {
+        await mocker.verify(getMember,
+                            willHaveCount: count,
+                            assertion: assertion,
+                            timeout: timeout.timeInterval,
+                            file: file,
+                            line: line)
+        return .init(mocker: mocker, assertion: assertion)
+    }
+
     /// Specifies the expected number of times the setter of the property should be called.
     ///
     /// - Parameter count: The `Count` object specifying the expected invocation count.
@@ -59,6 +79,26 @@ public struct PropertyVerifyBuilder<T: Mockable, ParentBuilder: AssertionBuilder
     @discardableResult
     public func setterCalled(count: Count, file: StaticString = #file, line: UInt = #line) -> ParentBuilder {
         mocker.verify(setMember, count: count, assertion: assertion, file: file, line: line)
+        return .init(mocker: mocker, assertion: assertion)
+    }
+
+    /// Specifies the expected number of times the setter of the property should be called.
+    ///
+    /// - Parameters:
+    ///   - count: Specifies the expected invocation count.
+    ///   - timeout: The maximum time it will wait for assertion to be true. Default 1 second.
+    /// - Returns: The parent builder, used for chaining additional specifications.
+    @discardableResult
+    public func setterEventuallyCalled(count: Count,
+                                       before timeout: Timeout = .seconds(1),
+                                       file: StaticString = #file,
+                                       line: UInt = #line) async -> ParentBuilder {
+        await mocker.verify(setMember,
+                            willHaveCount: count,
+                            assertion: assertion,
+                            timeout: timeout.timeInterval,
+                            file: file,
+                            line: line)
         return .init(mocker: mocker, assertion: assertion)
     }
 }
