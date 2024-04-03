@@ -183,9 +183,9 @@ By default, you must specify a return value for all requirements; otherwise, a f
 However, it is common to prefer avoiding this strict default behavior in favor of a more relaxed setting, where, 
 for example, void or optional return values do not need explicit `given` registration.
 
-Use the **MockerPolicy** [option set](https://developer.apple.com/documentation/swift/optionset) to implicitly mock:
-* only one kind of return value: `.relaxedOptional`
-* construct a custom set of policies: `[.relaxedVoid, .relaxedOptional, .relaxedArray]`
+Use the Use [`MockerPolicy`](https://kolos65.github.io/Mockable/documentation/mockable/mockerpolicy) (which is an [option set](https://developer.apple.com/documentation/swift/optionset)) to implicitly mock:
+* only one kind of return value: `.relaxedMockable`
+* construct a custom set of policies: `[.relaxedVoid, .relaxedOptional]`
 * or opt for a fully relaxed mode: `.relaxed`.
 
 You have two options to override the default strict behavior of the library:
@@ -198,8 +198,45 @@ You have two options to override the default strict behavior of the library:
     MockerPolicy.default = .relaxedVoid
     ```
 
-> ⚠️ Relaxed mode will not work with generic functions as the type system is unable to locate the appropriate generic overload.
+The `.relaxedMockable` policy in combination with the [`Mockable`](https://kolos65.github.io/Mockable/documentation/mockable/mockable) protocol can be used to set an implicit return value for custom types (or even built in types):
+```swift
+struct Car {
+    var name: String
+    var seats: Int
+}
 
+extension Car: Mockable {
+    static var mock: Car {
+        Car(name: "Mock Car", seats: 4)
+    }
+
+    // Defaults to [mock] but we can 
+    // provide a custom array of cars:
+    static var mocks: [Car] {
+        [
+            Car(name: "Mock Car 1", seats: 4),
+            Car(name: "Mock Car 2", seats: 4)
+        ]
+    }
+}
+
+@Mockable
+protocol CarService {
+    func getCar() -> Car
+    func getCars() -> [Car]
+}
+
+func testCarService() {
+    func test() {
+        let mock = MockCarService(policy: .relaxedMockable)
+        // Implictly mocked without a given registration:
+        let car = mock.getCar()
+        let cars = mock.getCars()
+    }
+}
+```
+
+> ⚠️ Relaxed mode will not work with generic return values as the type system is unable to locate the appropriate generic overload.
 
 ## Working with non-equatable Types
 **Mockable** uses a `Matcher` internally to compare parameters. 

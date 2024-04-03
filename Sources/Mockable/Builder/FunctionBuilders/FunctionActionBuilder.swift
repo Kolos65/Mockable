@@ -9,7 +9,7 @@
 ///
 /// This builder is used within the context of a higher-level builder (e.g., an `ActionBuilder`)
 /// to specify a desired action to perform when a particular function of a mock service is called.
-public struct FunctionActionBuilder<T: Mockable, ParentBuilder: EffectBuilder<T>> {
+public struct FunctionActionBuilder<T: MockService, ParentBuilder: EffectBuilder<T>> {
 
     /// Convenient type for the associated service's Member.
     public typealias Member = T.Member

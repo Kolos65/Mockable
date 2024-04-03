@@ -1,15 +1,15 @@
 //
-//  Mockable.swift
+//  MockService.swift
 //  Mockable
 //
 //  Created by Kolos Foltanyi on 2023. 11. 13..
 //
 
-/// A protocol defining the structure for a mockable service.
+/// A protocol defining the structure for a mocked service.
 ///
 /// Conforming types must provide a `Member` type representing their members
 /// as well as builders for specifying return values, actions, and verifications.
-public protocol Mockable {
+public protocol MockService {
 
     /// A type representing the members of the mocked protocol.
     associatedtype Member: Matchable, CaseIdentifiable

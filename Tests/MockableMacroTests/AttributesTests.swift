@@ -50,7 +50,7 @@ final class AttributesTests: MockableMacroTestCase {
             }
 
             #if MOCKING
-            final class MockAttributeTest: AttributeTest, Mockable {
+            final class MockAttributeTest: AttributeTest, MockService {
                 private var mocker = Mocker<MockAttributeTest>()
                 @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
                 func given() -> ReturnBuilder {

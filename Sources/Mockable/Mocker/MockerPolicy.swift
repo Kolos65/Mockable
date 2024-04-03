@@ -8,7 +8,7 @@
 /// A policy that controls how the library handles when no return value is found during mocking.
 ///
 /// MockerPolicy can be used to customize mocking behavior and disable the requirement of
-/// return value registration in case of built in types (like Void).
+/// return value registration in case of certain types.
 public struct MockerPolicy: OptionSet {
     /// Default policy to use when none was explicitly specified for a mock.
     ///
@@ -23,11 +23,7 @@ public struct MockerPolicy: OptionSet {
         .relaxedOptional,
         .relaxedThrowingVoid,
         .relaxedNonThrowingVoid,
-        .relaxedInteger,
-        .relaxedBoolean,
-        .relaxedArray,
-        .relaxedDictionary,
-        .relaxedString
+        .relaxedMockable
     ]
 
     /// Every void function will run normally without a registration
@@ -37,28 +33,16 @@ public struct MockerPolicy: OptionSet {
     ]
 
     /// Throwing Void functions will run without return value registration.
-    public static let relaxedThrowingVoid = Self(rawValue: 1 << 1)
+    public static let relaxedThrowingVoid = Self(rawValue: 1 << 0)
 
     /// Non-throwing Void functions will run without return value registration.
-    public static let relaxedNonThrowingVoid = Self(rawValue: 1 << 2)
+    public static let relaxedNonThrowingVoid = Self(rawValue: 1 << 1)
 
     /// Optional return values will default to nil.
-    public static let relaxedOptional = Self(rawValue: 1 << 0)
+    public static let relaxedOptional = Self(rawValue: 1 << 2)
 
-    /// Integer expressible return values will default to 1.
-    public static let relaxedInteger = Self(rawValue: 1 << 3)
-
-    /// String literal expressible return values will default to an empty string.
-    public static let relaxedString = Self(rawValue: 1 << 4)
-
-    /// Integer expressible return values will default to true.
-    public static let relaxedBoolean = Self(rawValue: 1 << 5)
-
-    /// Array expressible return values will default to an empty array.
-    public static let relaxedArray = Self(rawValue: 1 << 6)
-
-    /// Dictionary expressible return values will default to an empty dictionary.
-    public static let relaxedDictionary = Self(rawValue: 1 << 7)
+    /// Types conforming to the `Mockable` protocol will default to their mock value.
+    public static let relaxedMockable = Self(rawValue: 1 << 3)
 
     /// Option set raw value.
     public let rawValue: Int
