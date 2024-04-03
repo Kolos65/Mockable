@@ -44,4 +44,24 @@ public struct FunctionVerifyBuilder<T: Mockable, ParentBuilder: AssertionBuilder
         mocker.verify(member, count: count, assertion: assertion, file: file, line: line)
         return .init(mocker: mocker, assertion: assertion)
     }
+
+    /// Asserts the number of invocations of the specified member should be called using `count`.
+    ///
+    /// - Parameters:
+    ///   - count: Specifies the expected invocation count.
+    ///   - timeout: The maximum time it will wait for assertion to be true. Default 1 second.
+    /// - Returns: The parent builder, used for chaining additional specifications.
+    @discardableResult
+    public func eventuallyCalled(count: Count,
+                                 before timeout: Timeout = .seconds(1),
+                                 file: StaticString = #file,
+                                 line: UInt = #line) async -> ParentBuilder {
+        await mocker.verify(member,
+                            willHaveCount: count,
+                            assertion: assertion,
+                            timeout: timeout.timeInterval,
+                            file: file,
+                            line: line)
+        return .init(mocker: mocker, assertion: assertion)
+    }
 }

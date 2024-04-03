@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 // swiftlint:disable force_try
 /// A class responsible for mocking and verifying interactions with a mockable service.
@@ -36,7 +37,7 @@ public class Mocker<T: Mockable> {
     /// Dictionary to store actions to be performed on each member.
     private var _actions = [Member: [Action]]()
     /// Array to store invocations of members.
-    private var _invocations = [Member]()
+    @Published private var _invocations = [Member]()
 
     /// Synchornized access to return values
     var returns: [Member: [Return]] {
@@ -117,6 +118,48 @@ public class Mocker<T: Mockable> {
             file,
             line
         )
+    }
+
+    /// Verifies the number of times a member should be called.
+    ///
+    /// - Parameters:
+    ///   - member: The member to verify.
+    ///   - count: The expected number of invocations.
+    ///   - assertion: Assertion function to use.
+    ///   - timeout: The maximum time it will wait for assertion to be true
+    public func verify(_ member: Member,
+                       willHaveCount count: Count,
+                       assertion: @escaping MockableAssertion,
+                       timeout: TimeInterval,
+                       file: StaticString = #file,
+                       line: UInt = #line) async {
+        let invocationPublisher = $_invocations
+            .map { invocations in
+                invocations.filter { member.match($0) }
+            }
+            .prepend([])
+        let timerPublisher = Timer.publish(every: timeout, on: .main, in: .default)
+            .autoconnect()
+            .map { _ in true }
+            .prepend(false)
+        await withCheckedContinuation { continuation in
+            var cancellable: AnyCancellable?
+            cancellable = Publishers.CombineLatest(invocationPublisher, timerPublisher)
+                .receive(on: RunLoop.main)
+                .sink { matches, timedOut in
+                    let satisfied = count.satisfies(count: matches.count)
+                    guard satisfied || timedOut else { return }
+                    let prefix = timedOut ? "Wait for \(timeout)s expecting \(count)" : "Expected \(count)"
+                    assertion(
+                        satisfied,
+                        "\(prefix) invocation(s) of \(member.name), but was: \(matches.count)",
+                        file,
+                        line
+                    )
+                    cancellable?.cancel()
+                    continuation.resume()
+                }
+        }
     }
 
     /// Resets the state of the mocker.

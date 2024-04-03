@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import Foundation
 import MockableTest
 
 final class VerifyTests: XCTestCase {
@@ -39,6 +40,26 @@ final class VerifyTests: XCTestCase {
             .getUser(for: .any).called(count: .exactly(1))
     }
 
+    func test_givenMockFunctionIsCalledAsyncrhonously_whenCountVerified_assertsMatchingCounts() async {
+        given(mock).getUser(for: .any).willReturn(.test1)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [mock] in
+            _ = try? mock.getUser(for: UUID())
+        }
+
+        verify(mock).getUser(for: .any).called(count: .never)
+
+        await verify(mock)
+            .getUser(for: .any).eventuallyCalled(count: .once)
+            .getUser(for: .any).eventuallyCalled(count: .atLeastOnce)
+            .getUser(for: .any).eventuallyCalled(count: .less(than: 2))
+            .getUser(for: .any).eventuallyCalled(count: .more(than: 0))
+            .getUser(for: .any).eventuallyCalled(count: .moreOrEqual(to: 1))
+            .getUser(for: .any).eventuallyCalled(count: .lessOrEqual(to: 1))
+            .getUser(for: .any).eventuallyCalled(count: .from(0, to: 2))
+            .getUser(for: .any).eventuallyCalled(count: .exactly(1))
+    }
+
     func test_givenMockPropertyAccessed_whenCountVerified_assertsGetterAndSetter() throws {
         let testName = "Name"
 
@@ -51,6 +72,29 @@ final class VerifyTests: XCTestCase {
         verify(mock)
             .name().getterCalled(count: 2)
             .name().setterCalled(count: .once)
+    }
+
+    func test_givenMockPropertyAccessedAsynchronously_whenCountVerified_assertsGetterAndSetter() async {
+        let testName = "Name"
+
+        given(mock).name.willReturn(testName)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [mock] in
+            _ = mock.name
+            _ = mock.name
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [mock] in
+            mock.name = testName
+        }
+
+        verify(mock)
+            .name().getterCalled(count: .never)
+            .name().setterCalled(count: .never)
+
+        await verify(mock)
+            .name().getterEventuallyCalled(count: 2)
+            .name().setterEventuallyCalled(count: .once)
     }
 
     func test_givenGenericParamAndReturnFunc_whenVerifyUsed_OnlyParamIsInferred() {
