@@ -32,7 +32,7 @@ Read **Mockable**'s [documentation](https://kolos65.github.io/Mockable/documenta
 The library can be installed using Swift Package Manager.
 
 **Mockable** provides two library products:
-* **Mockable**: Core library containing the `@Mockable` macro.
+* **Mockable**: Core library containing the [`@Mockable`](https://kolos65.github.io/Mockable/documentation/mockable/mockable()) macro.
 * **MockableTest**: Testing utilities that depend on the `XCTest` framework (will only link with test targets).
 
 To use the library:
@@ -162,7 +162,7 @@ We specify the following:
 
 ### Parameters
 
-Function builders have **all parameters** from the original requirement but **encapsulate them** within the `Parameter<Value>` type. 
+Function builders have **all parameters** from the original requirement but **encapsulate them** within the [`Parameter<Value>`](https://kolos65.github.io/Mockable/documentation/mockable/parameter) type. 
 When constructing mockable clauses, you have to **specify parameter conditions** for every parameter of a function. There are three available options:
 
 * **`.any`**: Matches every call to the specified function, disregarding the actual parameter values.
@@ -191,10 +191,9 @@ verify(productService).fetch(for: .any).called(.once)
 ### Given
 
 Return values can be specified using a `given(_ service:)` clause. There are three return builders available:
-* **`willReturn(_ value:)`**: Will store the given return value and use it to mock subsequent calls.
-* **`willThrow(_ error:)`**: Will store the given error and throw it in subsequent calls. Only available for throwing functions and properties.
-* **`willProduce(_ producer)`**: Will use the provided closure for mocking. The closure has the same signature as the mocked function,
-  so for example a function that takes an integer returns a string and can throw will accept a closure of type `(Int) throws -> String`.
+* [`willReturn(_ value:)`](https://kolos65.github.io/Mockable/documentation/mockable/functionreturnbuilder/willreturn(_:)): Will store the given return value and use it to mock subsequent calls.
+* [`willThrow(_ error:)`](https://kolos65.github.io/Mockable/documentation/mockable/throwingfunctionreturnbuilder/willthrow(_:)): Will store the given error and throw it in subsequent calls. Only available for throwing functions and properties.
+* [`willProduce(_ producer)`](https://kolos65.github.io/Mockable/documentation/mockable/throwingfunctionreturnbuilder/willproduce(_:)): Will use the provided closure for mocking. The closure has the same signature as the mocked function, so for example a function that takes an integer returns a string and can throw will accept a closure of type `(Int) throws -> String`.
 
 The provided return values are used up in FIFO order and the last one is always kept for any further calls. Here are examples of using return clauses:
 ```swift
@@ -217,9 +216,9 @@ given(productService)
 ### When
 
 Side effects can be added using `when(_ service:)` clauses. There are three kind of side effects:
-* **`perform(_ action)`**: Will register an operation to perform on invocations of the mocked function.
-* **`performOnGet(_ action:)`**: Available for mutable properties only, will perform the provided operation on property access.
-* **`performOnSet(_ action:)`**: Available for mutable properties only, will perform the provided operation on property assignment.
+* [`perform(_ action)`](https://kolos65.github.io/Mockable/documentation/mockable/functionactionbuilder/perform(_:)): Will register an operation to perform on invocations of the mocked function.
+* [`performOnGet(_ action:)`](https://kolos65.github.io/Mockable/documentation/mockable/propertyactionbuilder/performonget(_:)): Available for mutable properties only, will perform the provided operation on property access.
+* [`performOnSet(_ action:)`](https://kolos65.github.io/Mockable/documentation/mockable/propertyactionbuilder/performonset(_:)): Available for mutable properties only, will perform the provided operation on property assignment.
 
 Some examples of using side effects are:
 ```swift
@@ -242,9 +241,9 @@ when(productService).url(newValue: .value(nil)).performOnSet {
 ### Verify
 You can verify invocations of your mock service using the `verify(_ service:)` clause.
 There are three kind of verifications:
-* **`called(_:)`**: Asserts invocation count based on the given value.
-* **`getCalled(_:)`**: Available for mutable properties only, asserts property access count.
-* **`setCalled(_:)`**: Available for mutable properties only, asserts property assignment count.
+* [`called(_:)`](https://kolos65.github.io/Mockable/documentation/mockable/functionverifybuilder/called(_:file:line:)): Asserts invocation count based on the given value.
+* [`getCalled(_:)`](https://kolos65.github.io/Mockable/documentation/mockable/propertyverifybuilder/getcalled(_:file:line:)): Available for mutable properties only, asserts property access count.
+* [`setCalled(_:)`](https://kolos65.github.io/Mockable/documentation/mockable/propertyverifybuilder/setcalled(_:file:line:)): Available for mutable properties only, asserts property assignment count.
 
 Here are some example assertions:
 ```swift
@@ -260,9 +259,9 @@ verify(productService)
 ```
 
 If you are testing asynchronous code and cannot write sync assertions you can use the async counterparts of the above verifications:
-* **`calledEventually(_:before:)`**: Wait until timeout or invocation count satisfied.
-* **`getCalledEventually(_:before:)`**: Wait until timeout or property access count satisfied.
-* **`setSalledEventually(_:before:)`**: Wait until timeout or property assignment count satisfied.
+* [`calledEventually(_:before:)`](https://kolos65.github.io/Mockable/documentation/mockable/functionverifybuilder/calledeventually(_:before:file:line:)): Wait until timeout or invocation count satisfied.
+* [`getCalledEventually(_:before:)`](https://kolos65.github.io/Mockable/documentation/mockable/propertyverifybuilder/getcalledeventually(_:before:file:line:)): Wait until timeout or property access count satisfied.
+* [`setSalledEventually(_:before:)`](https://kolos65.github.io/Mockable/documentation/mockable/propertyverifybuilder/setcalledeventually(_:before:file:line:)): Wait until timeout or property assignment count satisfied.
 
 Here are some examples of async verifications:
 ```swift
@@ -298,7 +297,7 @@ You have two options to override the default strict behavior of the library:
     MockerPolicy.default = .relaxedVoid
     ```
 
-The `.relaxedMockable` policy in combination with the [`Mockable`](https://kolos65.github.io/Mockable/documentation/mockable/mockable) protocol can be used to set an implicit return value for custom types:
+The `.relaxedMockable` policy in combination with the [`Mockable`](https://kolos65.github.io/Mockable/documentation/mockable/mockable) protocol can be used to set an implicit return value for custom (or even built in) types:
 ```swift
 struct Car {
     var name: String
@@ -339,7 +338,7 @@ func testCarService() {
 > ⚠️ Relaxed mode will not work with generic return values as the type system is unable to locate the appropriate generic overload.
 
 ### Working with non-equatable Types
-**Mockable** uses a `Matcher` internally to compare parameters. 
+**Mockable** uses a [`Matcher`](https://kolos65.github.io/Mockable/documentation/mockable/matcher) internally to compare parameters. 
 By default the matcher is able to compare any custom type that conforms to `Equatable` (except when used in a generic function).
 In special cases, when you
 * have non-equatable parameter types
