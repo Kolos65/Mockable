@@ -109,15 +109,11 @@ public class Mocker<T: Mockable> {
                        assertion: MockableAssertion,
                        file: StaticString = #file,
                        line: UInt = #line) {
-        let matches = invocations.filter {
-            member.match($0)
-        }
-        assertion(
-            count.satisfies(count: matches.count),
-            "Expected \(count) invocation(s) of \(member.name), but was: \(matches.count).",
-            file,
-            line
-        )
+        let matches = invocations.filter(member.match)
+        let message = """
+        Expected \(count) invocation(s) of \(member.name), but was: \(matches.count).",
+        """
+        assertion(count.satisfies(matches.count), message, file, line)
     }
 
     /// Verifies the number of times a member should be called.
@@ -128,37 +124,29 @@ public class Mocker<T: Mockable> {
     ///   - assertion: Assertion function to use.
     ///   - timeout: The maximum time it will wait for assertion to be true
     public func verify(_ member: Member,
-                       willHaveCount count: Count,
+                       count: Count,
                        assertion: @escaping MockableAssertion,
-                       timeout: TimeInterval,
+                       timeout: TimeoutDuration,
                        file: StaticString = #file,
                        line: UInt = #line) async {
-        let invocationPublisher = $_invocations
-            .map { invocations in
-                invocations.filter { member.match($0) }
-            }
-            .prepend([])
-        let timerPublisher = Timer.publish(every: timeout, on: .main, in: .default)
-            .autoconnect()
-            .map { _ in true }
-            .prepend(false)
-        await withCheckedContinuation { continuation in
-            var cancellable: AnyCancellable?
-            cancellable = Publishers.CombineLatest(invocationPublisher, timerPublisher)
-                .receive(on: RunLoop.main)
-                .sink { matches, timedOut in
-                    let satisfied = count.satisfies(count: matches.count)
-                    guard satisfied || timedOut else { return }
-                    let prefix = timedOut ? "Wait for \(timeout)s expecting \(count)" : "Expected \(count)"
-                    assertion(
-                        satisfied,
-                        "\(prefix) invocation(s) of \(member.name), but was: \(matches.count)",
-                        file,
-                        line
-                    )
-                    cancellable?.cancel()
-                    continuation.resume()
+        do {
+            let invocationsSequence = $_invocations.receive(on: queue).values
+            try await withTimeout(after: timeout.duration) {
+                for await invocations in invocationsSequence {
+                    let matches = invocations.filter(member.match)
+                    if count.satisfies(matches.count) {
+                        break
+                    } else {
+                        continue
+                    }
                 }
+            }
+        } catch {
+            let matches = invocations.filter(member.match)
+            let message = """
+            Expected \(count) invocation(s) of \(member.name) before \(timeout.duration)s, but was: \(matches.count)
+            """
+            assertion(count.satisfies(matches.count), message, file, line)
         }
     }
 

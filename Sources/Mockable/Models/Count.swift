@@ -7,15 +7,13 @@
 
 /// An enumeration representing different counting conditions for verifying invocations.
 ///
-/// - `atLeastOnce`: The member should be called at least once.
-/// - `once`: The member should be called exactly once.
-/// - `exactly(Int)`: The member should be called a specific number of times.
-/// - `from(Int, to: Int)`: The member should be called within a specific range of times.
-/// - `less(than: Int)`: The member should be called less than a specific number of times.
-/// - `lessOrEqual(to: Int)`: The member should be called less than or equal to a specific number of times.
-/// - `more(than: Int)`: The member should be called more than a specific number of times.
-/// - `moreOrEqual(to: Int)`: The member should be called more than or equal to a specific number of times.
-/// - `never`: The member should never be called.
+/// Use `Count` in `verify` clauses to write assertions:
+/// ```swift
+/// // Assert `fetch(for)` was called between 1 and 5 times:
+/// verify(productService)
+///     .fetch(for: .any)
+///     .called(.from(1, to: 5))
+/// ```
 public enum Count: ExpressibleByIntegerLiteral {
     /// The associated type for the integer literal.
     public typealias IntegerLiteralType = Int
@@ -27,21 +25,30 @@ public enum Count: ExpressibleByIntegerLiteral {
         self = .exactly(value)
     }
 
+    /// The member was called at least once.
     case atLeastOnce
+    /// The member was called exactly once.
     case once
+    /// The member was called a specific number of times.
     case exactly(Int)
+    /// The member was called within a specific range of times.
     case from(Int, to: Int)
+    /// The member was called less than a specific number of times.
     case less(than: Int)
+    /// The member was called less than or equal to a specific number of times.
     case lessOrEqual(to: Int)
+    /// The member was called more than a specific number of times.
     case more(than: Int)
+    /// The member was called more than or equal to a specific number of times.
     case moreOrEqual(to: Int)
+    /// The member was never called.
     case never
 
     /// Checks if the given count satisfies the specified condition.
     ///
     /// - Parameter count: The actual count to be compared.
     /// - Returns: `true` if the condition is satisfied; otherwise, `false`.
-    func satisfies(count: Int) -> Bool {
+    func satisfies(_ count: Int) -> Bool {
         switch self {
         case .atLeastOnce: return count >= 1
         case .once: return count == 1

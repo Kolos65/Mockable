@@ -134,9 +134,9 @@ func testCartService() async throws {
     try await cartService.checkout(with: mockProduct, using: mockURL)
 
     verify(productService)
-        .fetch(for: .value(mockProduct.id)).called(count: .atLeastOnce)
-        .checkout(with: .value(mockProduct)).called(count: .once)
-        .url(newValue: .value(mockURL)).setterCalled(count: .once)
+        .fetch(for: .value(mockProduct.id)).called(.atLeastOnce)
+        .checkout(with: .value(mockProduct)).called(.once)
+        .url(newValue: .value(mockURL)).setCalled(.once)
 }
 ```
 
@@ -170,7 +170,7 @@ When constructing mockable clauses, you have to **specify parameter conditions**
 * **`.matching((Value) -> Bool)`**: Uses the provided closure to filter functions calls.
 
 > Computed properties have no parameters, but mutable properties get a `(newValue:)` parameter in function builders that can be used 
-to constraint functionality on property assignment with a match condition. These `newValue` conditions will only effect the `performOnGet`, `performOnSet`, `getterCalled` and `setterCalled`
+to constraint functionality on property assignment with a match condition. These `newValue` conditions will only effect the `performOnGet`, `performOnSet`, `getCalled` and `setCalled`
 clauses but will have no effect on return clauses.
 
 Here are examples of using different parameter conditions:
@@ -185,7 +185,7 @@ when(productService)
   .perform { print("Ouch!") }
 
 // assert if the fetch(for:) was called exactly once regardless of what id parameter it was called with
-verify(productService).fetch(for: .any).called(count: .once)
+verify(productService).fetch(for: .any).called(.once)
 ```
 
 ### Given
@@ -242,39 +242,39 @@ when(productService).url(newValue: .value(nil)).performOnSet {
 ### Verify
 You can verify invocations of your mock service using the `verify(_ service:)` clause.
 There are three kind of verifications:
-* **`called(count:)`**: Asserts invocation count based on the given value.
-* **`getterCalled(count:)`**: Available for mutable properties only, asserts property access count.
-* **`setterCalled(count:)`**: Available for mutable properties only, asserts property assignment count.
-
-And three kind of its async counterpart:
-* **`eventuallyCalled(count:timeout:)`**: Wait until timeout or invocation count satisfied.
-* **`getterEventuallyCalled(count:timeout:)`**: Wait until timeout or property access count satisfied.
-* **`setterEventuallyCalled(count:timeout:)`**: Wait until timeout or property assignment count satisfied.
+* **`called(_:)`**: Asserts invocation count based on the given value.
+* **`getCalled(_:)`**: Available for mutable properties only, asserts property access count.
+* **`setCalled(_:)`**: Available for mutable properties only, asserts property assignment count.
 
 Here are some example assertions:
 ```swift
 verify(productService)
     // assert fetch(for:) was called between 1 and 5 times
-    .fetch(for: .any).called(count: .from(1, to: 5))
+    .fetch(for: .any).called(.from(1, to: 5))
     // assert checkout(with:) was called between exactly 10 times
-    .checkout(with: .any).called(count: 10)
+    .checkout(with: .any).called(10)
     // assert url property was accessed at least 2 times
-    .url().getterCalled(count: .moreOrEqual(to: 2))
+    .url().getCalled(.moreOrEqual(to: 2))
     // assert url property was never set to nil
-    .url(newValue: .value(nil)).setterCalled(count: .never)
+    .url(newValue: .value(nil)).setCalled(.never)
 ```
 
-And same thing in async:
+If you are testing asynchronous code and cannot write sync assertions you can use the async counterparts of the above verifications:
+* **`calledEventually(_:before:)`**: Wait until timeout or invocation count satisfied.
+* **`getCalledEventually(_:before:)`**: Wait until timeout or property access count satisfied.
+* **`setSalledEventually(_:before:)`**: Wait until timeout or property assignment count satisfied.
+
+Here are some examples of async verifications:
 ```swift
 await verify(productService)
     // assert fetch(for:) was called between 1 and 5 times before default timeout (1 second)
-    .fetch(for: .any).eventuallyCalled(count: .from(1, to: 5))
-    // assert checkout(with:) was called between exactly 10 times before default timeout (1 second)
-    .checkout(with: .any).eventuallyCalled(count: 10)
+    .fetch(for: .any).calledEventually(.from(1, to: 5))
+    // assert checkout(with:) was called between exactly 10 times before 3 seconds
+    .checkout(with: .any).calledEventually(10, before: .seconds(3))
     // assert url property was accessed at least 2 times before default timeout (1 second)
-    .url().getterEventuallyCalled(count: .moreOrEqual(to: 2))
+    .url().getCalledEventually(.moreOrEqual(to: 2))
     // assert url property was set to nil once
-    .url(newValue: .value(nil)).setterEventuallyCalled(count: .once)
+    .url(newValue: .value(nil)).setCalledEventually(.once)
 ```
 
 ### Relaxed Mode
