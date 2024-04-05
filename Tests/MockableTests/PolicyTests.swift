@@ -8,13 +8,13 @@
 import XCTest
 import MockableTest
 
-struct Car: Equatable {
+public struct Car: Equatable {
     var name: String
     var seats: Int
 }
 
 extension Car: Mockable {
-    static var mock: Car {
+    public static var mock: Car {
         Car(name: "Mock", seats: 4)
     }
 }
@@ -28,6 +28,7 @@ protocol PolicyService {
     func optionalFunc() -> String?
     var optionalProp: String? { get }
     func carFunc() -> Car
+    func optionalCarFunc() -> Car?
     var carProp: Car { get }
     func carsFunc() -> [Car]
     var carsProp: [Car] { get }
@@ -63,9 +64,15 @@ final class PolicyTests: XCTestCase {
         mock.nonThrowingVoidProp
     }
 
+    func test_whenOnlyOptionalPolicySet_mockReturnsNilNotMockableValue() throws {
+        let mock = MockPolicyService(policy: .relaxedOptional)
+        XCTAssertNil(mock.optionalCarFunc())
+    }
+
     func test_whenCustomMockedPolicySet_mockReturnsDefault() throws {
         let mock = MockPolicyService(policy: .relaxedMockable)
         XCTAssertEqual(Car.mock, mock.carFunc())
+        XCTAssertEqual(Car.mock, mock.optionalCarFunc())
         XCTAssertEqual(Car.mock, mock.carProp)
         XCTAssertEqual(Car.mocks, mock.carsFunc())
         XCTAssertEqual(Car.mocks, mock.carsProp)
@@ -79,6 +86,7 @@ final class PolicyTests: XCTestCase {
         XCTAssertEqual(nil, service.optionalFunc())
         XCTAssertEqual(nil, service.optionalProp)
         XCTAssertEqual(Car.mock, service.carFunc())
+        XCTAssertEqual(Car.mock, service.optionalCarFunc())
         XCTAssertEqual(Car.mock, service.carProp)
         XCTAssertEqual(Car.mocks, service.carsFunc())
         XCTAssertEqual(Car.mocks, service.carsProp)

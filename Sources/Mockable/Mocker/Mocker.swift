@@ -334,7 +334,7 @@ extension Mocker {
     }
 }
 
-// MARK: - Mocked
+// MARK: - Mockable
 
 extension Mocker {
     /// Mocks a member, performing associated actions and providing the expected return value.
@@ -366,5 +366,51 @@ extension Mocker {
     ) throws -> V where V: Mockable {
         let relaxed = currentPolicy.contains(.relaxedMockable)
         return try mock(member, producerResolver, relaxed ? .value(.mock) : .none)
+    }
+}
+
+// MARK: - Mockable + Optional
+
+extension Mocker {
+    /// Mocks a member, performing associated actions and providing the expected return value.
+    ///
+    /// - Parameters:
+    ///   - member: The member to mock.
+    ///   - producerResolver: A closure resolving the produced value.
+    /// - Returns: The expected return value.
+    @discardableResult
+    public func mock<V>(
+        _ member: Member,
+        producerResolver: (Any) throws -> V
+    ) -> V where V: Mockable, V: ExpressibleByNilLiteral {
+        // swiftlint:disable force_try
+        if currentPolicy.contains(.relaxedMockable) {
+            return try! mock(member, producerResolver, .value(.mock))
+        } else if currentPolicy.contains(.relaxedOptional) {
+            return try! mock(member, producerResolver, .value(nil))
+        } else {
+            return try! mock(member, producerResolver, .none)
+        }
+        // swiftlint:enable force_try
+    }
+
+    /// Mocks a throwing member, performing associated actions and providing the expected return value.
+    ///
+    /// - Parameters:
+    ///   - member: The member to mock.
+    ///   - producerResolver: A closure resolving the produced value.
+    /// - Returns: The expected return value.
+    @discardableResult
+    public func mockThrowing<V>(
+        _ member: Member,
+        producerResolver: (Any) throws -> V
+    ) throws -> V where V: Mockable, V: ExpressibleByNilLiteral {
+        if currentPolicy.contains(.relaxedMockable) {
+            return try mock(member, producerResolver, .value(.mock))
+        } else if currentPolicy.contains(.relaxedOptional) {
+            return try mock(member, producerResolver, .value(nil))
+        } else {
+            return try mock(member, producerResolver, .none)
+        }
     }
 }

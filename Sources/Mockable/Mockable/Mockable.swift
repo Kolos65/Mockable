@@ -64,3 +64,7 @@ extension Array: Mockable where Element: Mockable {
         Element.mocks
     }
 }
+
+extension Optional: Mockable where Wrapped: Mockable {
+    public static var mock: Self { Wrapped.mock }
+}
