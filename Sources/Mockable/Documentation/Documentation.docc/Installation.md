@@ -7,7 +7,7 @@ Learn how to install **Mockable** and integrate into your targets.
 **Mockable** can be installed using Swift Package Manager.
 
 It provides two library products:
-* **Mockable**: Core library containing the `@Mockable` macro. Add **Mockable** to all targets that contain protocols you want to mock. **Mockable** does not depend on the `XCTest` framework so it can be added to any target.
+* **Mockable**: Core library containing the [`@Mockable`](https://kolos65.github.io/Mockable/documentation/mockable/mockable()) macro. Add **Mockable** to all targets that contain protocols you want to mock. **Mockable** does not depend on the `XCTest` framework so it can be added to any target.
 * **MockableTest**: Testing utilities that depend on the `XCTest` framework. Add **MockableTest** to all of your test targets where you want to use mocked services for testing.
 
 > **MockableTest** contains utilities that use the `XCTest` framework so it will only link with test targets. 

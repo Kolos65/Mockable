@@ -6,13 +6,12 @@
 //
 
 /// An enumeration representing different types of parameters used in mocking.
-///
-/// - `any`: Matches any value.
-/// - `value(Value)`: Matches a specific value.
-/// - `matching((Value) -> Bool)`: Matches a value using a custom matching closure.
 public enum Parameter<Value> {
+    /// Matches any value.
     case any
+    /// Matches a specific value.
     case value(Value)
+    /// Matches a value using a custom matching closure.
     case matching((Value) -> Bool)
 }
 
