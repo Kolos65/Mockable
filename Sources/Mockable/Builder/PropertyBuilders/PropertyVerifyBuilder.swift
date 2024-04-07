@@ -48,7 +48,13 @@ public struct PropertyVerifyBuilder<T: MockService, ParentBuilder: AssertionBuil
     /// - Returns: The parent builder, used for chaining additional specifications.
     @discardableResult
     public func getCalled(_ count: Count, file: StaticString = #file, line: UInt = #line) -> ParentBuilder {
-        mocker.verify(getMember, count: count, assertion: assertion, file: file, line: line)
+        mocker.verify(
+            member: getMember,
+            count: count,
+            assertion: assertion,
+            file: file,
+            line: line
+        )
         return .init(mocker: mocker, assertion: assertion)
     }
 
@@ -64,7 +70,14 @@ public struct PropertyVerifyBuilder<T: MockService, ParentBuilder: AssertionBuil
                                     before timeout: TimeoutDuration = .seconds(1),
                                     file: StaticString = #file,
                                     line: UInt = #line) async -> ParentBuilder {
-        await mocker.verify(getMember, count: count, assertion: assertion, timeout: timeout, file: file, line: line)
+        await mocker.verify(
+            member: getMember,
+            count: count,
+            assertion: assertion,
+            timeout: timeout,
+            file: file,
+            line: line
+        )
         return .init(mocker: mocker, assertion: assertion)
     }
 
@@ -74,7 +87,13 @@ public struct PropertyVerifyBuilder<T: MockService, ParentBuilder: AssertionBuil
     /// - Returns: The parent builder, used for chaining additional specifications.
     @discardableResult
     public func setCalled(_ count: Count, file: StaticString = #file, line: UInt = #line) -> ParentBuilder {
-        mocker.verify(setMember, count: count, assertion: assertion, file: file, line: line)
+        mocker.verify(
+            member: setMember,
+            count: count,
+            assertion: assertion,
+            file: file,
+            line: line
+        )
         return .init(mocker: mocker, assertion: assertion)
     }
 
@@ -90,7 +109,14 @@ public struct PropertyVerifyBuilder<T: MockService, ParentBuilder: AssertionBuil
                                     before timeout: TimeoutDuration = .seconds(1),
                                     file: StaticString = #file,
                                     line: UInt = #line) async -> ParentBuilder {
-        await mocker.verify(setMember, count: count, assertion: assertion, timeout: timeout, file: file, line: line)
+        await mocker.verify(
+            member: setMember,
+            count: count,
+            assertion: assertion,
+            timeout: timeout,
+            file: file,
+            line: line
+        )
         return .init(mocker: mocker, assertion: assertion)
     }
 }

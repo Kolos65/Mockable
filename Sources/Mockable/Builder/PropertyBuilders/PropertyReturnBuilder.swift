@@ -37,7 +37,7 @@ public struct PropertyReturnBuilder<T: MockService, ParentBuilder: EffectBuilder
     /// - Returns: The parent builder, used for chaining additional specifications.
     @discardableResult
     public func willReturn(_ value: ReturnType) -> ParentBuilder {
-        mocker.given(getMember, returnValue: .return(value))
+        mocker.addReturnValue(.return(value), for: getMember)
         return .init(mocker: mocker)
     }
 
@@ -47,7 +47,7 @@ public struct PropertyReturnBuilder<T: MockService, ParentBuilder: EffectBuilder
     /// - Returns: The parent builder, used for chaining additional specifications.
     @discardableResult
     public func willProduce(_ producer: @escaping () -> ReturnType) -> ParentBuilder {
-        mocker.given(getMember, returnValue: .produce(producer))
+        mocker.addReturnValue(.produce(producer), for: getMember)
         return .init(mocker: mocker)
     }
 }

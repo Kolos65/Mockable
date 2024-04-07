@@ -41,7 +41,7 @@ public struct PropertyActionBuilder<T: MockService, ParentBuilder: EffectBuilder
     /// - Returns: The parent builder, typically used for chaining additional specifications.
     @discardableResult
     public func performOnGet(_ action: @escaping () -> Void) -> ParentBuilder {
-        mocker.perform(getMember, action: action)
+        mocker.addAction(action, for: getMember)
         return .init(mocker: mocker)
     }
 
@@ -51,7 +51,7 @@ public struct PropertyActionBuilder<T: MockService, ParentBuilder: EffectBuilder
     /// - Returns: The parent builder, typically used for chaining additional specifications.
     @discardableResult
     public func performOnSet(_ action: @escaping () -> Void) -> ParentBuilder {
-        mocker.perform(setMember, action: action)
+        mocker.addAction(action, for: setMember)
         return .init(mocker: mocker)
     }
 }

@@ -41,7 +41,13 @@ public struct FunctionVerifyBuilder<T: MockService, ParentBuilder: AssertionBuil
     /// - Returns: The parent builder, used for chaining additional specifications.
     @discardableResult
     public func called(_ count: Count, file: StaticString = #file, line: UInt = #line) -> ParentBuilder {
-        mocker.verify(member, count: count, assertion: assertion, file: file, line: line)
+        mocker.verify(
+            member: member,
+            count: count,
+            assertion: assertion,
+            file: file,
+            line: line
+        )
         return .init(mocker: mocker, assertion: assertion)
     }
 
@@ -57,7 +63,14 @@ public struct FunctionVerifyBuilder<T: MockService, ParentBuilder: AssertionBuil
                                  before timeout: TimeoutDuration = .seconds(1),
                                  file: StaticString = #file,
                                  line: UInt = #line) async -> ParentBuilder {
-        await mocker.verify(member, count: count, assertion: assertion, timeout: timeout, file: file, line: line)
+        await mocker.verify(
+            member: member,
+            count: count,
+            assertion: assertion,
+            timeout: timeout,
+            file: file,
+            line: line
+        )
         return .init(mocker: mocker, assertion: assertion)
     }
 }
