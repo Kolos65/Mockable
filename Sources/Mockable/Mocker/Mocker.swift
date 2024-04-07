@@ -56,6 +56,11 @@ public class Mocker<Service: MockService> {
         set { queue.sync { _invocations = newValue } }
     }
 
+    /// Async stream of invocations
+    private var invocationsStream: AsyncStream<[Member]> {
+        $_invocations.receive(on: queue).stream
+    }
+
     /// Initializes a new instance of `Mocker`.
     public init(policy: MockerPolicy? = nil) {
         self.policy = policy
@@ -129,9 +134,8 @@ public class Mocker<Service: MockService> {
                        file: StaticString = #file,
                        line: UInt = #line) async {
         do {
-            let invocationsSequence = $_invocations.receive(on: queue).values
             try await withTimeout(after: timeout.duration) {
-                for await invocations in invocationsSequence {
+                for await invocations in self.invocationsStream {
                     let matches = invocations.filter(member.match)
                     if count.satisfies(matches.count) {
                         break
