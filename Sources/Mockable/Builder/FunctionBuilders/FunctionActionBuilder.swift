@@ -36,7 +36,7 @@ public struct FunctionActionBuilder<T: MockService, ParentBuilder: EffectBuilder
     /// - Returns: The parent builder, used for chaining additional specifications.
     @discardableResult
     public func perform(_ action: @escaping () -> Void) -> ParentBuilder {
-        mocker.perform(member, action: action)
+        mocker.addAction(action, for: member)
         return .init(mocker: mocker)
     }
 }

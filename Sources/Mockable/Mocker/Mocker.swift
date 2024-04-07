@@ -13,24 +13,22 @@ import Combine
 /// The `Mocker` class keeps track of invocations, expected return values, and actions associated with
 /// specific members of a mockable service.
 public class Mocker<Service: MockService> {
+
+    // MARK: Public Properties
+
     /// The associated type representing a member of the mockable service.
     public typealias Member = Service.Member
     /// The associated type representing the return value of a member.
     public typealias Return = Service.Return
     /// The associated type representing an action to be performed on a member.
     public typealias Action = Service.Action
-
     /// Custom relaxation policy to use when missing return values.
     public var policy: MockerPolicy?
 
-    /// Resolved relaxation policy to use when missing return values.
-    private var currentPolicy: MockerPolicy {
-        policy ?? .default
-    }
+    // MARK: Private Properties
 
     /// A serial dispatch queue for thread safety when accessing mutable properties.
     private let queue = DispatchQueue(label: "com.mockable.mocker")
-
     /// Dictionary to store expected return values for each member.
     private var _returns = [Member: [Return]]()
     /// Dictionary to store actions to be performed on each member.
@@ -39,19 +37,19 @@ public class Mocker<Service: MockService> {
     @Published private var _invocations = [Member]()
 
     /// Synchornized access to return values
-    var returns: [Member: [Return]] {
+    private var returns: [Member: [Return]] {
         get { queue.sync { _returns } }
         set { queue.sync { _returns = newValue } }
     }
 
     /// Synchornized access to actions
-    var actions: [Member: [Action]] {
+    private var actions: [Member: [Action]] {
         get { queue.sync { _actions } }
         set { queue.sync { _actions = newValue } }
     }
 
     /// Synchornized access to invocations
-    var invocations: [Member] {
+    private var invocations: [Member] {
         get { queue.sync { _invocations } }
         set { queue.sync { _invocations = newValue } }
     }
@@ -61,10 +59,19 @@ public class Mocker<Service: MockService> {
         $_invocations.receive(on: queue).stream
     }
 
+    /// Resolved relaxation policy to use when missing return values.
+    private var currentPolicy: MockerPolicy {
+        policy ?? .default
+    }
+
+    // MARK: Init
+
     /// Initializes a new instance of `Mocker`.
     public init(policy: MockerPolicy? = nil) {
         self.policy = policy
     }
+
+    // MARK: Public Methods
 
     /// Adds an invocation for a member to the list of invocations.
     ///
@@ -73,21 +80,12 @@ public class Mocker<Service: MockService> {
         invocations.append(member)
     }
 
-    /// Performs actions associated with a member.
-    ///
-    /// - Parameter member: The member for which actions should be performed.
-    public func performActions(for member: Member) {
-        guard let actions = actions[member] else { return }
-        let matches = actions.filter { member.match($0.member) }
-        matches.forEach { $0.action() }
-    }
-
     /// Specifies an expected return value for a member.
     ///
     /// - Parameters:
     ///   - member: The member for which the return value is specified.
     ///   - returnValue: The expected return value.
-    public func given(_ member: Member, returnValue: ReturnValue) {
+    public func addReturnValue(_ returnValue: ReturnValue, for member: Member) {
         let given = Return(member: member, returnValue: returnValue)
         returns[member] = (returns[member] ?? []) + [given]
     }
@@ -97,7 +95,7 @@ public class Mocker<Service: MockService> {
     /// - Parameters:
     ///   - member: The member for which the action is specified.
     ///   - action: The action to be performed.
-    public func perform(_ member: Member, action: @escaping () -> Void) {
+    public func addAction(_ action: @escaping () -> Void, for member: Member) {
         let action = Action(member: member, action: action)
         actions[action.member] = (actions[action.member] ?? []) + [action]
     }
@@ -108,14 +106,14 @@ public class Mocker<Service: MockService> {
     ///   - member: The member to verify.
     ///   - count: The expected number of invocations.
     ///   - assertion: Assertion function to use.
-    public func verify(_ member: Member,
+    public func verify(member: Member,
                        count: Count,
                        assertion: MockableAssertion,
                        file: StaticString = #file,
                        line: UInt = #line) {
         let matches = invocations.filter(member.match)
         let message = """
-        Expected \(count) invocation(s) of \(member.name), but was: \(matches.count).",
+        Expected \(count) invocation(s) of \(member.name), but was \(matches.count).",
         """
         assertion(count.satisfies(matches.count), message, file, line)
     }
@@ -127,7 +125,7 @@ public class Mocker<Service: MockService> {
     ///   - count: The expected number of invocations.
     ///   - assertion: Assertion function to use.
     ///   - timeout: The maximum time it will wait for assertion to be true
-    public func verify(_ member: Member,
+    public func verify(member: Member,
                        count: Count,
                        assertion: @escaping MockableAssertion,
                        timeout: TimeoutDuration,
@@ -147,7 +145,7 @@ public class Mocker<Service: MockService> {
         } catch {
             let matches = invocations.filter(member.match)
             let message = """
-            Expected \(count) invocation(s) of \(member.name) before \(timeout.duration)s, but was: \(matches.count)
+            Expected \(count) invocation(s) of \(member.name) before \(timeout.duration) s, but was \(matches.count).
             """
             assertion(count.satisfies(matches.count), message, file, line)
         }
@@ -168,6 +166,15 @@ public class Mocker<Service: MockService> {
                 invocations.removeAll()
             }
         }
+    }
+
+    /// Performs actions associated with a member.
+    ///
+    /// - Parameter member: The member for which actions should be performed.
+    public func performActions(for member: Member) {
+        guard let actions = actions[member] else { return }
+        let matches = actions.filter { member.match($0.member) }
+        matches.forEach { $0.action() }
     }
 
     /// Mocks a member, performing associated actions and providing the expected return value.

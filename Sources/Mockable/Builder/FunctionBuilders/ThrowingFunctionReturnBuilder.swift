@@ -36,7 +36,7 @@ public struct ThrowingFunctionReturnBuilder<T: MockService, ParentBuilder: Effec
     /// - Returns: The parent builder, used for chaining additional specifications.
     @discardableResult
     public func willReturn(_ value: ReturnType) -> ParentBuilder {
-        mocker.given(member, returnValue: .return(value))
+        mocker.addReturnValue(.return(value), for: member)
         return .init(mocker: mocker)
     }
 
@@ -46,7 +46,7 @@ public struct ThrowingFunctionReturnBuilder<T: MockService, ParentBuilder: Effec
     /// - Returns: The parent builder, used for chaining additional specifications.
     @discardableResult
     public func willThrow(_ error: Error) -> ParentBuilder {
-        mocker.given(member, returnValue: .throw(error))
+        mocker.addReturnValue(.throw(error), for: member)
         return .init(mocker: mocker)
     }
 
@@ -56,7 +56,7 @@ public struct ThrowingFunctionReturnBuilder<T: MockService, ParentBuilder: Effec
     /// - Returns: The parent builder, used for chaining additional specifications.
     @discardableResult
     public func willProduce(_ producer: ProduceType) -> ParentBuilder {
-        mocker.given(member, returnValue: .produce(producer))
+        mocker.addReturnValue(.produce(producer), for: member)
         return .init(mocker: mocker)
     }
 }
@@ -65,7 +65,7 @@ extension ThrowingFunctionReturnBuilder where ReturnType == Void {
     /// Specifies that the void function will return normally when the mocked member is called.
     @discardableResult
     public func willReturn() -> ParentBuilder {
-        mocker.given(member, returnValue: .return(()))
+        mocker.addReturnValue(.return(()), for: member)
         return .init(mocker: mocker)
     }
 }
