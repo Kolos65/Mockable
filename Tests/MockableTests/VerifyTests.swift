@@ -44,7 +44,7 @@ final class VerifyTests: XCTestCase {
         given(mock).getUser(for: .any).willReturn(.test1)
 
         Task {
-            try await Task.sleep(for: .seconds(0.5))
+            try await Task.sleep(seconds: 0.5)
             _ = try self.mock.getUser(for: UUID())
         }
 
@@ -81,7 +81,7 @@ final class VerifyTests: XCTestCase {
         given(mock).name.willReturn(testName)
 
         Task {
-            try await Task.sleep(for: .seconds(0.5))
+            try await Task.sleep(seconds: 0.5)
             _ = mock.name
             _ = mock.name
             mock.name = testName
