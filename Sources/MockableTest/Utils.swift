@@ -24,6 +24,6 @@ import XCTest
 /// ```
 /// - Parameter service: The mockable service for which invocations are verified.
 /// - Returns: The service's verification builder.
-public func verify<T: MockService>(_ service: T) -> T.VerifyBuilder {
+public func verify<T: MockableService>(_ service: T) -> T.VerifyBuilder {
     service.verify(with: XCTAssert)
 }

@@ -9,7 +9,7 @@
 ///
 /// This builder is typically used within the context of a higher-level builder (e.g., a `VerifyBuilder`)
 /// to verify the expected number of invocations for a particular function of a mock service.
-public struct FunctionVerifyBuilder<T: MockService, ParentBuilder: AssertionBuilder<T>> {
+public struct FunctionVerifyBuilder<T: MockableService, ParentBuilder: AssertionBuilder<T>> {
 
     /// Convenient type for the associated service's Member.
     public typealias Member = T.Member

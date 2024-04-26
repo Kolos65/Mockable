@@ -9,5 +9,5 @@
 ///
 /// This builder is typically used within the context of a higher-level builder (e.g., a `VerifyBuilder`)
 /// to verify the expected number of invocations for a throwing function of a mock service.
-public typealias ThrowingFunctionVerifyBuilder<T: MockService, ParentBuilder: AssertionBuilder<T>>
+public typealias ThrowingFunctionVerifyBuilder<T: MockableService, ParentBuilder: AssertionBuilder<T>>
     = FunctionVerifyBuilder<T, ParentBuilder>

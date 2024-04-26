@@ -1,5 +1,5 @@
 //
-//  MockService.swift
+//  MockableService.swift
 //  Mockable
 //
 //  Created by Kolos Foltanyi on 2023. 11. 13..
@@ -9,7 +9,7 @@
 ///
 /// Conforming types must provide a `Member` type representing their members
 /// as well as builders for specifying return values, actions, and verifications.
-public protocol MockService {
+public protocol MockableService {
 
     /// A type representing the members of the mocked protocol.
     associatedtype Member: Matchable, CaseIdentifiable

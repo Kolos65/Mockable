@@ -42,7 +42,7 @@ extension MockFacotry {
                 name: requirements.syntax.name.trimmed
             ))
             InheritedTypeSyntax(type: IdentifierTypeSyntax(
-                name: NS.MockService
+                name: NS.MockableService
             ))
         }
     }

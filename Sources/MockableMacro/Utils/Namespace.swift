@@ -53,7 +53,7 @@ enum NS {
     static let assertion: TokenSyntax = "assertion"
 
     static let Mock: TokenSyntax = "Mock"
-    static let MockService: TokenSyntax = "MockService"
+    static let MockableService: TokenSyntax = "MockableService"
     static let Bool: TokenSyntax = "Bool"
     static let GenericValue: String = "GenericValue"
     static let MockableAssertion: TokenSyntax = "MockableAssertion"

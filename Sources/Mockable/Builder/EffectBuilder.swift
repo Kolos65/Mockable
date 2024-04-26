@@ -10,7 +10,7 @@
 public protocol EffectBuilder<Service> {
 
     /// The mock service associated with the Builder.
-    associatedtype Service: MockService
+    associatedtype Service: MockableService
 
     /// Initializes a new instance of the builder with the provided `Mocker`.
     ///
