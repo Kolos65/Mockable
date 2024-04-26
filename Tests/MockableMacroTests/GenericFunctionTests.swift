@@ -24,7 +24,7 @@ final class GenericFunctionTests: MockableMacroTestCase {
             }
 
             #if MOCKING
-            final class MockTest: Test, MockService {
+            final class MockTest: Test, MockableService {
                 private var mocker = Mocker<MockTest>()
                 @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
                 func given() -> ReturnBuilder {
@@ -112,7 +112,7 @@ final class GenericFunctionTests: MockableMacroTestCase {
             }
 
             #if MOCKING
-            final class MockTest: Test, MockService {
+            final class MockTest: Test, MockableService {
                 private var mocker = Mocker<MockTest>()
                 @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
                 func given() -> ReturnBuilder {
@@ -204,7 +204,7 @@ final class GenericFunctionTests: MockableMacroTestCase {
             }
 
             #if MOCKING
-            final class MockTest: Test, MockService {
+            final class MockTest: Test, MockableService {
                 private var mocker = Mocker<MockTest>()
                 @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
                 func given() -> ReturnBuilder {

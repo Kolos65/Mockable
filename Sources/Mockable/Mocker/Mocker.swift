@@ -12,7 +12,7 @@ import Combine
 ///
 /// The `Mocker` class keeps track of invocations, expected return values, and actions associated with
 /// specific members of a mockable service.
-public class Mocker<Service: MockService> {
+public class Mocker<Service: MockableService> {
 
     // MARK: Public Properties
 

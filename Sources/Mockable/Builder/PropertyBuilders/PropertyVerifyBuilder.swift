@@ -9,7 +9,7 @@
 ///
 /// This builder is typically used within the context of a higher-level builder (e.g., a `VerifyBuilder`)
 /// to verify the expected number of invocations for the getter and setter of a particular property of a mock.
-public struct PropertyVerifyBuilder<T: MockService, ParentBuilder: AssertionBuilder<T>> {
+public struct PropertyVerifyBuilder<T: MockableService, ParentBuilder: AssertionBuilder<T>> {
 
     /// Convenient type for the associated service's Member.
     public typealias Member = T.Member

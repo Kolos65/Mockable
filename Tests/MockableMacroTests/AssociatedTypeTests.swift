@@ -26,7 +26,7 @@ final class AssociatedTypeTests: MockableMacroTestCase {
             }
 
             #if MOCKING
-            final class MockTest<Item>: Test, MockService {
+            final class MockTest<Item>: Test, MockableService {
                 private var mocker = Mocker<MockTest>()
                 @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
                 func given() -> ReturnBuilder {
@@ -116,7 +116,7 @@ final class AssociatedTypeTests: MockableMacroTestCase {
             }
 
             #if MOCKING
-            final class MockTest<Item>: Test, MockService where Item: Equatable, Item: Hashable {
+            final class MockTest<Item>: Test, MockableService where Item: Equatable, Item: Hashable {
                 private var mocker = Mocker<MockTest>()
                 @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
                 func given() -> ReturnBuilder {
@@ -206,7 +206,7 @@ final class AssociatedTypeTests: MockableMacroTestCase {
             }
 
             #if MOCKING
-            final class MockTest<Item>: Test, MockService where Item: Equatable, Item: Hashable {
+            final class MockTest<Item>: Test, MockableService where Item: Equatable, Item: Hashable {
                 private var mocker = Mocker<MockTest>()
                 @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
                 func given() -> ReturnBuilder {
