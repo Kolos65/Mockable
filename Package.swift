@@ -9,7 +9,7 @@ func ifDev<T>(add list: [T]) -> [T] { isDev ? list : [] }
 
 let devDependencies: [Package.Dependency] = [
     .package(url: "https://github.com/pointfreeco/swift-macro-testing", from: "0.2.2"),
-    .package(url: "https://github.com/realm/SwiftLint", from: "0.54.0"),
+    .package(url: "https://github.com/realm/SwiftLint", exact: "0.54.0"),
     .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.3.0")
 ]
 
