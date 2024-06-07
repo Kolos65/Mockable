@@ -12,7 +12,7 @@ It provides two library products:
 
 > **MockableTest** contains utilities that use the `XCTest` framework so it will only link with test targets. 
 
-> **MockableTest** also makes **Mockable** available so you only need to add **MockableTest** to your test targets.
+> Make sure to import **Mockable** as well as **MockableTest** in your test targets.
 
 ## Add **Mockable** using Xcode
 1. Open your Xcode project.
@@ -47,6 +47,7 @@ let package = Package(
         .testTarget(
             ...
             dependencies: [
+                .product(name: "Mockable", package: "Mockable"),
                 .product(name: "MockableTest", package: "Mockable")
             ]
         )

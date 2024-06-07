@@ -37,7 +37,7 @@ The library can be installed using Swift Package Manager.
 
 To use the library:
 1. Add **Mockable** to all of your targets that contain protocols you want to mock.
-2. Add **MockableTest** to your test targets.
+2. Add **Mockable** and **MockableTest** to your test targets.
 
 Read the [installation guide](https://kolos65.github.io/Mockable/documentation/mockable/installation/) of the documentation for more details on how to integrate **Mockable** with your project.
 
@@ -117,6 +117,7 @@ protocol ProductService {
 ```
 A mock implementation named `MockProductService` will be generated, that can be used in unit tests like:
 ```swift
+import Mockable
 import MockableTest
 
 lazy var productService = MockProductService()
