@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@_exported import Mockable
+import Mockable
 
 /// Creates a proxy for verifying invocations of members of the given service.
 ///

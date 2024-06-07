@@ -20,7 +20,7 @@ let devPlugins: [Target.PluginUsage] = [
 let devTargets: [Target] = [
     .testTarget(
         name: "MockableTests",
-        dependencies: ["MockableTest"],
+        dependencies: ["Mockable", "MockableTest"],
         swiftSettings: [.define("MOCKING")],
         plugins: devPlugins
     ),

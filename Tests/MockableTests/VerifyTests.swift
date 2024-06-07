@@ -7,6 +7,7 @@
 
 import XCTest
 import Foundation
+import Mockable
 import MockableTest
 
 final class VerifyTests: XCTestCase {

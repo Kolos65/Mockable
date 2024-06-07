@@ -5,7 +5,7 @@
 //  Created by Kolos Foltanyi on 2023. 11. 21..
 //
 
-import MockableTest
+import Mockable
 
 @Mockable
 protocol TestProtocol where Item2: Identifiable {
