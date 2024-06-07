@@ -230,6 +230,94 @@ final class NameCollisionTests: MockableMacroTestCase {
             """
         }
     }
+
+    func test_reserved_keyword() {
+        assertMacro {
+            """
+            @Mockable
+            protocol Test {
+                func `repeat`(param: Bool) -> String
+            }
+            """
+        } expansion: {
+            """
+            protocol Test {
+                func `repeat`(param: Bool) -> String
+            }
+
+            #if MOCKING
+            final class MockTest: Test, MockableService {
+                private var mocker = Mocker<MockTest>()
+                @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
+                func given() -> ReturnBuilder {
+                    .init(mocker: mocker)
+                }
+                @available(*, deprecated, message: "Use when(_ service:) of Mockable instead. ")
+                func when() -> ActionBuilder {
+                    .init(mocker: mocker)
+                }
+                @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead. ")
+                func verify(with assertion: @escaping MockableAssertion) -> VerifyBuilder {
+                    .init(mocker: mocker, assertion: assertion)
+                }
+                func reset(_ scopes: Set<MockerScope> = .all) {
+                    mocker.reset(scopes: scopes)
+                }
+                init(policy: MockerPolicy? = nil) {
+                    if let policy {
+                        mocker.policy = policy
+                    }
+                }
+                func `repeat`(param: Bool) -> String {
+                    let member: Member = .m1_repeat(param: .value(param))
+                    return mocker.mock(member) { producer in
+                        let producer = try cast(producer) as (Bool) -> String
+                        return producer(param)
+                    }
+                }
+                enum Member: Matchable, CaseIdentifiable {
+                    case m1_repeat(param: Parameter<Bool>)
+                    func match(_ other: Member) -> Bool {
+                        switch (self, other) {
+                        case (.m1_repeat(param: let leftParam), .m1_repeat(param: let rightParam)):
+                            return leftParam.match(rightParam)
+                        }
+                    }
+                }
+                struct ReturnBuilder: EffectBuilder {
+                    private let mocker: Mocker<MockTest>
+                    init(mocker: Mocker<MockTest>) {
+                        self.mocker = mocker
+                    }
+                    func `repeat`(param: Parameter<Bool>) -> FunctionReturnBuilder<MockTest, ReturnBuilder, String, (Bool) -> String> {
+                        .init(mocker, kind: .m1_repeat(param: param))
+                    }
+                }
+                struct ActionBuilder: EffectBuilder {
+                    private let mocker: Mocker<MockTest>
+                    init(mocker: Mocker<MockTest>) {
+                        self.mocker = mocker
+                    }
+                    func `repeat`(param: Parameter<Bool>) -> FunctionActionBuilder<MockTest, ActionBuilder> {
+                        .init(mocker, kind: .m1_repeat(param: param))
+                    }
+                }
+                struct VerifyBuilder: AssertionBuilder {
+                    private let mocker: Mocker<MockTest>
+                    private let assertion: MockableAssertion
+                    init(mocker: Mocker<MockTest>, assertion: @escaping MockableAssertion) {
+                        self.mocker = mocker
+                        self.assertion = assertion
+                    }
+                    func `repeat`(param: Parameter<Bool>) -> FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                        .init(mocker, kind: .m1_repeat(param: param), assertion: assertion)
+                    }
+                }
+            }
+            #endif
+            """
+        }
+    }
 }
 
 

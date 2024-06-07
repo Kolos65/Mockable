@@ -6,6 +6,7 @@
 //
 
 import SwiftSyntax
+import Foundation
 
 // MARK: - FunctionRequirement + Caseable
 
@@ -42,7 +43,8 @@ extension FunctionRequirement: Caseable {
 extension FunctionRequirement {
     private var caseExpression: MemberAccessExprSyntax {
         let indexPrefix = String(index + 1)
-        let caseName = syntax.name.trimmedDescription
+        let specialEnclosingCharacters: CharacterSet = ["`"]
+        let caseName = syntax.name.trimmedDescription.trimmingCharacters(in: specialEnclosingCharacters)
         return MemberAccessExprSyntax(
             name: .identifier("m\(indexPrefix)_\(caseName)")
         )

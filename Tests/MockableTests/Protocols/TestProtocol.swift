@@ -49,6 +49,7 @@ protocol TestProtocol where Item2: Identifiable {
     func fetchData(for name: String) -> String
     func fetchData(forA name: String) -> String
     func fetchData(forB name: String) -> String
+    func `repeat`(param: Bool) -> Int
 
     // MARK: Property Requirements
 
