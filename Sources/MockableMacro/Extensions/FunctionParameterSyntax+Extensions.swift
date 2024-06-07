@@ -16,9 +16,9 @@ extension FunctionParameterSyntax {
         }
 
         guard ellipsis == nil else {
-            return ArrayTypeSyntax(element: type).cast(TypeSyntax.self)
+            return TypeSyntax(ArrayTypeSyntax(element: type))
         }
 
-        return type.cast(TypeSyntax.self)
+        return TypeSyntax(type)
     }
 }

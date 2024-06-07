@@ -88,8 +88,7 @@ extension EnumFactory {
         }
 
         let cases = try enumCaseDeclarations(requirements)
-
-        return try SwitchExprSyntax(subject: subject) {
+        let switchSyntax = try SwitchExprSyntax(subject: subject) {
             try SwitchCaseListSyntax {
                 for caseDeclaration in cases {
                     try matcherCase(for: caseDeclaration)
@@ -99,14 +98,14 @@ extension EnumFactory {
                 }
             }
         }
-        .cast(ExprSyntax.self)
+        return ExprSyntax(switchSyntax)
     }
 
     private static var defaultCase: SwitchCaseSyntax {
         let label = SwitchDefaultLabelSyntax()
         let returnStmt = ReturnStmtSyntax(
             expression: BooleanLiteralExprSyntax(false)
-        ).cast(StmtSyntax.self)
+        )
 
         return SwitchCaseSyntax(
             label: .default(label),
@@ -157,10 +156,10 @@ extension EnumFactory {
         )
 
         guard !parameters.isEmpty else {
-            return memberAccess.cast(ExprSyntax.self)
+            return ExprSyntax(memberAccess)
         }
 
-        return FunctionCallExprSyntax(
+        let functionCallExpr = FunctionCallExprSyntax(
             calledExpression: memberAccess,
             leftParen: .leftParenToken(),
             arguments: LabeledExprListSyntax {
@@ -174,7 +173,7 @@ extension EnumFactory {
             },
             rightParen: .rightParenToken()
         )
-        .cast(ExprSyntax.self)
+        return ExprSyntax(functionCallExpr)
     }
 
     private static func parameterExpression(
@@ -207,7 +206,7 @@ extension EnumFactory {
 
         guard !parameters.isEmpty else {
             let returnStmt = ReturnStmtSyntax(expression: BooleanLiteralExprSyntax(true))
-            return returnStmt.cast(StmtSyntax.self)
+            return StmtSyntax(returnStmt)
         }
 
         let leftNames = parameters.enumerated().map { index, element in
@@ -223,18 +222,20 @@ extension EnumFactory {
                 expression = matchCall(leftName, rightName)
                 continue
             }
-            expression = InfixOperatorExprSyntax(
+            let infixExpression = InfixOperatorExprSyntax(
                 leftOperand: expression,
                 operator: BinaryOperatorExprSyntax(operator: .binaryOperator(NS._andSign)),
                 rightOperand: matchCall(leftName, rightName)
             )
-            .cast(ExprSyntax.self)
+            expression = ExprSyntax(infixExpression)
         }
-        return ReturnStmtSyntax(expression: expression).cast(StmtSyntax.self)
+
+        let returnStmt = ReturnStmtSyntax(expression: expression)
+        return StmtSyntax(returnStmt)
     }
 
     private static func matchCall(_ leftName: TokenSyntax, _ rightName: TokenSyntax) -> ExprSyntax {
-        FunctionCallExprSyntax(
+        let functionCallExpr = FunctionCallExprSyntax(
             calledExpression: MemberAccessExprSyntax(
                 base: DeclReferenceExprSyntax(baseName: leftName),
                 declName: DeclReferenceExprSyntax(baseName: NS.match)
@@ -247,6 +248,6 @@ extension EnumFactory {
             },
             rightParen: .rightParenToken()
         )
-        .cast(ExprSyntax.self)
+        return ExprSyntax(functionCallExpr)
     }
 }

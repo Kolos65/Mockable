@@ -249,7 +249,7 @@ extension MemberFactory {
     }
 
     private static var mockerAssignmentWithPolicy: ExprSyntax {
-        IfExprSyntax(
+        let expression = IfExprSyntax(
             conditions: ConditionElementListSyntax {
                 OptionalBindingConditionSyntax(
                     bindingSpecifier: .keyword(.let),
@@ -271,6 +271,6 @@ extension MemberFactory {
                 }
             )
         )
-        .cast(ExprSyntax.self)
+        return ExprSyntax(expression)
     }
 }

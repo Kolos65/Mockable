@@ -15,7 +15,7 @@ extension FunctionRequirement: Buildable {
         with modifiers: DeclModifierListSyntax,
         using mockType: IdentifierTypeSyntax
     ) throws -> DeclSyntax {
-        FunctionDeclSyntax(
+        let decl = FunctionDeclSyntax(
             attributes: syntax.attributes.trimmed.with(\.trailingTrivia, .newline),
             modifiers: modifiers,
             name: syntax.name.trimmed,
@@ -24,7 +24,7 @@ extension FunctionRequirement: Buildable {
             genericWhereClause: genericWhereClause(for: kind),
             body: try body(for: kind)
         )
-        .cast(DeclSyntax.self)
+        return DeclSyntax(decl)
     }
 }
 

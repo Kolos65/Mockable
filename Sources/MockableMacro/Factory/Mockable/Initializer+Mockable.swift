@@ -11,7 +11,7 @@ import SwiftSyntax
 
 extension InitializerRequirement: Mockable {
     func implement(with modifiers: DeclModifierListSyntax) throws -> DeclSyntax {
-        return InitializerDeclSyntax(
+        let initDecl = InitializerDeclSyntax(
             attributes: syntax.attributes.trimmed.with(\.trailingTrivia, .newline),
             modifiers: modifiers,
             initKeyword: syntax.initKeyword.trimmed,
@@ -21,6 +21,6 @@ extension InitializerRequirement: Mockable {
             genericWhereClause: syntax.genericWhereClause?.trimmed,
             body: .init(statements: [])
         )
-        .cast(DeclSyntax.self)
+        return DeclSyntax(initDecl)
     }
 }
