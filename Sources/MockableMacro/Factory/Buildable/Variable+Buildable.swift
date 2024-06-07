@@ -31,7 +31,7 @@ extension VariableRequirement {
         with modifiers: DeclModifierListSyntax,
         using mockType: IdentifierTypeSyntax
     ) throws -> DeclSyntax {
-        VariableDeclSyntax(
+        let variableDecl = VariableDeclSyntax(
             attributes: syntax.attributes.trimmed.with(\.trailingTrivia, .newline),
             modifiers: modifiers,
             bindingSpecifier: .keyword(.var),
@@ -47,7 +47,7 @@ extension VariableRequirement {
                 )
             }
         )
-        .cast(DeclSyntax.self)
+        return DeclSyntax(variableDecl)
     }
 
     private func functionDeclaration(
@@ -55,14 +55,14 @@ extension VariableRequirement {
         with modifiers: DeclModifierListSyntax,
         using mockType: IdentifierTypeSyntax
     ) throws -> DeclSyntax {
-        FunctionDeclSyntax(
+        let functionDecl = FunctionDeclSyntax(
             attributes: syntax.attributes.trimmed.with(\.trailingTrivia, .newline),
             modifiers: modifiers,
             name: try syntax.name,
             signature: try signature(for: kind, using: mockType),
             body: .init(statements: try body(for: kind))
         )
-        .cast(DeclSyntax.self)
+        return DeclSyntax(functionDecl)
     }
 
     private func signature(

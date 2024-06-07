@@ -17,12 +17,12 @@ extension VariableRequirement: Caseable {
     }
 
     func caseSpecifier(wrapParams: Bool) throws -> ExprSyntax {
-        MemberAccessExprSyntax(name: try getterEnumName).cast(ExprSyntax.self)
+        ExprSyntax(MemberAccessExprSyntax(name: try getterEnumName))
     }
 
     func setterCaseSpecifier(wrapParams: Bool) throws -> ExprSyntax? {
         guard let setterName = try setterEnumName else { return nil }
-        return FunctionCallExprSyntax(
+        let functionCallExpr = FunctionCallExprSyntax(
             calledExpression: MemberAccessExprSyntax(name: setterName),
             leftParen: .leftParenToken(),
             arguments: LabeledExprListSyntax {
@@ -34,7 +34,7 @@ extension VariableRequirement: Caseable {
             },
             rightParen: .rightParenToken()
         )
-        .cast(ExprSyntax.self)
+        return ExprSyntax(functionCallExpr)
     }
 }
 
@@ -58,11 +58,11 @@ extension VariableRequirement {
     }
 
     private var setterParameters: ExprSyntax {
-        DeclReferenceExprSyntax(baseName: NS.newValue).cast(ExprSyntax.self)
+        ExprSyntax(DeclReferenceExprSyntax(baseName: NS.newValue))
     }
 
     private var wrappedSetterParameters: ExprSyntax {
-        FunctionCallExprSyntax(
+        let functionCallExpr = FunctionCallExprSyntax(
             calledExpression: MemberAccessExprSyntax(name: NS.value),
             leftParen: .leftParenToken(),
             arguments: LabeledExprListSyntax {
@@ -70,7 +70,7 @@ extension VariableRequirement {
             },
             rightParen: .rightParenToken()
         )
-        .cast(ExprSyntax.self)
+        return ExprSyntax(functionCallExpr)
     }
 
     private var getterEnumCaseDeclaration: EnumCaseDeclSyntax {

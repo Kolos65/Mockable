@@ -12,7 +12,7 @@ import SwiftSyntax
 /// Generates a class declaration that defines the mock implementation of the protocol.
 enum MockFacotry: Factory {
     static func build(from requirements: Requirements) throws -> DeclSyntax {
-        ClassDeclSyntax(
+        let classDecl = ClassDeclSyntax(
             modifiers: modifiers(requirements),
             name: .identifier(requirements.syntax.mockName),
             genericParameterClause: genericParameterClause(requirements),
@@ -25,7 +25,7 @@ enum MockFacotry: Factory {
                 try BuilderFactory.build(from: requirements)
             }
         )
-        .cast(DeclSyntax.self)
+        return DeclSyntax(classDecl)
     }
 }
 

@@ -23,15 +23,15 @@ extension FunctionRequirement: Caseable {
 
     func caseSpecifier(wrapParams: Bool) throws -> ExprSyntax {
         guard let parameters = parameters(wrap: wrapParams) else {
-            return caseExpression.cast(ExprSyntax.self)
+            return ExprSyntax(caseExpression)
         }
-        return FunctionCallExprSyntax(
+        let functionCallExpr = FunctionCallExprSyntax(
             calledExpression: caseExpression,
             leftParen: .leftParenToken(),
             arguments: parameters,
             rightParen: .rightParenToken()
         )
-        .cast(ExprSyntax.self)
+        return ExprSyntax(functionCallExpr)
     }
 
     func setterCaseSpecifier(wrapParams: Bool) -> ExprSyntax? { nil }
@@ -106,7 +106,7 @@ extension FunctionRequirement {
     private func wrappedParameterExpression(for functionParameter: FunctionParameterSyntax) -> ExprSyntax {
         let isGeneric = syntax.containsGenericType(in: functionParameter)
         let functionParamName = functionParameter.secondName ?? functionParameter.firstName
-        return FunctionCallExprSyntax(
+        let functionCallExpr = FunctionCallExprSyntax(
             calledExpression: MemberAccessExprSyntax(name: isGeneric ? NS.generic : NS.value),
             leftParen: .leftParenToken(),
             arguments: LabeledExprListSyntax {
@@ -114,25 +114,28 @@ extension FunctionRequirement {
             },
             rightParen: .rightParenToken()
         )
-        .cast(ExprSyntax.self)
+        return ExprSyntax(functionCallExpr)
     }
 
     private func parameterExpression(for functionParameter: FunctionParameterSyntax) -> ExprSyntax {
         let isGeneric = syntax.containsGenericType(in: functionParameter)
         let functionParamName = functionParameter.secondName ?? functionParameter.firstName
         if isGeneric {
-            return FunctionCallExprSyntax(
-                calledExpression: MemberAccessExprSyntax(
-                    base: DeclReferenceExprSyntax(baseName: functionParamName),
-                    name: NS.eraseToGenericValue
-                ),
-                leftParen: .leftParenToken(),
-                arguments: [],
-                rightParen: .rightParenToken()
+            return ExprSyntax(
+                FunctionCallExprSyntax(
+                    calledExpression: MemberAccessExprSyntax(
+                        base: DeclReferenceExprSyntax(baseName: functionParamName),
+                        name: NS.eraseToGenericValue
+                    ),
+                    leftParen: .leftParenToken(),
+                    arguments: [],
+                    rightParen: .rightParenToken()
+                )
             )
-            .cast(ExprSyntax.self)
         } else {
-            return DeclReferenceExprSyntax(baseName: functionParamName).cast(ExprSyntax.self)
+            return ExprSyntax(
+                DeclReferenceExprSyntax(baseName: functionParamName)
+            )
         }
     }
 }

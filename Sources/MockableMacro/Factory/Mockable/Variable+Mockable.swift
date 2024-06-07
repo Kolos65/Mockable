@@ -11,7 +11,7 @@ import SwiftSyntax
 
 extension VariableRequirement: Mockable {
     func implement(with modifiers: DeclModifierListSyntax) throws -> DeclSyntax {
-        VariableDeclSyntax(
+        let variableDecl = VariableDeclSyntax(
             attributes: syntax.attributes.trimmed.with(\.trailingTrivia, .newline),
             modifiers: modifiers,
             bindingSpecifier: .keyword(.var),
@@ -19,7 +19,7 @@ extension VariableRequirement: Mockable {
                 try syntax.binding.with(\.accessorBlock, accessorBlock)
             }
         )
-        .cast(DeclSyntax.self)
+        return DeclSyntax(variableDecl)
     }
 }
 
@@ -91,9 +91,9 @@ extension VariableRequirement {
                 trailingClosure: try mockerClosure
             )
             return if try syntax.isThrowing {
-                TryExprSyntax(expression: call).cast(ExprSyntax.self)
+                ExprSyntax(TryExprSyntax(expression: call))
             } else {
-                call.cast(ExprSyntax.self)
+                ExprSyntax(call)
             }
         }
     }
@@ -167,15 +167,15 @@ extension VariableRequirement {
 
     private var producerCall: ReturnStmtSyntax {
         get throws {
-            let producerCall = FunctionCallExprSyntax(
+            let producerCallExpr = FunctionCallExprSyntax(
                 calledExpression: DeclReferenceExprSyntax(baseName: NS.producer),
                 leftParen: .leftParenToken(),
                 arguments: [],
                 rightParen: .rightParenToken()
             )
-            .cast(ExprSyntax.self)
 
-            let tryProducerCall = TryExprSyntax(expression: producerCall).cast(ExprSyntax.self)
+            let producerCall = ExprSyntax(producerCallExpr)
+            let tryProducerCall = ExprSyntax(TryExprSyntax(expression: producerCall))
 
             return ReturnStmtSyntax(expression: try syntax.isThrowing ? tryProducerCall : producerCall)
         }

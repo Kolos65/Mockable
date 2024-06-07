@@ -32,6 +32,6 @@ public enum MockableMacro: PeerMacro {
             )
         }
 
-        return [IfConfigDeclSyntax(clauses: ifClause).cast(DeclSyntax.self)]
+        return [DeclSyntax(IfConfigDeclSyntax(clauses: ifClause))]
     }
 }

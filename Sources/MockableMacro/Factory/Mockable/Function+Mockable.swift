@@ -26,7 +26,7 @@ extension FunctionRequirement: Mockable {
                 throw MockableMacroError.nonEscapingFunctionParameter
             }
         }
-        return decl.cast(DeclSyntax.self)
+        return DeclSyntax(decl)
     }
 }
 
@@ -48,7 +48,7 @@ extension FunctionRequirement {
 
     private var memberDeclaration: DeclSyntax {
         get throws {
-            try VariableDeclSyntax(bindingSpecifier: .keyword(.let)) {
+            let variableDecl = try VariableDeclSyntax(bindingSpecifier: .keyword(.let)) {
                 try PatternBindingListSyntax {
                     PatternBindingSyntax(
                         pattern: IdentifierPatternSyntax(identifier: NS.member),
@@ -61,12 +61,12 @@ extension FunctionRequirement {
                     )
                 }
             }
-            .cast(DeclSyntax.self)
+            return DeclSyntax(variableDecl)
         }
     }
 
     private var returnStatement: StmtSyntax {
-        ReturnStmtSyntax(expression: mockerCall).cast(StmtSyntax.self)
+        StmtSyntax(ReturnStmtSyntax(expression: mockerCall))
     }
 
     private var mockerCall: ExprSyntax {
@@ -87,9 +87,9 @@ extension FunctionRequirement {
             trailingClosure: mockerClosure
         )
         return if syntax.isThrowing {
-            TryExprSyntax(expression: call).cast(ExprSyntax.self)
+            ExprSyntax(TryExprSyntax(expression: call))
         } else {
-            call.cast(ExprSyntax.self)
+            ExprSyntax(call)
         }
     }
 
@@ -141,7 +141,7 @@ extension FunctionRequirement {
     }
 
     private var producerCall: ReturnStmtSyntax {
-        let producerCall = FunctionCallExprSyntax(
+        let producerCallExpr = FunctionCallExprSyntax(
             calledExpression: DeclReferenceExprSyntax(baseName: NS.producer),
             leftParen: .leftParenToken(),
             arguments: LabeledExprListSyntax {
@@ -155,9 +155,8 @@ extension FunctionRequirement {
             },
             rightParen: .rightParenToken()
         )
-        .cast(ExprSyntax.self)
-
-        let tryProducerCall = TryExprSyntax(expression: producerCall).cast(ExprSyntax.self)
+        let producerCall = ExprSyntax(producerCallExpr)
+        let tryProducerCall = ExprSyntax(TryExprSyntax(expression: producerCall))
 
         return ReturnStmtSyntax(expression: syntax.isThrowing ? tryProducerCall : producerCall)
     }
