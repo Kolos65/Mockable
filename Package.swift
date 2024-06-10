@@ -41,10 +41,12 @@ let package = Package(
     products: [
         .library(
             name: "Mockable",
+            type: .dynamic,
             targets: ["Mockable"]
         ),
         .library(
             name: "MockableTest",
+            type: .dynamic,
             targets: ["MockableTest"]
         ),
     ],
