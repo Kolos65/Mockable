@@ -29,7 +29,7 @@ extension BuilderFactory {
         _ requirements: Requirements
     ) throws -> some DeclSyntaxProtocol {
         StructDeclSyntax(
-            modifiers: requirements.syntax.modifiers,
+            modifiers: requirements.modifiers,
             name: kind.name,
             inheritanceClause: InheritanceClauseSyntax(inheritedTypes: inheritedTypes(kind)),
             memberBlock: MemberBlockSyntax(members: try members(kind, requirements))
@@ -53,7 +53,7 @@ extension BuilderFactory {
                 MemberBlockItemSyntax(
                     decl: try variable.builder(
                         of: kind,
-                        with: requirements.syntax.modifiers,
+                        with: requirements.modifiers,
                         using: requirements.syntax.mockType
                     )
                 )
@@ -62,7 +62,7 @@ extension BuilderFactory {
                 MemberBlockItemSyntax(
                     decl: try function.builder(
                         of: kind,
-                        with: requirements.syntax.modifiers,
+                        with: requirements.modifiers,
                         using: requirements.syntax.mockType
                     )
                 )
@@ -101,7 +101,7 @@ extension BuilderFactory {
         _ requirements: Requirements
     ) -> InitializerDeclSyntax {
         InitializerDeclSyntax(
-            modifiers: requirements.syntax.modifiers,
+            modifiers: requirements.modifiers,
             signature: initializerSignature(kind, requirements)
         ) {
             InfixOperatorExprSyntax(

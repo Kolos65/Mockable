@@ -11,7 +11,8 @@ struct Requirements {
 
     // MARK: Properties
 
-    var syntax: ProtocolDeclSyntax
+    let syntax: ProtocolDeclSyntax
+    let modifiers: DeclModifierListSyntax
     var functions = [FunctionRequirement]()
     var variables = [VariableRequirement]()
     var initializers = [InitializerRequirement]()
@@ -20,11 +21,16 @@ struct Requirements {
 
     init(_ syntax: ProtocolDeclSyntax) throws {
         self.syntax = syntax
-
         let members = syntax.memberBlock.members
 
         guard members.compactMap({ $0.decl.as(SubscriptDeclSyntax.self) }).isEmpty else {
             throw MockableMacroError.subscriptsNotSupported
+        }
+        self.modifiers = syntax.modifiers.trimmed.filter { modifier in
+            guard case .keyword(let keyword) = modifier.name.tokenKind else {
+                return true
+            }
+            return keyword != .private
         }
 
         self.variables = try members

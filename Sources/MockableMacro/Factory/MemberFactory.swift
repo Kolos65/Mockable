@@ -29,7 +29,7 @@ enum MemberFactory: Factory {
 extension MemberFactory {
     private static func defaultInit(_ requirements: Requirements) -> InitializerDeclSyntax {
         InitializerDeclSyntax(
-            modifiers: requirements.syntax.modifiers.trimmed,
+            modifiers: requirements.modifiers,
             signature: .init(parameterClause: defaultInitParameters),
             body: .init { CodeBlockItemSyntax(item: .expr(mockerAssignmentWithPolicy)) }
         )
@@ -64,7 +64,7 @@ extension MemberFactory {
     private static func given(_ requirements: Requirements) -> FunctionDeclSyntax {
         FunctionDeclSyntax(
             attributes: unavailableAttribute(message: Messages.givenMessage),
-            modifiers: requirements.syntax.modifiers,
+            modifiers: requirements.modifiers,
             name: NS.given,
             signature: .init(
                 parameterClause: FunctionParameterClauseSyntax(parameters: []),
@@ -78,7 +78,7 @@ extension MemberFactory {
     private static func when(_ requirements: Requirements) -> FunctionDeclSyntax {
         FunctionDeclSyntax(
             attributes: unavailableAttribute(message: Messages.whenMessage),
-            modifiers: requirements.syntax.modifiers,
+            modifiers: requirements.modifiers,
             name: NS.when,
             signature: .init(
                 parameterClause: FunctionParameterClauseSyntax(parameters: []),
@@ -92,7 +92,7 @@ extension MemberFactory {
     private static func verify(_ requirements: Requirements) -> FunctionDeclSyntax {
         FunctionDeclSyntax(
             attributes: unavailableAttribute(message: Messages.verifyMessage),
-            modifiers: requirements.syntax.modifiers,
+            modifiers: requirements.modifiers,
             name: NS.verify,
             signature: .init(
                 parameterClause: FunctionParameterClauseSyntax(
@@ -110,7 +110,7 @@ extension MemberFactory {
     }
     private static func reset(_ requirements: Requirements) -> FunctionDeclSyntax {
         FunctionDeclSyntax(
-            modifiers: requirements.syntax.modifiers,
+            modifiers: requirements.modifiers,
             name: NS.reset,
             signature: .init(
                 parameterClause: FunctionParameterClauseSyntax(

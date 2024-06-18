@@ -20,7 +20,7 @@ extension Car: Mockable {
 }
 
 @Mockable
-protocol PolicyService {
+private protocol PolicyService {
     func throwingVoidFunc() throws
     var throwingVoidProp: Void { get throws }
     func nonThrowingVoidFunc()
