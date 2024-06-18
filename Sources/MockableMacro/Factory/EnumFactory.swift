@@ -14,7 +14,7 @@ import SwiftSyntax
 enum EnumFactory: Factory {
     static func build(from requirements: Requirements) throws -> EnumDeclSyntax {
         EnumDeclSyntax(
-            modifiers: requirements.syntax.modifiers,
+            modifiers: requirements.modifiers,
             name: NS.Member,
             inheritanceClause: inheritanceClause,
             memberBlock: MemberBlockSyntax(members: try members(requirements))
@@ -67,7 +67,7 @@ extension EnumFactory {
             try matcherSwitch(requirements)
         }
         let decl = FunctionDeclSyntax(
-            modifiers: requirements.syntax.modifiers,
+            modifiers: requirements.modifiers,
             name: NS.match,
             signature: signature,
             body: .init(statements: statement)
