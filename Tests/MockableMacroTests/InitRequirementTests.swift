@@ -27,7 +27,7 @@ final class InitRequirementTests: MockableMacroTestCase {
 
             #if MOCKING
             final class MockTest: Test, MockableService {
-                private var mocker = Mocker<MockTest>()
+                private let mocker = Mocker<MockTest>()
                 @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
                 func given() -> ReturnBuilder {
                     .init(mocker: mocker)
@@ -104,7 +104,7 @@ final class InitRequirementTests: MockableMacroTestCase {
 
             #if MOCKING
             final class MockTest: Test, MockableService {
-                private var mocker = Mocker<MockTest>()
+                private let mocker = Mocker<MockTest>()
                 @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
                 func given() -> ReturnBuilder {
                     .init(mocker: mocker)

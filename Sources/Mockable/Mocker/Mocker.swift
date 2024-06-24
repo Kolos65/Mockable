@@ -12,7 +12,7 @@ import Combine
 ///
 /// The `Mocker` class keeps track of invocations, expected return values, and actions associated with
 /// specific members of a mockable service.
-public class Mocker<Service: MockableService> {
+public class Mocker<Service: MockableService>: @unchecked Sendable {
 
     // MARK: Public Properties
 
