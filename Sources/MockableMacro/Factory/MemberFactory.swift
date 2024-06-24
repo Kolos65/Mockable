@@ -38,7 +38,7 @@ extension MemberFactory {
     private static func mocker(_ requirements: Requirements) -> VariableDeclSyntax {
         VariableDeclSyntax(
             modifiers: [DeclModifierSyntax(name: .keyword(.private))],
-            bindingSpecifier: .keyword(.var)
+            bindingSpecifier: .keyword(.let)
         ) {
             PatternBindingSyntax(
                 pattern: IdentifierPatternSyntax(identifier: NS.mocker),
