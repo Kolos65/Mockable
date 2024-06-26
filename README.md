@@ -6,6 +6,7 @@
 **Mockable** is a [Swift macro](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/macros/) driven testing framework that provides automatic mock implementations for your protocols. It offers an intuitive **declarative syntax** that simplifies the process of mocking services in unit tests. The generated mock implementations can be excluded from release builds using compile conditions. 
 
 ## Table of Contents
+- [Sponsorship](#Sponsorship)
 - [Documentation](#Documentation)
 - [Installation](#Installation)
 - [Configuration](#Configuration)
@@ -22,6 +23,12 @@
 - [Limitations](#Limitations)
 - [Contribution](#Contribution)
 - [License](#License)
+
+## Sponsorship
+
+I'm working on **Mockable** as a fun side project. I believe in the power of open source, and I'm thrilled to share it with you. If **Mockable** saves you time and you’d like to show your appreciation, I would be incredibly grateful for your support.
+
+<a href="https://www.buymeacoffee.com/kolos"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a beer&emoji=🍺&slug=kolos&button_colour=FF5F5F&font_colour=ffffff&font_family=Arial&outline_colour=000000&coffee_colour=FFDD00" /></a>
 
 ## Documentation
 
