@@ -64,7 +64,7 @@ extension MemberFactory {
     private static func given(_ requirements: Requirements) -> FunctionDeclSyntax {
         FunctionDeclSyntax(
             attributes: unavailableAttribute(message: Messages.givenMessage),
-            modifiers: requirements.modifiers,
+            modifiers: clauseModifiers(requirements),
             name: NS.given,
             signature: .init(
                 parameterClause: FunctionParameterClauseSyntax(parameters: []),
@@ -78,7 +78,7 @@ extension MemberFactory {
     private static func when(_ requirements: Requirements) -> FunctionDeclSyntax {
         FunctionDeclSyntax(
             attributes: unavailableAttribute(message: Messages.whenMessage),
-            modifiers: requirements.modifiers,
+            modifiers: clauseModifiers(requirements),
             name: NS.when,
             signature: .init(
                 parameterClause: FunctionParameterClauseSyntax(parameters: []),
@@ -92,7 +92,7 @@ extension MemberFactory {
     private static func verify(_ requirements: Requirements) -> FunctionDeclSyntax {
         FunctionDeclSyntax(
             attributes: unavailableAttribute(message: Messages.verifyMessage),
-            modifiers: requirements.modifiers,
+            modifiers: clauseModifiers(requirements),
             name: NS.verify,
             signature: .init(
                 parameterClause: FunctionParameterClauseSyntax(
@@ -119,6 +119,14 @@ extension MemberFactory {
             ),
             body: resetCall
         )
+    }
+
+    private static func clauseModifiers(_ requirements: Requirements) -> DeclModifierListSyntax {
+        var modifiers = requirements.modifiers
+        if requirements.isActor {
+            modifiers.append(DeclModifierSyntax(name: .keyword(.nonisolated)))
+        }
+        return modifiers
     }
 
     private static func builderInit(arguments: LabeledExprListSyntax) -> CodeBlockSyntax {

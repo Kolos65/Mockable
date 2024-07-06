@@ -70,6 +70,7 @@ enum NS {
     static let MockerPolicy: TokenSyntax = "MockerPolicy"
     static let Set: TokenSyntax = "Set"
     static let Void: TokenSyntax = "Void"
+    static let Actor: TokenSyntax = "Actor"
 
     static func Parameter(_ type: String) -> TokenSyntax { "Parameter<\(raw: type)>" }
     static func Param(suffix: String) -> TokenSyntax { "Param\(raw: suffix)" }

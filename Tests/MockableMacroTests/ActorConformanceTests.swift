@@ -1,8 +1,8 @@
 //
-//  AccessModifierTests.swift
+//  ActorConformanceTests.swift
+//  
 //
-//
-//  Created by Nayanda Haberty on 29/5/24.
+//  Created by Kolos Foltanyi on 06/07/2024.
 //
 
 import MacroTesting
@@ -10,36 +10,36 @@ import XCTest
 import SwiftSyntax
 @testable import Mockable
 
-final class AccessModifierTests: MockableMacroTestCase {
-    func test_private_access_modifier() {
+final class ActorConformanceTests: MockableMacroTestCase {
+    func test_actor_requirement() {
         assertMacro {
           """
           @Mockable
-          private protocol Test {
+          protocol Test: Actor {
               var foo: Int { get }
               func bar(number: Int) -> Int
           }
           """
         } expansion: {
             """
-            private protocol Test {
+            protocol Test: Actor {
                 var foo: Int { get }
                 func bar(number: Int) -> Int
             }
 
             #if MOCKING
-            private final class MockTest: Test, MockableService {
+            actor MockTest: Test, MockableService {
                 private let mocker = Mocker<MockTest>()
                 @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
-                func given() -> ReturnBuilder {
+                nonisolated func given() -> ReturnBuilder {
                     .init(mocker: mocker)
                 }
                 @available(*, deprecated, message: "Use when(_ service:) of Mockable instead. ")
-                func when() -> ActionBuilder {
+                nonisolated func when() -> ActionBuilder {
                     .init(mocker: mocker)
                 }
                 @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead. ")
-                func verify(with assertion: @escaping MockableAssertion) -> VerifyBuilder {
+                nonisolated func verify(with assertion: @escaping MockableAssertion) -> VerifyBuilder {
                     .init(mocker: mocker, assertion: assertion)
                 }
                 func reset(_ scopes: Set<MockerScope> = .all) {
