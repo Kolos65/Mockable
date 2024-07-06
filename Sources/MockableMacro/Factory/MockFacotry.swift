@@ -14,6 +14,7 @@ enum MockFacotry: Factory {
     static func build(from requirements: Requirements) throws -> DeclSyntax {
         let classDecl = ClassDeclSyntax(
             modifiers: modifiers(requirements),
+            classKeyword: classKeyword(requirements),
             name: .identifier(requirements.syntax.mockName),
             genericParameterClause: genericParameterClause(requirements),
             inheritanceClause: inheritanceClause(requirements),
@@ -33,7 +34,15 @@ enum MockFacotry: Factory {
 
 extension MockFacotry {
     private static func modifiers(_ requirements: Requirements) -> DeclModifierListSyntax {
-        requirements.syntax.modifiers.trimmed + [DeclModifierSyntax(name: .keyword(.final))]
+        var modifiers = requirements.syntax.modifiers.trimmed
+        if !requirements.isActor {
+            modifiers.append(DeclModifierSyntax(name: .keyword(.final)))
+        }
+        return modifiers
+    }
+
+    private static func classKeyword(_ requirements: Requirements) -> TokenSyntax {
+        requirements.isActor ? .keyword(.actor) : .keyword(.class)
     }
 
     private static func inheritanceClause(_ requirements: Requirements) -> InheritanceClauseSyntax {

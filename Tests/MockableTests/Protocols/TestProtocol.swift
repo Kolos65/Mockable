@@ -8,7 +8,7 @@
 import MockableTest
 
 @Mockable
-protocol TestProtocol: Sendable where Item2: Identifiable {
+protocol TestProtocol: Actor, Sendable where Item2: Identifiable {
 
     // MARK: Associated Types
 

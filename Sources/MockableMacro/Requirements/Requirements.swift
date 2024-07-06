@@ -13,6 +13,7 @@ struct Requirements {
 
     let syntax: ProtocolDeclSyntax
     let modifiers: DeclModifierListSyntax
+    let isActor: Bool
     var functions = [FunctionRequirement]()
     var variables = [VariableRequirement]()
     var initializers = [InitializerRequirement]()
@@ -26,14 +27,49 @@ struct Requirements {
         guard members.compactMap({ $0.decl.as(SubscriptDeclSyntax.self) }).isEmpty else {
             throw MockableMacroError.subscriptsNotSupported
         }
-        self.modifiers = syntax.modifiers.trimmed.filter { modifier in
+
+        self.modifiers = Self.initModifiers(syntax)
+        self.isActor = Self.initIsActor(syntax)
+        self.initializers = Self.initInitializers(members)
+        self.variables = try Self.initVariables(members)
+        self.functions = try Self.initFunctions(members, startIndex: variables.count)
+    }
+}
+
+// MARK: - Helpers
+
+extension Requirements {
+    private static func isStatic(_ modifier: DeclModifierSyntax) -> Bool {
+        modifier.name.tokenKind == .keyword(.static)
+    }
+
+    private static func initModifiers(_ syntax: ProtocolDeclSyntax) -> DeclModifierListSyntax {
+        syntax.modifiers.trimmed.filter { modifier in
             guard case .keyword(let keyword) = modifier.name.tokenKind else {
                 return true
             }
             return keyword != .private
         }
+    }
 
-        self.variables = try members
+    private static func initIsActor(_ syntax: ProtocolDeclSyntax) -> Bool {
+        guard let inheritanceClause = syntax.inheritanceClause,
+              !inheritanceClause.inheritedTypes.isEmpty else {
+            return false
+        }
+
+        for inheritedType in inheritanceClause.inheritedTypes {
+            if let type = inheritedType.type.as(IdentifierTypeSyntax.self),
+               type.name.trimmed.tokenKind == NS.Actor.tokenKind {
+                return true
+            }
+        }
+
+        return false
+    }
+
+    private static func initVariables(_ members: MemberBlockItemListSyntax) throws -> [VariableRequirement] {
+        try members
             .compactMap { $0.decl.as(VariableDeclSyntax.self) }
             .filter {
                 guard !$0.modifiers.contains(where: isStatic) else {
@@ -43,8 +79,11 @@ struct Requirements {
             }
             .enumerated()
             .map(VariableRequirement.init)
+    }
 
-        self.functions = try members
+    private static func initFunctions(_ members: MemberBlockItemListSyntax,
+                                      startIndex: Int) throws -> [FunctionRequirement] {
+        try members
             .compactMap { $0.decl.as(FunctionDeclSyntax.self) }
             .filter {
                 guard !$0.modifiers.contains(where: isStatic) else {
@@ -57,20 +96,14 @@ struct Requirements {
             }
             .enumerated()
             .map { index, element in
-                FunctionRequirement(index: variables.count + index, syntax: element)
+                FunctionRequirement(index: startIndex + index, syntax: element)
             }
+    }
 
-        self.initializers = members
+    private static func initInitializers(_ members: MemberBlockItemListSyntax) -> [InitializerRequirement] {
+        members
             .compactMap { $0.decl.as(InitializerDeclSyntax.self) }
             .enumerated()
             .map { InitializerRequirement(index: $0, syntax: $1) }
-    }
-}
-
-// MARK: - Helpers
-
-extension Requirements {
-    private func isStatic(_ modifier: DeclModifierSyntax) -> Bool {
-        modifier.name.tokenKind == .keyword(.static)
     }
 }
