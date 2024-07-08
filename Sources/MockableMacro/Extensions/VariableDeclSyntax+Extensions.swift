@@ -17,7 +17,13 @@ extension VariableDeclSyntax {
     var isComputed: Bool { setAccessor == nil }
 
     var isThrowing: Bool {
-        get throws { try getAccessor.effectSpecifiers?.throwsSpecifier != nil }
+        get throws {
+            #if canImport(SwiftSyntax600)
+            try getAccessor.effectSpecifiers?.throwsClause?.throwsSpecifier != nil
+            #else
+            try getAccessor.effectSpecifiers?.throwsSpecifier != nil
+            #endif
+        }
     }
 
     var resolvedType: TypeSyntax {
@@ -53,11 +59,18 @@ extension VariableDeclSyntax {
 
     var closureType: FunctionTypeSyntax {
         get throws {
+            #if canImport(SwiftSyntax600)
+            let effectSpecifiers = TypeEffectSpecifiersSyntax(
+                throwsClause: try isThrowing ? .init(throwsSpecifier: .keyword(.throws)) : nil
+            )
+            #else
+            let effectSpecifiers = TypeEffectSpecifiersSyntax(
+                throwsSpecifier: try isThrowing ? .keyword(.throws) : nil
+            )
+            #endif
             return FunctionTypeSyntax(
                 parameters: TupleTypeElementListSyntax(),
-                effectSpecifiers: .init(
-                    throwsSpecifier: try isThrowing ? .keyword(.throws) : nil
-                ),
+                effectSpecifiers: effectSpecifiers,
                 returnClause: .init(type: try resolvedType)
             )
         }
@@ -86,3 +99,11 @@ extension VariableDeclSyntax {
         }
     }
 }
+
+#if canImport(SwiftSyntax600)
+extension VariableDeclSyntax {
+    var errorType: TypeSyntax? {
+        get throws { try getAccessor.effectSpecifiers?.throwsClause?.type }
+    }
+}
+#endif

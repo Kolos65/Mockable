@@ -31,6 +31,13 @@ extension FunctionParameterSyntax {
     }
 
     var isInout: Bool {
+        #if canImport(SwiftSyntax600)
+        type.as(AttributedTypeSyntax.self)?.specifiers.contains { specifier in
+            guard case .simpleTypeSpecifier(let simpleSpecifier) = specifier else { return false }
+            return simpleSpecifier.specifier.tokenKind == .keyword(.inout)
+        } ?? false
+        #else
         type.as(AttributedTypeSyntax.self)?.specifier?.tokenKind == .keyword(.inout)
+        #endif
     }
 }

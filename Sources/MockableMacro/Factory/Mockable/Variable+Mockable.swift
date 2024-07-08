@@ -87,10 +87,13 @@ extension VariableRequirement {
                     )
                 ),
                 leftParen: .leftParenToken(),
-                arguments: LabeledExprListSyntax {
+                arguments: try LabeledExprListSyntax {
                     LabeledExprSyntax(
                         expression: DeclReferenceExprSyntax(baseName: NS.member)
                     )
+                    if let errorTypeExpression = try errorTypeExpression {
+                        errorTypeExpression
+                    }
                 },
                 rightParen: .rightParenToken(),
                 trailingClosure: try mockerClosure
@@ -100,6 +103,24 @@ extension VariableRequirement {
             } else {
                 ExprSyntax(call)
             }
+        }
+    }
+
+    private var errorTypeExpression: LabeledExprSyntax? {
+        get throws {
+            #if canImport(SwiftSyntax600)
+            guard let type = try syntax.errorType else { return nil }
+            return LabeledExprSyntax(
+                label: NS.error,
+                colon: .colonToken(),
+                expression: MemberAccessExprSyntax(
+                    base: DeclReferenceExprSyntax(baseName: .identifier(type.trimmedDescription)),
+                    declName: DeclReferenceExprSyntax(baseName: .keyword(.`self`))
+                )
+            )
+            #else
+            return nil
+            #endif
         }
     }
 

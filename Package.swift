@@ -8,7 +8,7 @@ let isDev = Context.environment["MOCKABLE_DEV"].flatMap(Bool.init) ?? false
 func ifDev<T>(add list: [T]) -> [T] { isDev ? list : [] }
 
 let devDependencies: [Package.Dependency] = [
-    .package(url: "https://github.com/pointfreeco/swift-macro-testing", from: "0.5.2"),
+    .package(url: "https://github.com/pointfreeco/swift-macro-testing", exact: "0.5.2"),
     .package(url: "https://github.com/realm/SwiftLint", exact: "0.55.1"),
     .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.3.0")
 ]
@@ -45,15 +45,15 @@ let package = Package(
         )
     ],
     dependencies: ifDev(add: devDependencies) + [
-        .package(url: "https://github.com/swiftlang/swift-syntax.git", "509.0.0"..<"511.0.0"),
-        .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay", .upToNextMajor(from: "1.4.1"))
+        .package(url: "https://github.com/swiftlang/swift-syntax.git", "509.0.0"..<"601.0.0"),
+        .package(url: "https://github.com/pointfreeco/swift-issue-reporting", .upToNextMajor(from: "1.4.1"))
     ],
     targets: ifDev(add: devTargets) + [
         .target(
             name: "Mockable",
             dependencies: [
                 "MockableMacro",
-                .product(name: "IssueReporting", package: "xctest-dynamic-overlay")
+                .product(name: "IssueReporting", package: "swift-issue-reporting")
             ],
             plugins: ifDev(add: devPlugins)
         ),
@@ -65,5 +65,6 @@ let package = Package(
             ],
             plugins: ifDev(add: devPlugins)
         )
-    ]
+    ],
+    swiftLanguageVersions: [.v5, .version("6")]
 )

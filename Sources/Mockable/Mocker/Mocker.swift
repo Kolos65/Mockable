@@ -206,6 +206,25 @@ public class Mocker<Service: MockableService>: @unchecked Sendable {
     public func mockThrowing<V>(_ member: Member, producerResolver: (Any) throws -> V) throws -> V {
         return try mock(member, producerResolver, .none)
     }
+
+    #if swift(>=6)
+    /// Mocks a throwing member, performing associated actions and providing the expected return value.
+    ///
+    /// - Parameters:
+    ///   - member: The member to mock.
+    ///   - producerResolver: A closure resolving the produced value.
+    /// - Returns: The expected return value.
+    @discardableResult
+    public func mockThrowing<V, E>(_ member: Member,
+                                   error: E.Type,
+                                   producerResolver: (Any) throws -> V) throws(E) -> V {
+        do {
+            return try mock(member, producerResolver, .none)
+        } catch {
+            throw error as! E // swiftlint:disable:this force_cast
+        }
+    }
+    #endif
 }
 
 // MARK: - Helpers
@@ -315,6 +334,25 @@ extension Mocker {
         let relaxed = currentPolicy.contains(.relaxedThrowingVoid)
         return try mock(member, producerResolver, relaxed ? .value(()) : .none)
     }
+
+    #if swift(>=6)
+    /// Mocks a throwing member, performing associated actions and providing the expected return value.
+    ///
+    /// - Parameters:
+    ///   - member: The member to mock.
+    ///   - producerResolver: A closure resolving the produced value.
+    /// - Returns: The expected return value.
+    public func mockThrowing<E>(_ member: Member,
+                                error: E.Type,
+                                producerResolver: (Any) throws -> Void) throws(E) {
+        do {
+            let relaxed = currentPolicy.contains(.relaxedThrowingVoid)
+            return try mock(member, producerResolver, relaxed ? .value(()) : .none)
+        } catch {
+            throw error as! E // swiftlint:disable:this force_cast
+        }
+    }
+    #endif
 }
 
 // MARK: - Optional
@@ -350,6 +388,28 @@ extension Mocker {
         let relaxed = currentPolicy.contains(.relaxedOptional)
         return try mock(member, producerResolver, relaxed ? .value(nil) : .none)
     }
+
+    #if swift(>=6)
+    /// Mocks a throwing member, performing associated actions and providing the expected return value.
+    ///
+    /// - Parameters:
+    ///   - member: The member to mock.
+    ///   - producerResolver: A closure resolving the produced value.
+    /// - Returns: The expected return value.
+    @discardableResult
+    public func mockThrowing<V, E>(
+        _ member: Member,
+        error: E.Type,
+        producerResolver: (Any) throws -> V
+    ) throws(E) -> V where V: ExpressibleByNilLiteral {
+        do {
+            let relaxed = currentPolicy.contains(.relaxedThrowingVoid)
+            return try mock(member, producerResolver, relaxed ? .value(nil) : .none)
+        } catch {
+            throw error as! E // swiftlint:disable:this force_cast
+        }
+    }
+    #endif
 }
 
 // MARK: - Mockable
@@ -385,6 +445,28 @@ extension Mocker {
         let relaxed = currentPolicy.contains(.relaxedMocked)
         return try mock(member, producerResolver, relaxed ? .value(.mock) : .none)
     }
+
+    #if swift(>=6)
+    /// Mocks a throwing member, performing associated actions and providing the expected return value.
+    ///
+    /// - Parameters:
+    ///   - member: The member to mock.
+    ///   - producerResolver: A closure resolving the produced value.
+    /// - Returns: The expected return value.
+    @discardableResult
+    public func mockThrowing<V, E>(
+        _ member: Member,
+        error: E,
+        producerResolver: (Any) throws -> V
+    ) throws(E) -> V where V: Mocked {
+        do {
+            let relaxed = currentPolicy.contains(.relaxedMocked)
+            return try mock(member, producerResolver, relaxed ? .value(.mock) : .none)
+        } catch {
+            throw error as! E // swiftlint:disable:this force_cast
+        }
+    }
+    #endif
 }
 
 // MARK: - Mockable + Optional
@@ -431,4 +513,31 @@ extension Mocker {
             return try mock(member, producerResolver, .none)
         }
     }
+
+    #if swift(>=6)
+    /// Mocks a throwing member, performing associated actions and providing the expected return value.
+    ///
+    /// - Parameters:
+    ///   - member: The member to mock.
+    ///   - producerResolver: A closure resolving the produced value.
+    /// - Returns: The expected return value.
+    @discardableResult
+    public func mockThrowing<V, E>(
+        _ member: Member,
+        error: E.Type,
+        producerResolver: (Any) throws -> V
+    ) throws(E) -> V where V: Mocked, V: ExpressibleByNilLiteral {
+        do {
+            if currentPolicy.contains(.relaxedMocked) {
+                return try mock(member, producerResolver, .value(.mock))
+            } else if currentPolicy.contains(.relaxedOptional) {
+                return try mock(member, producerResolver, .value(nil))
+            } else {
+                return try mock(member, producerResolver, .none)
+            }
+        } catch {
+            throw error as! E // swiftlint:disable:this force_cast
+        }
+    }
+    #endif
 }

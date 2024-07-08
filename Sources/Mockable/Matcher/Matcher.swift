@@ -35,7 +35,12 @@ public class Matcher {
     // MARK: Private Properties
 
     private var matchers: [MatcherType] = []
+
+    #if swift(>=6)
+    nonisolated(unsafe) private static var `default` = Matcher()
+    #else
     private static var `default` = Matcher()
+    #endif
 
     // MARK: Init
 

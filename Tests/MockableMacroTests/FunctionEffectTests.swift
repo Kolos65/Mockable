@@ -5,7 +5,6 @@
 //  Created by Kolos Foltanyi on 2023. 11. 21..
 //
 
-
 import MacroTesting
 import XCTest
 
@@ -83,10 +82,10 @@ final class FunctionEffectTests: MockableMacroTestCase {
                     init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    func returnsAndThrows() -> Mockable.ThrowingFunctionReturnBuilder<MockTest, ReturnBuilder, String, () throws -> String> {
+                    func returnsAndThrows() -> Mockable.ThrowingFunctionReturnBuilder<MockTest, ReturnBuilder, String, Error, () throws -> String> {
                         .init(mocker, kind: .m1_returnsAndThrows)
                     }
-                    func canThrowError() -> Mockable.ThrowingFunctionReturnBuilder<MockTest, ReturnBuilder, Void, () throws -> Void> {
+                    func canThrowError() -> Mockable.ThrowingFunctionReturnBuilder<MockTest, ReturnBuilder, Void, Error, () throws -> Void> {
                         .init(mocker, kind: .m2_canThrowError)
                     }
                 }
@@ -295,10 +294,10 @@ final class FunctionEffectTests: MockableMacroTestCase {
                     func asyncFunction() -> Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Void, () -> Void> {
                         .init(mocker, kind: .m1_asyncFunction)
                     }
-                    func asyncThrowingFunction() -> Mockable.ThrowingFunctionReturnBuilder<MockTest, ReturnBuilder, Void, () throws -> Void> {
+                    func asyncThrowingFunction() -> Mockable.ThrowingFunctionReturnBuilder<MockTest, ReturnBuilder, Void, Error, () throws -> Void> {
                         .init(mocker, kind: .m2_asyncThrowingFunction)
                     }
-                    func asyncParamFunction(param: Parameter<() async throws -> Void>) -> Mockable.ThrowingFunctionReturnBuilder<MockTest, ReturnBuilder, Void, (@escaping () async throws -> Void) throws -> Void> {
+                    func asyncParamFunction(param: Parameter<() async throws -> Void>) -> Mockable.ThrowingFunctionReturnBuilder<MockTest, ReturnBuilder, Void, Error, (@escaping () async throws -> Void) throws -> Void> {
                         .init(mocker, kind: .m3_asyncParamFunction(param: param))
                     }
                 }

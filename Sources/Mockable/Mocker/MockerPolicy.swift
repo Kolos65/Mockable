@@ -9,11 +9,15 @@
 ///
 /// MockerPolicy can be used to customize mocking behavior and disable the requirement of
 /// return value registration in case of certain types.
-public struct MockerPolicy: OptionSet {
+public struct MockerPolicy: OptionSet, Sendable {
     /// Default policy to use when none was explicitly specified for a mock.
     ///
     /// Change this property to set the default policy to use for all mocks. Defaults to `strict`.
+    #if swift(>=6)
+    nonisolated(unsafe) public static var `default`: Self = .strict
+    #else
     public static var `default`: Self = .strict
+    #endif
 
     /// All return values must be registered, a fatal error will occur otherwise.
     public static let strict: Self = []
