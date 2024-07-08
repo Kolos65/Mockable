@@ -87,6 +87,9 @@ extension FunctionRequirement {
                 LabeledExprSyntax(
                     expression: DeclReferenceExprSyntax(baseName: NS.member)
                 )
+                if let errorTypeExpression {
+                    errorTypeExpression
+                }
             },
             rightParen: .rightParenToken(),
             trailingClosure: mockerClosure
@@ -96,6 +99,22 @@ extension FunctionRequirement {
         } else {
             ExprSyntax(call)
         }
+    }
+
+    private var errorTypeExpression: LabeledExprSyntax? {
+        #if canImport(SwiftSyntax600)
+        guard let type = syntax.errorType else { return nil }
+        return LabeledExprSyntax(
+            label: NS.error,
+            colon: .colonToken(),
+            expression: MemberAccessExprSyntax(
+                base: DeclReferenceExprSyntax(baseName: .identifier(type.trimmedDescription)),
+                declName: DeclReferenceExprSyntax(baseName: .keyword(.`self`))
+            )
+        )
+        #else
+        return nil
+        #endif
     }
 
     private var mockerClosure: ClosureExprSyntax {

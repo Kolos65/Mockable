@@ -7,6 +7,8 @@ disabled_rules:
   - nesting
   - switch_case_alignment
   - void_function_in_ternary
+  - type_name
+
 opt_in_rules:
   - closure_spacing
   - convenience_type
@@ -156,9 +158,6 @@ trailing_whitespace:
   severity: warning
 unused_closure_parameter:
   severity: error
-type_name:
-  excluded:
-    - NS
 identifier_name:
   excluded:
     - to

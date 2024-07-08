@@ -344,13 +344,13 @@ final class PropertyRequirementTests: MockableMacroTestCase {
                     init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    var throwingProperty: Mockable.ThrowingFunctionReturnBuilder<MockTest, ReturnBuilder, Int, () throws -> Int> {
+                    var throwingProperty: Mockable.ThrowingFunctionReturnBuilder<MockTest, ReturnBuilder, Int, Error, () throws -> Int> {
                         .init(mocker, kind: .m1_throwingProperty)
                     }
                     var asyncProperty: Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, String, () -> String> {
                         .init(mocker, kind: .m2_asyncProperty)
                     }
-                    var asyncThrowingProperty: Mockable.ThrowingFunctionReturnBuilder<MockTest, ReturnBuilder, String, () throws -> String> {
+                    var asyncThrowingProperty: Mockable.ThrowingFunctionReturnBuilder<MockTest, ReturnBuilder, String, Error, () throws -> String> {
                         .init(mocker, kind: .m3_asyncThrowingProperty)
                     }
                 }
