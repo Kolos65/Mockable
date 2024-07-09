@@ -1,4 +1,4 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.0
 
 import PackageDescription
 import CompilerPluginSupport
@@ -9,12 +9,12 @@ func ifDev<T>(add list: [T]) -> [T] { isDev ? list : [] }
 
 let devDependencies: [Package.Dependency] = [
     .package(url: "https://github.com/pointfreeco/swift-macro-testing", from: "0.2.2"),
-    .package(url: "https://github.com/realm/SwiftLint", exact: "0.55.1"),
+    // .package(url: "https://github.com/realm/SwiftLint", exact: "0.55.1"),
     .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.3.0")
 ]
 
 let devPlugins: [Target.PluginUsage] = [
-    .plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLint")
+    // .plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLint")
 ]
 
 let devTargets: [Target] = [
@@ -49,7 +49,7 @@ let package = Package(
         ),
     ],
     dependencies: ifDev(add: devDependencies) + [
-        .package(url: "https://github.com/apple/swift-syntax.git", "509.0.0"..<"511.0.0")
+        .package(url: "https://github.com/apple/swift-syntax.git", exact: "600.0.0-prerelease-2024-06-12")
     ],
     targets: ifDev(add: devTargets) + [
         .target(

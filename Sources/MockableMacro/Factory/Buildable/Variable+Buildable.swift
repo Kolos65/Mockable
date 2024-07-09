@@ -104,6 +104,10 @@ extension VariableRequirement {
             if let returnType = try variableReturnType(for: kind) {
                 returnType
             }
+            if try syntax.isThrowing && syntax.isComputed && kind == .return {
+                // TODO: Get Error Type
+                GenericArgumentSyntax(argument: IdentifierTypeSyntax(name: "Error"))
+            }
             if let produceType = try variableProduceType(for: kind) {
                 produceType
             }

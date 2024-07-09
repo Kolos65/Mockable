@@ -135,7 +135,11 @@ extension BuilderFactory {
                 if kind == .verify {
                     FunctionParameterSyntax(
                         firstName: NS.assertion,
-                        type: AttributedTypeSyntax(attributes: .init { .escaping }, baseType: assertionType)
+                        type: AttributedTypeSyntax(
+                            specifiers: [],
+                            attributes: .init { .escaping },
+                            baseType: assertionType
+                        )
                     )
                 }
             }

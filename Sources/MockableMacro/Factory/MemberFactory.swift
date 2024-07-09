@@ -159,10 +159,11 @@ extension MemberFactory {
     }
 
     private static var assertionParameter: FunctionParameterSyntax {
-        FunctionParameterSyntax(
+        return FunctionParameterSyntax(
             firstName: NS.with,
             secondName: NS.assertion,
             type: AttributedTypeSyntax(
+                specifiers: [],
                 attributes: [.attribute(.escaping)],
                 baseType: IdentifierTypeSyntax(name: NS.MockableAssertion)
             )

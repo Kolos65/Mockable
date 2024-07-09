@@ -81,6 +81,10 @@ extension FunctionRequirement {
             if let returnType = functionReturnType(for: kind) {
                 returnType
             }
+            if syntax.isThrowing && kind == .return {
+                // TODO: Get Error Type
+                GenericArgumentSyntax(argument: IdentifierTypeSyntax(name: "Error"))
+            }
             if let produceType = functionProduceType(for: kind) {
                 produceType
             }

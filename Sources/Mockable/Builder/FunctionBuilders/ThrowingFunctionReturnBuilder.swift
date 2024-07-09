@@ -13,6 +13,7 @@ public struct ThrowingFunctionReturnBuilder<
     T: MockableService,
     ParentBuilder: EffectBuilder<T>,
     ReturnType,
+    ErrorType: Error,
     ProduceType
 > {
 
@@ -30,7 +31,7 @@ public struct ThrowingFunctionReturnBuilder<
     /// - Parameters:
     ///   - mocker: The `Mocker` instance of the associated mock service.
     ///   - kind: The member being mocked.
-    public init(_ mocker: Mocker<T>, kind member: Member) {
+    public init(_ mocker: Mocker<T>, kind member: Member, error: ErrorType.Type = Error.self) {
         self.member = member
         self.mocker = mocker
     }
@@ -50,7 +51,7 @@ public struct ThrowingFunctionReturnBuilder<
     /// - Parameter error: The error to be thrown for mocking the specified member.
     /// - Returns: The parent builder, used for chaining additional specifications.
     @discardableResult
-    public func willThrow(_ error: Error) -> ParentBuilder {
+    public func willThrow(_ error: ErrorType) -> ParentBuilder {
         mocker.addReturnValue(.throw(error), for: member)
         return .init(mocker: mocker)
     }
