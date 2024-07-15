@@ -49,7 +49,7 @@ let package = Package(
         ),
     ],
     dependencies: ifDev(add: devDependencies) + [
-        .package(url: "https://github.com/apple/swift-syntax.git", "509.0.0"..<"511.0.0")
+        .package(url: "https://github.com/swiftlang/swift-syntax.git", "509.0.0"..<"511.0.0")
     ],
     targets: ifDev(add: devTargets) + [
         .target(
