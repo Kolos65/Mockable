@@ -18,7 +18,7 @@ import MockableMacro
 class MockableMacroTestCase: XCTestCase {
     override func invokeTest() {
         #if canImport(MockableMacro)
-        withMacroTesting(isRecording: false, macros: ["Mockable": MockableMacro.self]) {
+        withMacroTesting(record: false, macros: ["Mockable": MockableMacro.self]) {
             super.invokeTest()
         }
         #else

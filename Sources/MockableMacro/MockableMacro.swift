@@ -19,7 +19,7 @@ public enum MockableMacro: PeerMacro {
         }
 
         let requirements = try Requirements(protocolDecl)
-        let declaration = try MockFacotry.build(from: requirements)
+        let declaration = try MockFactory.build(from: requirements)
         let codeblock = CodeBlockItemListSyntax {
             CodeBlockItemSyntax(item: .decl(declaration))
         }

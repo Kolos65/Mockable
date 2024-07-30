@@ -1,5 +1,5 @@
 //
-//  MockFacotry.swift
+//  MockFactory.swift
 //  MockableMacro
 //
 //  Created by Kolos Foltanyi on 2024. 03. 28..
@@ -10,9 +10,10 @@ import SwiftSyntax
 /// Factory to generate the mock service declaration.
 ///
 /// Generates a class declaration that defines the mock implementation of the protocol.
-enum MockFacotry: Factory {
+enum MockFactory: Factory {
     static func build(from requirements: Requirements) throws -> DeclSyntax {
         let classDecl = ClassDeclSyntax(
+            attributes: try attributes(requirements),
             modifiers: modifiers(requirements),
             classKeyword: classKeyword(requirements),
             name: .identifier(requirements.syntax.mockName),
@@ -32,7 +33,16 @@ enum MockFacotry: Factory {
 
 // MARK: - Helpers
 
-extension MockFacotry {
+extension MockFactory {
+    private static func attributes(_ requirements: Requirements) throws -> AttributeListSyntax {
+        guard requirements.containsGenericExistentials else { return [] }
+        return try AttributeListSyntax {
+            // Runtime support for parametrized protocol types is only available from:
+            try Availability.from(iOS: "16.0", macOS: "13.0", tvOS: "16.0", watchOS: "9.0")
+        }
+        .with(\.trailingTrivia, .newline)
+    }
+
     private static func modifiers(_ requirements: Requirements) -> DeclModifierListSyntax {
         var modifiers = requirements.syntax.modifiers.trimmed
         if !requirements.isActor {
