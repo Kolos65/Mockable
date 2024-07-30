@@ -14,6 +14,7 @@ struct Requirements {
     let syntax: ProtocolDeclSyntax
     let modifiers: DeclModifierListSyntax
     let isActor: Bool
+    let containsGenericExistentials: Bool
     var functions = [FunctionRequirement]()
     var variables = [VariableRequirement]()
     var initializers = [InitializerRequirement]()
@@ -33,6 +34,7 @@ struct Requirements {
         self.initializers = Self.initInitializers(members)
         self.variables = try Self.initVariables(members)
         self.functions = try Self.initFunctions(members, startIndex: variables.count)
+        self.containsGenericExistentials = try Self.initContainsGenericExistentials(variables, functions)
     }
 }
 
@@ -105,5 +107,40 @@ extension Requirements {
             .compactMap { $0.decl.as(InitializerDeclSyntax.self) }
             .enumerated()
             .map { InitializerRequirement(index: $0, syntax: $1) }
+    }
+
+    private static func initContainsGenericExistentials(
+        _ variables: [VariableRequirement],
+        _ functions: [FunctionRequirement]
+    ) throws -> Bool {
+        let variables = try variables.filter {
+            let type = try $0.syntax.type
+            return hasParametrizedProtocolRequirement(type)
+        }
+
+        let functions = functions.filter {
+            guard let returnClause = $0.syntax.signature.returnClause else { return false }
+            let type = returnClause.type
+            return hasParametrizedProtocolRequirement(type)
+        }
+
+        return !variables.isEmpty || !functions.isEmpty
+    }
+
+    private static func hasParametrizedProtocolRequirement(_ type: TypeSyntax) -> Bool {
+        if let type = type.as(SomeOrAnyTypeSyntax.self),
+           type.someOrAnySpecifier.tokenKind == .keyword(.any),
+           let type = type.constraint.as(IdentifierTypeSyntax.self),
+           let argumentClause = type.genericArgumentClause,
+           !argumentClause.arguments.isEmpty {
+            return true
+        } else if let type = type.as(IdentifierTypeSyntax.self),
+                  let argumentClause = type.genericArgumentClause {
+            return argumentClause.arguments.contains {
+                return hasParametrizedProtocolRequirement($0.argument)
+            }
+        } else {
+            return false
+        }
     }
 }

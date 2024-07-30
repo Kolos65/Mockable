@@ -41,6 +41,10 @@ enum NS {
     static let addInvocation: TokenSyntax = "addInvocation"
     static let performActions: TokenSyntax = "performActions"
     static let policy: TokenSyntax = "policy"
+    static let iOS: TokenSyntax = "iOS"
+    static let macOS: TokenSyntax = "macOS"
+    static let tvOS: TokenSyntax = "tvOS"
+    static let watchOS: TokenSyntax = "watchOS"
 
     static let _andSign: String = "&&"
     static let _init: TokenSyntax = "init"

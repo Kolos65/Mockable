@@ -42,6 +42,7 @@ protocol TestProtocol: Actor, Sendable where Item2: Identifiable {
     func method<T: Hashable, E, C, I>(
         prop1: T, prop2: E, prop3: C, prop4: I
     ) where E: Equatable, E: Hashable, C: Codable
+    func getInts() -> any Collection<Int>
 
     // MARK: Name Collision
 

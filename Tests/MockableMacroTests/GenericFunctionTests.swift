@@ -285,4 +285,364 @@ final class GenericFunctionTests: MockableMacroTestCase {
             """
         }
     }
+
+    func test_parametrized_protocol_requirements_in_variables() {
+        assertMacro {
+        """
+        @Mockable
+        protocol Test {
+            var prop: any SomeProtocol<String> { get }
+        }
+        """
+        } expansion: {
+            """
+            protocol Test {
+                var prop: any SomeProtocol<String> { get }
+            }
+
+            #if MOCKING
+            @available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *)
+            final class MockTest: Test, MockableService {
+                private let mocker = Mocker<MockTest>()
+                @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
+                func given() -> ReturnBuilder {
+                    .init(mocker: mocker)
+                }
+                @available(*, deprecated, message: "Use when(_ service:) of Mockable instead. ")
+                func when() -> ActionBuilder {
+                    .init(mocker: mocker)
+                }
+                @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead. ")
+                func verify(with assertion: @escaping MockableAssertion) -> VerifyBuilder {
+                    .init(mocker: mocker, assertion: assertion)
+                }
+                func reset(_ scopes: Set<MockerScope> = .all) {
+                    mocker.reset(scopes: scopes)
+                }
+                init(policy: MockerPolicy? = nil) {
+                    if let policy {
+                        mocker.policy = policy
+                    }
+                }
+                var prop: any SomeProtocol<String> {
+                    get {
+                        let member: Member = .m1_prop
+                        return mocker.mock(member) { producer in
+                            let producer = try cast(producer) as () -> any SomeProtocol<String>
+                            return producer()
+                        }
+                    }
+                }
+                enum Member: Matchable, CaseIdentifiable {
+                    case m1_prop
+                    func match(_ other: Member) -> Bool {
+                        switch (self, other) {
+                        case (.m1_prop, .m1_prop):
+                            return true
+                        }
+                    }
+                }
+                struct ReturnBuilder: EffectBuilder {
+                    private let mocker: Mocker<MockTest>
+                    init(mocker: Mocker<MockTest>) {
+                        self.mocker = mocker
+                    }
+                    var prop: FunctionReturnBuilder<MockTest, ReturnBuilder, any SomeProtocol<String>, () -> any SomeProtocol<String>> {
+                        .init(mocker, kind: .m1_prop)
+                    }
+                }
+                struct ActionBuilder: EffectBuilder {
+                    private let mocker: Mocker<MockTest>
+                    init(mocker: Mocker<MockTest>) {
+                        self.mocker = mocker
+                    }
+                    var prop: FunctionActionBuilder<MockTest, ActionBuilder> {
+                        .init(mocker, kind: .m1_prop)
+                    }
+                }
+                struct VerifyBuilder: AssertionBuilder {
+                    private let mocker: Mocker<MockTest>
+                    private let assertion: MockableAssertion
+                    init(mocker: Mocker<MockTest>, assertion: @escaping MockableAssertion) {
+                        self.mocker = mocker
+                        self.assertion = assertion
+                    }
+                    var prop: FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                        .init(mocker, kind: .m1_prop, assertion: assertion)
+                    }
+                }
+            }
+            #endif
+            """
+        }
+    }
+
+    func test_nested_parametrized_protocol_requirements_in_variables() {
+        assertMacro {
+        """
+        @Mockable
+        protocol Test {
+            var prop: Parent<String, Child<any SomeProtocol<Double>>> { get }
+        }
+        """
+        } expansion: {
+            """
+            protocol Test {
+                var prop: Parent<String, Child<any SomeProtocol<Double>>> { get }
+            }
+
+            #if MOCKING
+            @available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *)
+            final class MockTest: Test, MockableService {
+                private let mocker = Mocker<MockTest>()
+                @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
+                func given() -> ReturnBuilder {
+                    .init(mocker: mocker)
+                }
+                @available(*, deprecated, message: "Use when(_ service:) of Mockable instead. ")
+                func when() -> ActionBuilder {
+                    .init(mocker: mocker)
+                }
+                @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead. ")
+                func verify(with assertion: @escaping MockableAssertion) -> VerifyBuilder {
+                    .init(mocker: mocker, assertion: assertion)
+                }
+                func reset(_ scopes: Set<MockerScope> = .all) {
+                    mocker.reset(scopes: scopes)
+                }
+                init(policy: MockerPolicy? = nil) {
+                    if let policy {
+                        mocker.policy = policy
+                    }
+                }
+                var prop: Parent<String, Child<any SomeProtocol<Double>>> {
+                    get {
+                        let member: Member = .m1_prop
+                        return mocker.mock(member) { producer in
+                            let producer = try cast(producer) as () -> Parent<String, Child<any SomeProtocol<Double>>>
+                            return producer()
+                        }
+                    }
+                }
+                enum Member: Matchable, CaseIdentifiable {
+                    case m1_prop
+                    func match(_ other: Member) -> Bool {
+                        switch (self, other) {
+                        case (.m1_prop, .m1_prop):
+                            return true
+                        }
+                    }
+                }
+                struct ReturnBuilder: EffectBuilder {
+                    private let mocker: Mocker<MockTest>
+                    init(mocker: Mocker<MockTest>) {
+                        self.mocker = mocker
+                    }
+                    var prop: FunctionReturnBuilder<MockTest, ReturnBuilder, Parent<String, Child<any SomeProtocol<Double>>>, () -> Parent<String, Child<any SomeProtocol<Double>>>> {
+                        .init(mocker, kind: .m1_prop)
+                    }
+                }
+                struct ActionBuilder: EffectBuilder {
+                    private let mocker: Mocker<MockTest>
+                    init(mocker: Mocker<MockTest>) {
+                        self.mocker = mocker
+                    }
+                    var prop: FunctionActionBuilder<MockTest, ActionBuilder> {
+                        .init(mocker, kind: .m1_prop)
+                    }
+                }
+                struct VerifyBuilder: AssertionBuilder {
+                    private let mocker: Mocker<MockTest>
+                    private let assertion: MockableAssertion
+                    init(mocker: Mocker<MockTest>, assertion: @escaping MockableAssertion) {
+                        self.mocker = mocker
+                        self.assertion = assertion
+                    }
+                    var prop: FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                        .init(mocker, kind: .m1_prop, assertion: assertion)
+                    }
+                }
+            }
+            #endif
+            """
+        }
+    }
+
+    func test_parametrized_protocol_requirements_in_functions() {
+        assertMacro {
+        """
+        @Mockable
+        protocol Test {
+            func foo() -> any SomeProtocol<Double>
+        }
+        """
+        } expansion: {
+            """
+            protocol Test {
+                func foo() -> any SomeProtocol<Double>
+            }
+
+            #if MOCKING
+            @available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *)
+            final class MockTest: Test, MockableService {
+                private let mocker = Mocker<MockTest>()
+                @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
+                func given() -> ReturnBuilder {
+                    .init(mocker: mocker)
+                }
+                @available(*, deprecated, message: "Use when(_ service:) of Mockable instead. ")
+                func when() -> ActionBuilder {
+                    .init(mocker: mocker)
+                }
+                @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead. ")
+                func verify(with assertion: @escaping MockableAssertion) -> VerifyBuilder {
+                    .init(mocker: mocker, assertion: assertion)
+                }
+                func reset(_ scopes: Set<MockerScope> = .all) {
+                    mocker.reset(scopes: scopes)
+                }
+                init(policy: MockerPolicy? = nil) {
+                    if let policy {
+                        mocker.policy = policy
+                    }
+                }
+                func foo() -> any SomeProtocol<Double> {
+                    let member: Member = .m1_foo
+                    return mocker.mock(member) { producer in
+                        let producer = try cast(producer) as () -> any SomeProtocol<Double>
+                        return producer()
+                    }
+                }
+                enum Member: Matchable, CaseIdentifiable {
+                    case m1_foo
+                    func match(_ other: Member) -> Bool {
+                        switch (self, other) {
+                        case (.m1_foo, .m1_foo):
+                            return true
+                        }
+                    }
+                }
+                struct ReturnBuilder: EffectBuilder {
+                    private let mocker: Mocker<MockTest>
+                    init(mocker: Mocker<MockTest>) {
+                        self.mocker = mocker
+                    }
+                    func foo() -> FunctionReturnBuilder<MockTest, ReturnBuilder, any SomeProtocol<Double>, () -> any SomeProtocol<Double>> {
+                        .init(mocker, kind: .m1_foo)
+                    }
+                }
+                struct ActionBuilder: EffectBuilder {
+                    private let mocker: Mocker<MockTest>
+                    init(mocker: Mocker<MockTest>) {
+                        self.mocker = mocker
+                    }
+                    func foo() -> FunctionActionBuilder<MockTest, ActionBuilder> {
+                        .init(mocker, kind: .m1_foo)
+                    }
+                }
+                struct VerifyBuilder: AssertionBuilder {
+                    private let mocker: Mocker<MockTest>
+                    private let assertion: MockableAssertion
+                    init(mocker: Mocker<MockTest>, assertion: @escaping MockableAssertion) {
+                        self.mocker = mocker
+                        self.assertion = assertion
+                    }
+                    func foo() -> FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                        .init(mocker, kind: .m1_foo, assertion: assertion)
+                    }
+                }
+            }
+            #endif
+            """
+        }
+    }
+
+    func test_nested_parametrized_protocol_requirements_in_functions() {
+        assertMacro {
+        """
+        @Mockable
+        protocol Test {
+            func foo() -> Parent<String, Child<any SomeProtocol<Double>>>
+        }
+        """
+        } expansion: {
+            """
+            protocol Test {
+                func foo() -> Parent<String, Child<any SomeProtocol<Double>>>
+            }
+
+            #if MOCKING
+            @available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *)
+            final class MockTest: Test, MockableService {
+                private let mocker = Mocker<MockTest>()
+                @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
+                func given() -> ReturnBuilder {
+                    .init(mocker: mocker)
+                }
+                @available(*, deprecated, message: "Use when(_ service:) of Mockable instead. ")
+                func when() -> ActionBuilder {
+                    .init(mocker: mocker)
+                }
+                @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead. ")
+                func verify(with assertion: @escaping MockableAssertion) -> VerifyBuilder {
+                    .init(mocker: mocker, assertion: assertion)
+                }
+                func reset(_ scopes: Set<MockerScope> = .all) {
+                    mocker.reset(scopes: scopes)
+                }
+                init(policy: MockerPolicy? = nil) {
+                    if let policy {
+                        mocker.policy = policy
+                    }
+                }
+                func foo() -> Parent<String, Child<any SomeProtocol<Double>>> {
+                    let member: Member = .m1_foo
+                    return mocker.mock(member) { producer in
+                        let producer = try cast(producer) as () -> Parent<String, Child<any SomeProtocol<Double>>>
+                        return producer()
+                    }
+                }
+                enum Member: Matchable, CaseIdentifiable {
+                    case m1_foo
+                    func match(_ other: Member) -> Bool {
+                        switch (self, other) {
+                        case (.m1_foo, .m1_foo):
+                            return true
+                        }
+                    }
+                }
+                struct ReturnBuilder: EffectBuilder {
+                    private let mocker: Mocker<MockTest>
+                    init(mocker: Mocker<MockTest>) {
+                        self.mocker = mocker
+                    }
+                    func foo() -> FunctionReturnBuilder<MockTest, ReturnBuilder, Parent<String, Child<any SomeProtocol<Double>>>, () -> Parent<String, Child<any SomeProtocol<Double>>>> {
+                        .init(mocker, kind: .m1_foo)
+                    }
+                }
+                struct ActionBuilder: EffectBuilder {
+                    private let mocker: Mocker<MockTest>
+                    init(mocker: Mocker<MockTest>) {
+                        self.mocker = mocker
+                    }
+                    func foo() -> FunctionActionBuilder<MockTest, ActionBuilder> {
+                        .init(mocker, kind: .m1_foo)
+                    }
+                }
+                struct VerifyBuilder: AssertionBuilder {
+                    private let mocker: Mocker<MockTest>
+                    private let assertion: MockableAssertion
+                    init(mocker: Mocker<MockTest>, assertion: @escaping MockableAssertion) {
+                        self.mocker = mocker
+                        self.assertion = assertion
+                    }
+                    func foo() -> FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                        .init(mocker, kind: .m1_foo, assertion: assertion)
+                    }
+                }
+            }
+            #endif
+            """
+        }
+    }
 }
