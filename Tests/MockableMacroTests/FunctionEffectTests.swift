@@ -161,7 +161,7 @@ final class FunctionEffectTests: MockableMacroTestCase {
                 func execute(operation: @escaping () throws -> Void) rethrows {
                     let member: Member = .m1_execute(operation: .value(operation))
                     mocker.mock(member) { producer in
-                        let producer = try cast(producer) as (() throws -> Void) -> Void
+                        let producer = try cast(producer) as (@escaping () throws -> Void) -> Void
                         return producer(operation)
                     }
                 }
@@ -179,7 +179,7 @@ final class FunctionEffectTests: MockableMacroTestCase {
                     init(mocker: Mocker<MockTest>) {
                         self.mocker = mocker
                     }
-                    func execute(operation: Parameter<() throws -> Void>) -> FunctionReturnBuilder<MockTest, ReturnBuilder, Void, (() throws -> Void) -> Void> {
+                    func execute(operation: Parameter<() throws -> Void>) -> FunctionReturnBuilder<MockTest, ReturnBuilder, Void, (@escaping () throws -> Void) -> Void> {
                         .init(mocker, kind: .m1_execute(operation: operation))
                     }
                 }
@@ -267,7 +267,7 @@ final class FunctionEffectTests: MockableMacroTestCase {
                 func asyncParamFunction(param: @escaping () async throws -> Void) async throws {
                     let member: Member = .m3_asyncParamFunction(param: .value(param))
                     try mocker.mockThrowing(member) { producer in
-                        let producer = try cast(producer) as (() async throws -> Void) throws -> Void
+                        let producer = try cast(producer) as (@escaping () async throws -> Void) throws -> Void
                         return try producer(param)
                     }
                 }
@@ -299,7 +299,7 @@ final class FunctionEffectTests: MockableMacroTestCase {
                     func asyncThrowingFunction() -> ThrowingFunctionReturnBuilder<MockTest, ReturnBuilder, Void, () throws -> Void> {
                         .init(mocker, kind: .m2_asyncThrowingFunction)
                     }
-                    func asyncParamFunction(param: Parameter<() async throws -> Void>) -> ThrowingFunctionReturnBuilder<MockTest, ReturnBuilder, Void, (() async throws -> Void) throws -> Void> {
+                    func asyncParamFunction(param: Parameter<() async throws -> Void>) -> ThrowingFunctionReturnBuilder<MockTest, ReturnBuilder, Void, (@escaping () async throws -> Void) throws -> Void> {
                         .init(mocker, kind: .m3_asyncParamFunction(param: param))
                     }
                 }

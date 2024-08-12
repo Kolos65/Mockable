@@ -49,8 +49,8 @@ final class ExoticParameterTests: MockableMacroTestCase {
                 func modifyValue(_ value: inout Int) {
                     let member: Member = .m1_modifyValue(.value(value))
                     mocker.mock(member) { producer in
-                        let producer = try cast(producer) as (Int) -> Void
-                        return producer(value)
+                        let producer = try cast(producer) as (inout Int) -> Void
+                        return producer(&value)
                     }
                 }
                 enum Member: Matchable, CaseIdentifiable {
@@ -67,7 +67,7 @@ final class ExoticParameterTests: MockableMacroTestCase {
                     init(mocker: Mocker<MockTest>) {
                         self.mocker = mocker
                     }
-                    func modifyValue(_ value: Parameter<Int>) -> FunctionReturnBuilder<MockTest, ReturnBuilder, Void, (Int) -> Void> {
+                    func modifyValue(_ value: Parameter<Int>) -> FunctionReturnBuilder<MockTest, ReturnBuilder, Void, (inout Int) -> Void> {
                         .init(mocker, kind: .m1_modifyValue(value))
                     }
                 }
@@ -225,7 +225,7 @@ final class ExoticParameterTests: MockableMacroTestCase {
                 func execute(operation: @escaping () throws -> Void) {
                     let member: Member = .m1_execute(operation: .value(operation))
                     mocker.mock(member) { producer in
-                        let producer = try cast(producer) as (() throws -> Void) -> Void
+                        let producer = try cast(producer) as (@escaping () throws -> Void) -> Void
                         return producer(operation)
                     }
                 }
@@ -243,7 +243,7 @@ final class ExoticParameterTests: MockableMacroTestCase {
                     init(mocker: Mocker<MockTest>) {
                         self.mocker = mocker
                     }
-                    func execute(operation: Parameter<() throws -> Void>) -> FunctionReturnBuilder<MockTest, ReturnBuilder, Void, (() throws -> Void) -> Void> {
+                    func execute(operation: Parameter<() throws -> Void>) -> FunctionReturnBuilder<MockTest, ReturnBuilder, Void, (@escaping () throws -> Void) -> Void> {
                         .init(mocker, kind: .m1_execute(operation: operation))
                     }
                 }

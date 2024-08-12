@@ -91,7 +91,7 @@ extension FunctionRequirement {
     }
 
     private func wrappedType(for parameter: FunctionParameterSyntax) -> IdentifierTypeSyntax {
-        let type = parameter.resolvedType.description
+        let type = parameter.resolvedType().description
         let isGeneric = syntax.containsGenericType(in: parameter)
         let identifier = isGeneric ? NS.GenericValue : type
         return IdentifierTypeSyntax(name: NS.Parameter(identifier))

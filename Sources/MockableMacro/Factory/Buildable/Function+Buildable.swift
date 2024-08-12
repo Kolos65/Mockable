@@ -63,7 +63,7 @@ extension FunctionRequirement {
                 FunctionParameterSyntax(
                     firstName: parameter.firstName,
                     secondName: parameter.secondName,
-                    type: IdentifierTypeSyntax(name: NS.Parameter(parameter.resolvedType.description))
+                    type: IdentifierTypeSyntax(name: NS.Parameter(parameter.resolvedType().description))
                 )
             }
         }

@@ -28,7 +28,9 @@ protocol TestService {
     func setUser(user: User) async throws -> Bool
     func modify(user: User) -> Int
     func update(products: [Product]) -> Int
+    func download(completion: @escaping (Product) -> Void)
     func print() throws
+    func change(user: inout User)
 
     // MARK: Generics
 
