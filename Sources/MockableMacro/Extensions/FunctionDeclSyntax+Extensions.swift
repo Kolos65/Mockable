@@ -18,7 +18,7 @@ extension FunctionDeclSyntax {
 
     var closureType: FunctionTypeSyntax {
         let params = signature.parameterClause.parameters
-            .map(\.resolvedType)
+            .map { $0.resolvedType(for: .parameter) }
 
         return FunctionTypeSyntax(
             parameters: TupleTypeElementListSyntax {

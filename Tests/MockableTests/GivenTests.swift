@@ -250,4 +250,30 @@ final class GivenTests: XCTestCase {
 
         XCTAssertEqual(result, 1234)
     }
+
+    func test_givenEscapingClosureParam_whenWillProduceCalled_closureCanBeSaved() throws {
+        var storedCompletion: ((Product) -> Void)?
+
+        given(mock)
+            .download(completion: .any)
+            .willProduce { completion in
+                storedCompletion = completion
+            }
+
+        mock.download { _ in }
+
+        XCTAssertNotNil(storedCompletion)
+    }
+
+    func test_givenInoutParam_whenWillProduceUsed_mutationWorks() {
+        given(mock)
+            .change(user: .any)
+            .willProduce { param in
+                param.age = 100
+            }
+        var user: User = .init(name: "test", age: 0)
+        mock.change(user: &user)
+
+        XCTAssertEqual(user.age, 100)
+    }
 }

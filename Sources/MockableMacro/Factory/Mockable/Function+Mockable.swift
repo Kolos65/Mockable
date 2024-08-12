@@ -146,11 +146,14 @@ extension FunctionRequirement {
             leftParen: .leftParenToken(),
             arguments: LabeledExprListSyntax {
                 for parameter in syntax.signature.parameterClause.parameters {
-                    LabeledExprSyntax(
-                        expression: DeclReferenceExprSyntax(
-                            baseName: parameter.secondName?.trimmed ?? parameter.firstName.trimmed
-                        )
+                    let parameterReference = DeclReferenceExprSyntax(
+                        baseName: parameter.secondName?.trimmed ?? parameter.firstName.trimmed
                     )
+                    if parameter.isInout {
+                        LabeledExprSyntax(expression: InOutExprSyntax(expression: parameterReference))
+                    } else {
+                        LabeledExprSyntax(expression: parameterReference)
+                    }
                 }
             },
             rightParen: .rightParenToken()

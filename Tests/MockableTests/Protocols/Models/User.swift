@@ -10,7 +10,7 @@ import Foundation
 struct User: Equatable, Hashable {
     let id = UUID()
     let name: String
-    let age: Int
+    var age: Int
 
     static let test1: User = .init(name: "test1", age: 1)
     static let test2: User = .init(name: "test2", age: 2)
