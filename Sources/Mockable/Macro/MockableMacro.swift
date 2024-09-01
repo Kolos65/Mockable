@@ -38,4 +38,4 @@
 /// }
 /// ```
 @attached(peer, names: prefixed(Mock))
-public macro Mockable() = #externalMacro(module: "MockableMacro", type: "MockableMacro")
+public macro Mockable(name: String? = nil) = #externalMacro(module: "MockableMacro", type: "MockableMacro")
