@@ -13,7 +13,7 @@ extension InitializerRequirement: Mockable {
     func implement(with modifiers: DeclModifierListSyntax) throws -> DeclSyntax {
         let initDecl = InitializerDeclSyntax(
             attributes: syntax.attributes.trimmed.with(\.trailingTrivia, .newline),
-            modifiers: modifiers,
+            modifiers: declarationModifiers(extending: modifiers),
             initKeyword: syntax.initKeyword.trimmed,
             optionalMark: syntax.optionalMark?.trimmed,
             genericParameterClause: syntax.genericParameterClause?.trimmed,
@@ -22,5 +22,14 @@ extension InitializerRequirement: Mockable {
             body: .init(statements: [])
         )
         return DeclSyntax(initDecl)
+    }
+}
+
+// MARK: - Helpers
+
+extension InitializerRequirement {
+    private func declarationModifiers(extending modifiers: DeclModifierListSyntax) -> DeclModifierListSyntax {
+        let filtered = syntax.modifiers.filtered(keywords: [.nonisolated])
+        return modifiers.trimmed.appending(filtered.trimmed)
     }
 }

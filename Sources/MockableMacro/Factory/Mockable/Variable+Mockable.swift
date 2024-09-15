@@ -13,7 +13,7 @@ extension VariableRequirement: Mockable {
     func implement(with modifiers: DeclModifierListSyntax) throws -> DeclSyntax {
         let variableDecl = VariableDeclSyntax(
             attributes: syntax.attributes.trimmed.with(\.trailingTrivia, .newline),
-            modifiers: modifiers,
+            modifiers: declarationModifiers(extending: modifiers),
             bindingSpecifier: .keyword(.var),
             bindings: try PatternBindingListSyntax {
                 try syntax.binding.with(\.accessorBlock, accessorBlock)
@@ -26,6 +26,11 @@ extension VariableRequirement: Mockable {
 // MARK: - Helpers
 
 extension VariableRequirement {
+    private func declarationModifiers(extending modifiers: DeclModifierListSyntax) -> DeclModifierListSyntax {
+        let filtered = syntax.modifiers.filtered(keywords: [.nonisolated])
+        return modifiers.trimmed.appending(filtered.trimmed)
+    }
+
     private var accessorBlock: AccessorBlockSyntax {
         get throws {
             AccessorBlockSyntax(accessors: .accessors(try accessorDeclList))
