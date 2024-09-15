@@ -8,7 +8,7 @@ let isDev = Context.environment["MOCKABLE_DEV"].flatMap(Bool.init) ?? false
 func ifDev<T>(add list: [T]) -> [T] { isDev ? list : [] }
 
 let devDependencies: [Package.Dependency] = [
-    .package(url: "https://github.com/pointfreeco/swift-macro-testing", from: "0.2.2"),
+    .package(url: "https://github.com/pointfreeco/swift-macro-testing", from: "0.5.2"),
     .package(url: "https://github.com/realm/SwiftLint", exact: "0.55.1"),
     .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.3.0")
 ]

@@ -13,7 +13,7 @@ extension FunctionRequirement: Mockable {
     func implement(with modifiers: DeclModifierListSyntax) throws -> DeclSyntax {
         let decl = FunctionDeclSyntax(
             attributes: syntax.attributes.trimmed.with(\.trailingTrivia, .newline),
-            modifiers: modifiers,
+            modifiers: declarationModifiers(extending: modifiers),
             funcKeyword: syntax.funcKeyword.trimmed,
             name: syntax.name.trimmed,
             genericParameterClause: syntax.genericParameterClause?.trimmed,
@@ -33,6 +33,11 @@ extension FunctionRequirement: Mockable {
 // MARK: - Helpers
 
 extension FunctionRequirement {
+    private func declarationModifiers(extending modifiers: DeclModifierListSyntax) -> DeclModifierListSyntax {
+        let filtered = syntax.modifiers.filtered(keywords: [.nonisolated])
+        return modifiers.trimmed.appending(filtered.trimmed)
+    }
+
     private var body: CodeBlockItemListSyntax {
         get throws {
             try CodeBlockItemListSyntax {
