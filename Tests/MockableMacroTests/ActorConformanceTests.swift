@@ -17,14 +17,18 @@ final class ActorConformanceTests: MockableMacroTestCase {
           @Mockable
           protocol Test: Actor {
               var foo: Int { get }
+              nonisolated var quz: Int { get }
               func bar(number: Int) -> Int
+              nonisolated func baz(number: Int) -> Int
           }
           """
         } expansion: {
             """
             protocol Test: Actor {
                 var foo: Int { get }
+                nonisolated var quz: Int { get }
                 func bar(number: Int) -> Int
+                nonisolated func baz(number: Int) -> Int
             }
 
             #if MOCKING
@@ -51,7 +55,14 @@ final class ActorConformanceTests: MockableMacroTestCase {
                     }
                 }
                 func bar(number: Int) -> Int {
-                    let member: Member = .m2_bar(number: .value(number))
+                    let member: Member = .m3_bar(number: .value(number))
+                    return mocker.mock(member) { producer in
+                        let producer = try cast(producer) as (Int) -> Int
+                        return producer(number)
+                    }
+                }
+                nonisolated func baz(number: Int) -> Int {
+                    let member: Member = .m4_baz(number: .value(number))
                     return mocker.mock(member) { producer in
                         let producer = try cast(producer) as (Int) -> Int
                         return producer(number)
@@ -66,14 +77,29 @@ final class ActorConformanceTests: MockableMacroTestCase {
                         }
                     }
                 }
+                nonisolated var quz: Int {
+                    get {
+                        let member: Member = .m2_quz
+                        return mocker.mock(member) { producer in
+                            let producer = try cast(producer) as () -> Int
+                            return producer()
+                        }
+                    }
+                }
                 enum Member: Matchable, CaseIdentifiable {
                     case m1_foo
-                    case m2_bar(number: Parameter<Int>)
+                    case m2_quz
+                    case m3_bar(number: Parameter<Int>)
+                    case m4_baz(number: Parameter<Int>)
                     func match(_ other: Member) -> Bool {
                         switch (self, other) {
                         case (.m1_foo, .m1_foo):
                             return true
-                        case (.m2_bar(number: let leftNumber), .m2_bar(number: let rightNumber)):
+                        case (.m2_quz, .m2_quz):
+                            return true
+                        case (.m3_bar(number: let leftNumber), .m3_bar(number: let rightNumber)):
+                            return leftNumber.match(rightNumber)
+                        case (.m4_baz(number: let leftNumber), .m4_baz(number: let rightNumber)):
                             return leftNumber.match(rightNumber)
                         default:
                             return false
@@ -88,8 +114,14 @@ final class ActorConformanceTests: MockableMacroTestCase {
                     var foo: FunctionReturnBuilder<MockTest, ReturnBuilder, Int, () -> Int> {
                         .init(mocker, kind: .m1_foo)
                     }
+                    var quz: FunctionReturnBuilder<MockTest, ReturnBuilder, Int, () -> Int> {
+                        .init(mocker, kind: .m2_quz)
+                    }
                     func bar(number: Parameter<Int>) -> FunctionReturnBuilder<MockTest, ReturnBuilder, Int, (Int) -> Int> {
-                        .init(mocker, kind: .m2_bar(number: number))
+                        .init(mocker, kind: .m3_bar(number: number))
+                    }
+                    func baz(number: Parameter<Int>) -> FunctionReturnBuilder<MockTest, ReturnBuilder, Int, (Int) -> Int> {
+                        .init(mocker, kind: .m4_baz(number: number))
                     }
                 }
                 struct ActionBuilder: EffectBuilder {
@@ -100,8 +132,14 @@ final class ActorConformanceTests: MockableMacroTestCase {
                     var foo: FunctionActionBuilder<MockTest, ActionBuilder> {
                         .init(mocker, kind: .m1_foo)
                     }
+                    var quz: FunctionActionBuilder<MockTest, ActionBuilder> {
+                        .init(mocker, kind: .m2_quz)
+                    }
                     func bar(number: Parameter<Int>) -> FunctionActionBuilder<MockTest, ActionBuilder> {
-                        .init(mocker, kind: .m2_bar(number: number))
+                        .init(mocker, kind: .m3_bar(number: number))
+                    }
+                    func baz(number: Parameter<Int>) -> FunctionActionBuilder<MockTest, ActionBuilder> {
+                        .init(mocker, kind: .m4_baz(number: number))
                     }
                 }
                 struct VerifyBuilder: AssertionBuilder {
@@ -114,8 +152,14 @@ final class ActorConformanceTests: MockableMacroTestCase {
                     var foo: FunctionVerifyBuilder<MockTest, VerifyBuilder> {
                         .init(mocker, kind: .m1_foo, assertion: assertion)
                     }
+                    var quz: FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                        .init(mocker, kind: .m2_quz, assertion: assertion)
+                    }
                     func bar(number: Parameter<Int>) -> FunctionVerifyBuilder<MockTest, VerifyBuilder> {
-                        .init(mocker, kind: .m2_bar(number: number), assertion: assertion)
+                        .init(mocker, kind: .m3_bar(number: number), assertion: assertion)
+                    }
+                    func baz(number: Parameter<Int>) -> FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                        .init(mocker, kind: .m4_baz(number: number), assertion: assertion)
                     }
                 }
             }

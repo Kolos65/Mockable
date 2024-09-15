@@ -27,7 +27,7 @@ extension ConformanceFactory {
         try MemberBlockItemListSyntax {
             for variable in requirements.variables {
                 MemberBlockItemSyntax(
-                    decl: try variable.implement(with: requirements.modifiers)
+                    decl: try variable.implement(with: variable.syntax.modifiers)
                 )
             }
         }
@@ -37,7 +37,7 @@ extension ConformanceFactory {
         try MemberBlockItemListSyntax {
             for function in requirements.functions {
                 MemberBlockItemSyntax(
-                    decl: try function.implement(with: requirements.modifiers)
+                    decl: try function.implement(with: function.syntax.modifiers)
                 )
             }
         }

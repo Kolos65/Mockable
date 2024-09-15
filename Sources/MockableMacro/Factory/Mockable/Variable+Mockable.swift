@@ -13,7 +13,7 @@ extension VariableRequirement: Mockable {
     func implement(with modifiers: DeclModifierListSyntax) throws -> DeclSyntax {
         let variableDecl = VariableDeclSyntax(
             attributes: syntax.attributes.trimmed.with(\.trailingTrivia, .newline),
-            modifiers: modifiers,
+            modifiers: modifiers.trimmed,
             bindingSpecifier: .keyword(.var),
             bindings: try PatternBindingListSyntax {
                 try syntax.binding.with(\.accessorBlock, accessorBlock)

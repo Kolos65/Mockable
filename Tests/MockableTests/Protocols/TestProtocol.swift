@@ -34,6 +34,7 @@ protocol TestProtocol: Actor, Sendable where Item2: Identifiable {
     func asyncFunction() async
     func asyncThrowingFunction() async throws
     func asyncParamFunction(param: @escaping () async throws -> Void) async
+    nonisolated func nonisolatedFunction() async
 
     // MARK: Generic Functions
 
@@ -61,6 +62,7 @@ protocol TestProtocol: Actor, Sendable where Item2: Identifiable {
     var throwingProperty: Int { get throws }
     var asyncProperty: String { get async }
     var asyncThrowingProperty: String { get async throws }
+    nonisolated var nonisolatedProperty: String { get set }
 
     // MARK: Init
 

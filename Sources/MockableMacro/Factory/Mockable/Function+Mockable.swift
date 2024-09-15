@@ -13,7 +13,7 @@ extension FunctionRequirement: Mockable {
     func implement(with modifiers: DeclModifierListSyntax) throws -> DeclSyntax {
         let decl = FunctionDeclSyntax(
             attributes: syntax.attributes.trimmed.with(\.trailingTrivia, .newline),
-            modifiers: modifiers,
+            modifiers: modifiers.trimmed,
             funcKeyword: syntax.funcKeyword.trimmed,
             name: syntax.name.trimmed,
             genericParameterClause: syntax.genericParameterClause?.trimmed,
