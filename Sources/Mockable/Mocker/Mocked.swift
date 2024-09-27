@@ -1,13 +1,13 @@
 //
-//  Mockable.swift
-//  Mockable
+//  Mocked.swift
+//  Mocked
 //
 //  Created by Kolos Foltanyi on 2024. 04. 03..
 //
 
 /// A protocol that represents auto-mocked types.
 ///
-/// `Mockable` in combination with a `relaxedMockable` option of `MockerPolicy `can be used
+/// `Mocked` in combination with a `relaxedMocked` option of `MockerPolicy `can be used
 /// to set an implicit return value for custom types:
 ///
 /// ```swift
@@ -16,7 +16,7 @@
 ///     var seats: Int
 /// }
 ///
-/// extension Car: Mockable {
+/// extension Car: Mocked {
 ///     static var mock: Car {
 ///         Car(name: "Mock Car", seats: 4)
 ///     }
@@ -39,14 +39,14 @@
 ///
 /// func testCarService() {
 ///     func test() {
-///         let mock = MockCarService(policy: .relaxedMockable)
+///         let mock = MockCarService(policy: .relaxedMocked)
 ///         // Implictly mocked without a given registration:
 ///         let car = mock.getCar()
 ///         let cars = mock.getCars()
 ///     }
 /// }
 /// ```
-public protocol Mockable {
+public protocol Mocked {
     /// A default mock return value to use when `.relaxedMocked` policy is set.
     static var mock: Self { get }
 
@@ -55,16 +55,16 @@ public protocol Mockable {
     static var mocks: [Self] { get }
 }
 
-extension Mockable {
+extension Mocked {
     public static var mocks: [Self] { [mock] }
 }
 
-extension Array: Mockable where Element: Mockable {
+extension Array: Mocked where Element: Mocked {
     public static var mock: Self {
         Element.mocks
     }
 }
 
-extension Optional: Mockable where Wrapped: Mockable {
+extension Optional: Mocked where Wrapped: Mocked {
     public static var mock: Self { Wrapped.mock }
 }

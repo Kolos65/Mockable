@@ -23,7 +23,7 @@ public struct MockerPolicy: OptionSet {
         .relaxedOptional,
         .relaxedThrowingVoid,
         .relaxedNonThrowingVoid,
-        .relaxedMockable
+        .relaxedMocked
     ]
 
     /// Every void function will run normally without a registration
@@ -41,8 +41,8 @@ public struct MockerPolicy: OptionSet {
     /// Optional return values will default to nil.
     public static let relaxedOptional = Self(rawValue: 1 << 2)
 
-    /// Types conforming to the `Mockable` protocol will default to their mock value.
-    public static let relaxedMockable = Self(rawValue: 1 << 3)
+    /// Types conforming to the `Mocked` protocol will default to their mock value.
+    public static let relaxedMocked = Self(rawValue: 1 << 3)
 
     /// Option set raw value.
     public let rawValue: Int
