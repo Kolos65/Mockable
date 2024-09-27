@@ -358,8 +358,8 @@ extension Mocker {
     public func mock<V>(
         _ member: Member,
         producerResolver: (Any) throws -> V
-    ) -> V where V: Mockable {
-        let relaxed = currentPolicy.contains(.relaxedMockable)
+    ) -> V where V: Mocked {
+        let relaxed = currentPolicy.contains(.relaxedMocked)
         // swiftlint:disable:next force_try
         return try! mock(member, producerResolver, relaxed ? .value(.mock) : .none)
     }
@@ -374,8 +374,8 @@ extension Mocker {
     public func mockThrowing<V>(
         _ member: Member,
         producerResolver: (Any) throws -> V
-    ) throws -> V where V: Mockable {
-        let relaxed = currentPolicy.contains(.relaxedMockable)
+    ) throws -> V where V: Mocked {
+        let relaxed = currentPolicy.contains(.relaxedMocked)
         return try mock(member, producerResolver, relaxed ? .value(.mock) : .none)
     }
 }
@@ -393,9 +393,9 @@ extension Mocker {
     public func mock<V>(
         _ member: Member,
         producerResolver: (Any) throws -> V
-    ) -> V where V: Mockable, V: ExpressibleByNilLiteral {
+    ) -> V where V: Mocked, V: ExpressibleByNilLiteral {
         // swiftlint:disable force_try
-        if currentPolicy.contains(.relaxedMockable) {
+        if currentPolicy.contains(.relaxedMocked) {
             return try! mock(member, producerResolver, .value(.mock))
         } else if currentPolicy.contains(.relaxedOptional) {
             return try! mock(member, producerResolver, .value(nil))
@@ -415,8 +415,8 @@ extension Mocker {
     public func mockThrowing<V>(
         _ member: Member,
         producerResolver: (Any) throws -> V
-    ) throws -> V where V: Mockable, V: ExpressibleByNilLiteral {
-        if currentPolicy.contains(.relaxedMockable) {
+    ) throws -> V where V: Mocked, V: ExpressibleByNilLiteral {
+        if currentPolicy.contains(.relaxedMocked) {
             return try mock(member, producerResolver, .value(.mock))
         } else if currentPolicy.contains(.relaxedOptional) {
             return try mock(member, producerResolver, .value(nil))

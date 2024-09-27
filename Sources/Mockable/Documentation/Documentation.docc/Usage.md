@@ -197,14 +197,14 @@ You have two options to override the default strict behavior of the library:
     MockerPolicy.default = .relaxedVoid
     ```
 
-The `.relaxedMockable` policy in combination with the [`Mockable`](https://kolos65.github.io/Mockable/documentation/mockable/mockable) protocol can be used to set an implicit return value for custom (or even built in) types:
+The `.relaxedMocked` policy in combination with the [`Mocked`](https://kolos65.github.io/Mockable/documentation/mockable/mocked) protocol can be used to set an implicit return value for custom (or even built in) types:
 ```swift
 struct Car {
     var name: String
     var seats: Int
 }
 
-extension Car: Mockable {
+extension Car: Mocked {
     static var mock: Car {
         Car(name: "Mock Car", seats: 4)
     }
@@ -227,7 +227,7 @@ protocol CarService {
 
 func testCarService() {
     func test() {
-        let mock = MockCarService(policy: .relaxedMockable)
+        let mock = MockCarService(policy: .relaxedMocked)
         // Implictly mocked without a given registration:
         let car = mock.getCar()
         let cars = mock.getCars()

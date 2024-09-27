@@ -13,7 +13,7 @@ public struct Car: Equatable {
     var seats: Int
 }
 
-extension Car: Mockable {
+extension Car: Mocked {
     public static var mock: Car {
         Car(name: "Mock", seats: 4)
     }
@@ -70,7 +70,7 @@ final class PolicyTests: XCTestCase {
     }
 
     func test_whenCustomMockedPolicySet_mockReturnsDefault() throws {
-        let mock = MockPolicyService(policy: .relaxedMockable)
+        let mock = MockPolicyService(policy: .relaxedMocked)
         XCTAssertEqual(Car.mock, mock.carFunc())
         XCTAssertEqual(Car.mock, mock.optionalCarFunc())
         XCTAssertEqual(Car.mock, mock.carProp)
