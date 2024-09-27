@@ -53,17 +53,17 @@ final class AttributesTests: MockableMacroTestCase {
             final class MockAttributeTest: AttributeTest, Mockable.MockableService {
                 typealias Mocker = Mockable.Mocker<MockAttributeTest>
                 private let mocker = Mocker()
-                @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
-                func given() -> ReturnBuilder {
+                @available(*, deprecated, message: "Use given(_ service:) instead. ")
+                var given: ReturnBuilder {
                     .init(mocker: mocker)
                 }
-                @available(*, deprecated, message: "Use when(_ service:) of Mockable instead. ")
-                func when() -> ActionBuilder {
+                @available(*, deprecated, message: "Use when(_ service:) instead. ")
+                var when: ActionBuilder {
                     .init(mocker: mocker)
                 }
-                @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead. ")
-                func verify(with assertion: @escaping Mockable.MockableAssertion) -> VerifyBuilder {
-                    .init(mocker: mocker, assertion: assertion)
+                @available(*, deprecated, message: "Use verify(_ service:) instead. ")
+                var verify: VerifyBuilder {
+                    .init(mocker: mocker)
                 }
                 func reset(_ scopes: Set<Mockable.MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
@@ -135,7 +135,7 @@ final class AttributesTests: MockableMacroTestCase {
                         }
                     }
                 }
-                struct ReturnBuilder: Mockable.EffectBuilder {
+                struct ReturnBuilder: Mockable.Builder {
                     private let mocker: Mocker
                     init(mocker: Mocker) {
                         self.mocker = mocker
@@ -157,7 +157,7 @@ final class AttributesTests: MockableMacroTestCase {
                         .init(mocker, kind: .m4_test2)
                     }
                 }
-                struct ActionBuilder: Mockable.EffectBuilder {
+                struct ActionBuilder: Mockable.Builder {
                     private let mocker: Mocker
                     init(mocker: Mocker) {
                         self.mocker = mocker
@@ -179,28 +179,26 @@ final class AttributesTests: MockableMacroTestCase {
                         .init(mocker, kind: .m4_test2)
                     }
                 }
-                struct VerifyBuilder: Mockable.AssertionBuilder {
+                struct VerifyBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    private let assertion: Mockable.MockableAssertion
-                    init(mocker: Mocker, assertion: @escaping Mockable.MockableAssertion) {
+                    init(mocker: Mocker) {
                         self.mocker = mocker
-                        self.assertion = assertion
                     }
                     @available(iOS 15, *)
                     var prop: Mockable.FunctionVerifyBuilder<MockAttributeTest, VerifyBuilder> {
-                        .init(mocker, kind: .m1_prop, assertion: assertion)
+                        .init(mocker, kind: .m1_prop)
                     }
                     @available(iOS 15, *)
                     var prop2: Mockable.FunctionVerifyBuilder<MockAttributeTest, VerifyBuilder> {
-                        .init(mocker, kind: .m2_prop2, assertion: assertion)
+                        .init(mocker, kind: .m2_prop2)
                     }
                     @available(iOS 15, *)
                     func test() -> Mockable.FunctionVerifyBuilder<MockAttributeTest, VerifyBuilder> {
-                        .init(mocker, kind: .m3_test, assertion: assertion)
+                        .init(mocker, kind: .m3_test)
                     }
                     @available(iOS 15, *)
                     func test2() -> Mockable.FunctionVerifyBuilder<MockAttributeTest, VerifyBuilder> {
-                        .init(mocker, kind: .m4_test2, assertion: assertion)
+                        .init(mocker, kind: .m4_test2)
                     }
                 }
             }

@@ -35,17 +35,17 @@ final class ActorConformanceTests: MockableMacroTestCase {
             actor MockTest: Test, Mockable.MockableService {
                 typealias Mocker = Mockable.Mocker<MockTest>
                 private let mocker = Mocker()
-                @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
-                nonisolated func given() -> ReturnBuilder {
+                @available(*, deprecated, message: "Use given(_ service:) instead. ")
+                nonisolated var given: ReturnBuilder {
                     .init(mocker: mocker)
                 }
-                @available(*, deprecated, message: "Use when(_ service:) of Mockable instead. ")
-                nonisolated func when() -> ActionBuilder {
+                @available(*, deprecated, message: "Use when(_ service:) instead. ")
+                nonisolated var when: ActionBuilder {
                     .init(mocker: mocker)
                 }
-                @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead. ")
-                nonisolated func verify(with assertion: @escaping Mockable.MockableAssertion) -> VerifyBuilder {
-                    .init(mocker: mocker, assertion: assertion)
+                @available(*, deprecated, message: "Use verify(_ service:) instead. ")
+                nonisolated var verify: VerifyBuilder {
+                    .init(mocker: mocker)
                 }
                 func reset(_ scopes: Set<Mockable.MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
@@ -107,7 +107,7 @@ final class ActorConformanceTests: MockableMacroTestCase {
                         }
                     }
                 }
-                struct ReturnBuilder: Mockable.EffectBuilder {
+                struct ReturnBuilder: Mockable.Builder {
                     private let mocker: Mocker
                     init(mocker: Mocker) {
                         self.mocker = mocker
@@ -125,7 +125,7 @@ final class ActorConformanceTests: MockableMacroTestCase {
                         .init(mocker, kind: .m4_baz(number: number))
                     }
                 }
-                struct ActionBuilder: Mockable.EffectBuilder {
+                struct ActionBuilder: Mockable.Builder {
                     private let mocker: Mocker
                     init(mocker: Mocker) {
                         self.mocker = mocker
@@ -143,24 +143,22 @@ final class ActorConformanceTests: MockableMacroTestCase {
                         .init(mocker, kind: .m4_baz(number: number))
                     }
                 }
-                struct VerifyBuilder: Mockable.AssertionBuilder {
+                struct VerifyBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    private let assertion: Mockable.MockableAssertion
-                    init(mocker: Mocker, assertion: @escaping Mockable.MockableAssertion) {
+                    init(mocker: Mocker) {
                         self.mocker = mocker
-                        self.assertion = assertion
                     }
                     var foo: Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
-                        .init(mocker, kind: .m1_foo, assertion: assertion)
+                        .init(mocker, kind: .m1_foo)
                     }
                     var quz: Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
-                        .init(mocker, kind: .m2_quz, assertion: assertion)
+                        .init(mocker, kind: .m2_quz)
                     }
                     func bar(number: Parameter<Int>) -> Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
-                        .init(mocker, kind: .m3_bar(number: number), assertion: assertion)
+                        .init(mocker, kind: .m3_bar(number: number))
                     }
                     func baz(number: Parameter<Int>) -> Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
-                        .init(mocker, kind: .m4_baz(number: number), assertion: assertion)
+                        .init(mocker, kind: .m4_baz(number: number))
                     }
                 }
             }

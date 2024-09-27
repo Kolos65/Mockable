@@ -9,7 +9,7 @@
 ///
 /// This builder is typically used within the context of a higher-level builder (e.g., a `VerifyBuilder`)
 /// to verify the expected number of invocations for a particular function of a mock service.
-public struct FunctionVerifyBuilder<T: MockableService, ParentBuilder: AssertionBuilder<T>> {
+public struct FunctionVerifyBuilder<T: MockableService, ParentBuilder: Builder<T>> {
 
     /// Convenient type for the associated service's Member.
     public typealias Member = T.Member
@@ -20,19 +20,14 @@ public struct FunctionVerifyBuilder<T: MockableService, ParentBuilder: Assertion
     /// The member being verified.
     private var member: Member
 
-    /// Assertion function to use for verfications.
-    private var assertion: MockableAssertion
-
     /// Initializes a new instance of `FunctionVerifyBuilder`.
     ///
     /// - Parameters:
     ///   - mocker: The `Mocker` instance of the associated mock service.
     ///   - kind: The member being verified.
-    ///   - assertion: The assertion method to use for verfications.
-    public init(_ mocker: Mocker<T>, kind member: Member, assertion: @escaping MockableAssertion) {
+    public init(_ mocker: Mocker<T>, kind member: Member) {
         self.member = member
         self.mocker = mocker
-        self.assertion = assertion
     }
 
     /// Asserts the number of invocations of the specified member using `count`.
@@ -40,15 +35,21 @@ public struct FunctionVerifyBuilder<T: MockableService, ParentBuilder: Assertion
     /// - Parameter count: Specifies the expected invocation count.
     /// - Returns: The parent builder, used for chaining additional specifications.
     @discardableResult
-    public func called(_ count: Count, file: StaticString = #file, line: UInt = #line) -> ParentBuilder {
+    public func called(
+        _ count: Count,
+        fileID: StaticString = #fileID,
+        filePath: StaticString = #filePath,
+        line: UInt = #line,
+        column: UInt = #column) -> ParentBuilder {
         mocker.verify(
             member: member,
             count: count,
-            assertion: assertion,
-            file: file,
-            line: line
+            fileID: fileID,
+            filePath: filePath,
+            line: line,
+            column: column
         )
-        return .init(mocker: mocker, assertion: assertion)
+        return .init(mocker: mocker)
     }
 
     /// Asynchronously waits at most `timeout` interval for a successfuly assertion of
@@ -61,16 +62,19 @@ public struct FunctionVerifyBuilder<T: MockableService, ParentBuilder: Assertion
     @discardableResult
     public func calledEventually(_ count: Count,
                                  before timeout: TimeoutDuration = .seconds(1),
-                                 file: StaticString = #file,
-                                 line: UInt = #line) async -> ParentBuilder {
+                                 fileID: StaticString = #fileID,
+                                 filePath: StaticString = #filePath,
+                                 line: UInt = #line,
+                                 column: UInt = #column) async -> ParentBuilder {
         await mocker.verify(
             member: member,
             count: count,
-            assertion: assertion,
             timeout: timeout,
-            file: file,
-            line: line
+            fileID: fileID,
+            filePath: filePath,
+            line: line,
+            column: column
         )
-        return .init(mocker: mocker, assertion: assertion)
+        return .init(mocker: mocker)
     }
 }

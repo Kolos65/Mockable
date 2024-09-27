@@ -11,7 +11,7 @@
 /// to specify the desired return value or a return value producer for a throwing function of a mock service.
 public struct ThrowingFunctionReturnBuilder<
     T: MockableService,
-    ParentBuilder: EffectBuilder<T>,
+    ParentBuilder: Builder<T>,
     ReturnType,
     ProduceType
 > {

@@ -15,11 +15,11 @@ public protocol MockableService {
     associatedtype Member: Matchable, CaseIdentifiable
 
     /// A builder responsible for registering return values.
-    associatedtype ReturnBuilder: EffectBuilder<Self>
+    associatedtype ReturnBuilder: Builder<Self>
     /// A builder responsible for registering side-effects.
-    associatedtype ActionBuilder: EffectBuilder<Self>
+    associatedtype ActionBuilder: Builder<Self>
     /// A builder responsible for asserting member invocations.
-    associatedtype VerifyBuilder: AssertionBuilder<Self>
+    associatedtype VerifyBuilder: Builder<Self>
 
     /// Encapsulates member return values.
     typealias Return = MemberReturn<Member>
@@ -28,11 +28,11 @@ public protocol MockableService {
     typealias Action = MemberAction<Member>
 
     /// A builder proxy for specifying return values.
-    func given() -> ReturnBuilder
+    var given: ReturnBuilder { get }
 
     /// A builder proxy for specifying actions.
-    func when() -> ActionBuilder
+    var when: ActionBuilder { get }
 
     /// The builder proxy for verifying invocations.
-    func verify(with assertion: @escaping MockableAssertion) -> VerifyBuilder
+    var verify: VerifyBuilder { get }
 }

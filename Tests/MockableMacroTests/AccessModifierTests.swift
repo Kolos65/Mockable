@@ -33,17 +33,17 @@ final class AccessModifierTests: MockableMacroTestCase {
             public final class MockTest: Test, Mockable.MockableService {
                 public typealias Mocker = Mockable.Mocker<MockTest>
                 private let mocker = Mocker()
-                @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
-                public func given() -> ReturnBuilder {
+                @available(*, deprecated, message: "Use given(_ service:) instead. ")
+                public var given: ReturnBuilder {
                     .init(mocker: mocker)
                 }
-                @available(*, deprecated, message: "Use when(_ service:) of Mockable instead. ")
-                public func when() -> ActionBuilder {
+                @available(*, deprecated, message: "Use when(_ service:) instead. ")
+                public var when: ActionBuilder {
                     .init(mocker: mocker)
                 }
-                @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead. ")
-                public func verify(with assertion: @escaping Mockable.MockableAssertion) -> VerifyBuilder {
-                    .init(mocker: mocker, assertion: assertion)
+                @available(*, deprecated, message: "Use verify(_ service:) instead. ")
+                public var verify: VerifyBuilder {
+                    .init(mocker: mocker)
                 }
                 public func reset(_ scopes: Set<Mockable.MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
@@ -85,7 +85,7 @@ final class AccessModifierTests: MockableMacroTestCase {
                         }
                     }
                 }
-                public struct ReturnBuilder: Mockable.EffectBuilder {
+                public struct ReturnBuilder: Mockable.Builder {
                     private let mocker: Mocker
                     public init(mocker: Mocker) {
                         self.mocker = mocker
@@ -97,7 +97,7 @@ final class AccessModifierTests: MockableMacroTestCase {
                         .init(mocker, kind: .m2_bar(number: number))
                     }
                 }
-                public struct ActionBuilder: Mockable.EffectBuilder {
+                public struct ActionBuilder: Mockable.Builder {
                     private let mocker: Mocker
                     public init(mocker: Mocker) {
                         self.mocker = mocker
@@ -109,18 +109,16 @@ final class AccessModifierTests: MockableMacroTestCase {
                         .init(mocker, kind: .m2_bar(number: number))
                     }
                 }
-                public struct VerifyBuilder: Mockable.AssertionBuilder {
+                public struct VerifyBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    private let assertion: Mockable.MockableAssertion
-                    public init(mocker: Mocker, assertion: @escaping Mockable.MockableAssertion) {
+                    public init(mocker: Mocker) {
                         self.mocker = mocker
-                        self.assertion = assertion
                     }
                     public var foo: Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
-                        .init(mocker, kind: .m1_foo, assertion: assertion)
+                        .init(mocker, kind: .m1_foo)
                     }
                     public func bar(number: Parameter<Int>) -> Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
-                        .init(mocker, kind: .m2_bar(number: number), assertion: assertion)
+                        .init(mocker, kind: .m2_bar(number: number))
                     }
                 }
             }
@@ -149,17 +147,17 @@ final class AccessModifierTests: MockableMacroTestCase {
             private final class MockTest: Test, Mockable.MockableService {
                 typealias Mocker = Mockable.Mocker<MockTest>
                 private let mocker = Mocker()
-                @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
-                func given() -> ReturnBuilder {
+                @available(*, deprecated, message: "Use given(_ service:) instead. ")
+                var given: ReturnBuilder {
                     .init(mocker: mocker)
                 }
-                @available(*, deprecated, message: "Use when(_ service:) of Mockable instead. ")
-                func when() -> ActionBuilder {
+                @available(*, deprecated, message: "Use when(_ service:) instead. ")
+                var when: ActionBuilder {
                     .init(mocker: mocker)
                 }
-                @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead. ")
-                func verify(with assertion: @escaping Mockable.MockableAssertion) -> VerifyBuilder {
-                    .init(mocker: mocker, assertion: assertion)
+                @available(*, deprecated, message: "Use verify(_ service:) instead. ")
+                var verify: VerifyBuilder {
+                    .init(mocker: mocker)
                 }
                 func reset(_ scopes: Set<Mockable.MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
@@ -199,7 +197,7 @@ final class AccessModifierTests: MockableMacroTestCase {
                         }
                     }
                 }
-                struct ReturnBuilder: Mockable.EffectBuilder {
+                struct ReturnBuilder: Mockable.Builder {
                     private let mocker: Mocker
                     init(mocker: Mocker) {
                         self.mocker = mocker
@@ -211,7 +209,7 @@ final class AccessModifierTests: MockableMacroTestCase {
                         .init(mocker, kind: .m2_bar(number: number))
                     }
                 }
-                struct ActionBuilder: Mockable.EffectBuilder {
+                struct ActionBuilder: Mockable.Builder {
                     private let mocker: Mocker
                     init(mocker: Mocker) {
                         self.mocker = mocker
@@ -223,18 +221,16 @@ final class AccessModifierTests: MockableMacroTestCase {
                         .init(mocker, kind: .m2_bar(number: number))
                     }
                 }
-                struct VerifyBuilder: Mockable.AssertionBuilder {
+                struct VerifyBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    private let assertion: Mockable.MockableAssertion
-                    init(mocker: Mocker, assertion: @escaping Mockable.MockableAssertion) {
+                    init(mocker: Mocker) {
                         self.mocker = mocker
-                        self.assertion = assertion
                     }
                     var foo: Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
-                        .init(mocker, kind: .m1_foo, assertion: assertion)
+                        .init(mocker, kind: .m1_foo)
                     }
                     func bar(number: Parameter<Int>) -> Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
-                        .init(mocker, kind: .m2_bar(number: number), assertion: assertion)
+                        .init(mocker, kind: .m2_bar(number: number))
                     }
                 }
             }
@@ -261,17 +257,17 @@ final class AccessModifierTests: MockableMacroTestCase {
             public final class MockTest: Test, Mockable.MockableService {
                 public typealias Mocker = Mockable.Mocker<MockTest>
                 private let mocker = Mocker()
-                @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
-                public func given() -> ReturnBuilder {
+                @available(*, deprecated, message: "Use given(_ service:) instead. ")
+                public var given: ReturnBuilder {
                     .init(mocker: mocker)
                 }
-                @available(*, deprecated, message: "Use when(_ service:) of Mockable instead. ")
-                public func when() -> ActionBuilder {
+                @available(*, deprecated, message: "Use when(_ service:) instead. ")
+                public var when: ActionBuilder {
                     .init(mocker: mocker)
                 }
-                @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead. ")
-                public func verify(with assertion: @escaping Mockable.MockableAssertion) -> VerifyBuilder {
-                    .init(mocker: mocker, assertion: assertion)
+                @available(*, deprecated, message: "Use verify(_ service:) instead. ")
+                public var verify: VerifyBuilder {
+                    .init(mocker: mocker)
                 }
                 public func reset(_ scopes: Set<Mockable.MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
@@ -297,7 +293,7 @@ final class AccessModifierTests: MockableMacroTestCase {
                         }
                     }
                 }
-                public struct ReturnBuilder: Mockable.EffectBuilder {
+                public struct ReturnBuilder: Mockable.Builder {
                     private let mocker: Mocker
                     public init(mocker: Mocker) {
                         self.mocker = mocker
@@ -306,7 +302,7 @@ final class AccessModifierTests: MockableMacroTestCase {
                         .init(mocker, kind: .m1_foo)
                     }
                 }
-                public struct ActionBuilder: Mockable.EffectBuilder {
+                public struct ActionBuilder: Mockable.Builder {
                     private let mocker: Mocker
                     public init(mocker: Mocker) {
                         self.mocker = mocker
@@ -315,15 +311,13 @@ final class AccessModifierTests: MockableMacroTestCase {
                         .init(mocker, kind: .m1_foo)
                     }
                 }
-                public struct VerifyBuilder: Mockable.AssertionBuilder {
+                public struct VerifyBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    private let assertion: Mockable.MockableAssertion
-                    public init(mocker: Mocker, assertion: @escaping Mockable.MockableAssertion) {
+                    public init(mocker: Mocker) {
                         self.mocker = mocker
-                        self.assertion = assertion
                     }
                     public func foo() -> Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
-                        .init(mocker, kind: .m1_foo, assertion: assertion)
+                        .init(mocker, kind: .m1_foo)
                     }
                 }
             }

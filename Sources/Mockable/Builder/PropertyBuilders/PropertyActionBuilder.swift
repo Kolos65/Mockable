@@ -9,7 +9,7 @@
 ///
 /// This builder is typically used within the context of a higher-level builder (e.g., an `ActionBuilder`)
 /// to specify the behavior of the getter and setter of a particular property of a mock.
-public struct PropertyActionBuilder<T: MockableService, ParentBuilder: EffectBuilder<T>> {
+public struct PropertyActionBuilder<T: MockableService, ParentBuilder: Builder<T>> {
 
     /// Convenient type for the associated service's Member.
     public typealias Member = T.Member

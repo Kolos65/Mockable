@@ -143,13 +143,6 @@ extension VariableRequirement {
                     expression: setterSpecifier
                 )
             }
-            if kind == .verify {
-                LabeledExprSyntax(
-                    label: NS.assertion,
-                    colon: .colonToken(),
-                    expression: DeclReferenceExprSyntax(baseName: NS.assertion)
-                )
-            }
         }
         return CodeBlockItemListSyntax {
             FunctionCallExprSyntax(

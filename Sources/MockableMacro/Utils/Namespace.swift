@@ -54,17 +54,14 @@ enum NS {
     static let set_: String = "set_"
 
     static let mocker: TokenSyntax = "mocker"
-    static let assertion: TokenSyntax = "assertion"
 
     static let Mockable: TokenSyntax = "Mockable"
     static let Mock: TokenSyntax = "Mock"
     static let MockableService: TokenSyntax = "MockableService"
     static let Bool: TokenSyntax = "Bool"
     static let GenericValue: String = "GenericValue"
-    static let MockableAssertion: TokenSyntax = "MockableAssertion"
     static let Mocker: TokenSyntax = "Mocker"
-    static let EffectBuilder: TokenSyntax = "EffectBuilder"
-    static let AssertionBuilder: TokenSyntax = "AssertionBuilder"
+    static let Builder: TokenSyntax = "Builder"
     static let Member: TokenSyntax = "Member"
     static let Matchable: TokenSyntax = "Matchable"
     static let CaseIdentifiable: TokenSyntax = "CaseIdentifiable"

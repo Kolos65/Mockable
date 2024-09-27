@@ -1,5 +1,5 @@
 //
-//  EffectBuilder.swift
+//  Builder.swift
 //  Mockable
 //
 //  Created by Kolos Foltanyi on 2023. 11. 21..
@@ -7,7 +7,7 @@
 
 /// Used to specify members of a protocol when building
 /// given or when clauses of a mock service.
-public protocol EffectBuilder<Service> {
+public protocol Builder<Service> {
 
     /// The mock service associated with the Builder.
     associatedtype Service: MockableService

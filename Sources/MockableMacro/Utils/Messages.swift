@@ -6,7 +6,7 @@
 //
 
 enum Messages {
-    static let givenMessage = "Use given(_ service:) of Mockable instead."
-    static let whenMessage = "Use when(_ service:) of Mockable instead."
-    static let verifyMessage = "Use verify(_ service:) of MockableTest instead."
+    static let givenMessage = "Use given(_ service:) instead."
+    static let whenMessage = "Use when(_ service:) instead."
+    static let verifyMessage = "Use verify(_ service:) instead."
 }

@@ -9,7 +9,7 @@
 ///
 /// This builder is typically used within the context of a higher-level builder (e.g., a `VerifyBuilder`)
 /// to verify the expected number of invocations for the getter and setter of a particular property of a mock.
-public struct PropertyVerifyBuilder<T: MockableService, ParentBuilder: AssertionBuilder<T>> {
+public struct PropertyVerifyBuilder<T: MockableService, ParentBuilder: Builder<T>> {
 
     /// Convenient type for the associated service's Member.
     public typealias Member = T.Member
@@ -23,9 +23,6 @@ public struct PropertyVerifyBuilder<T: MockableService, ParentBuilder: Assertion
     /// The member representing the setter of the property.
     var setMember: Member
 
-    /// Assertion function to use for verfications.
-    private var assertion: MockableAssertion
-
     /// Initializes a new instance of `PropertyVerifyBuilder`.
     ///
     /// - Parameters:
@@ -34,12 +31,10 @@ public struct PropertyVerifyBuilder<T: MockableService, ParentBuilder: Assertion
     ///   - setKind: The member representing the setter of the property.
     public init(_ mocker: Mocker<T>,
                 kind getMember: Member,
-                setKind setMember: Member,
-                assertion: @escaping MockableAssertion) {
+                setKind setMember: Member) {
         self.getMember = getMember
         self.setMember = setMember
         self.mocker = mocker
-        self.assertion = assertion
     }
 
     /// Specifies the expected number of times the getter of the property should be called.
@@ -47,15 +42,22 @@ public struct PropertyVerifyBuilder<T: MockableService, ParentBuilder: Assertion
     /// - Parameter count: The `Count` object specifying the expected invocation count.
     /// - Returns: The parent builder, used for chaining additional specifications.
     @discardableResult
-    public func getCalled(_ count: Count, file: StaticString = #file, line: UInt = #line) -> ParentBuilder {
+    public func getCalled(
+        _ count: Count,
+        fileID: StaticString = #fileID,
+        filePath: StaticString = #filePath,
+        line: UInt = #line,
+        column: UInt = #column
+    ) -> ParentBuilder {
         mocker.verify(
             member: getMember,
             count: count,
-            assertion: assertion,
-            file: file,
-            line: line
+            fileID: fileID,
+            filePath: filePath,
+            line: line,
+            column: column
         )
-        return .init(mocker: mocker, assertion: assertion)
+        return .init(mocker: mocker)
     }
 
     /// Asynchronously waits at most `timeout` interval for a successfuly assertion of
@@ -68,17 +70,20 @@ public struct PropertyVerifyBuilder<T: MockableService, ParentBuilder: Assertion
     @discardableResult
     public func getCalledEventually(_ count: Count,
                                     before timeout: TimeoutDuration = .seconds(1),
-                                    file: StaticString = #file,
-                                    line: UInt = #line) async -> ParentBuilder {
+                                    fileID: StaticString = #fileID,
+                                    filePath: StaticString = #filePath,
+                                    line: UInt = #line,
+                                    column: UInt = #column) async -> ParentBuilder {
         await mocker.verify(
             member: getMember,
             count: count,
-            assertion: assertion,
             timeout: timeout,
-            file: file,
-            line: line
+            fileID: fileID,
+            filePath: filePath,
+            line: line,
+            column: column
         )
-        return .init(mocker: mocker, assertion: assertion)
+        return .init(mocker: mocker)
     }
 
     /// Specifies the expected number of times the setter of the property should be called.
@@ -86,15 +91,21 @@ public struct PropertyVerifyBuilder<T: MockableService, ParentBuilder: Assertion
     /// - Parameter count: The `Count` object specifying the expected invocation count.
     /// - Returns: The parent builder, used for chaining additional specifications.
     @discardableResult
-    public func setCalled(_ count: Count, file: StaticString = #file, line: UInt = #line) -> ParentBuilder {
+    public func setCalled(
+        _ count: Count,
+        fileID: StaticString = #fileID,
+        filePath: StaticString = #filePath,
+        line: UInt = #line,
+        column: UInt = #column) -> ParentBuilder {
         mocker.verify(
             member: setMember,
             count: count,
-            assertion: assertion,
-            file: file,
-            line: line
+            fileID: fileID,
+            filePath: filePath,
+            line: line,
+            column: column
         )
-        return .init(mocker: mocker, assertion: assertion)
+        return .init(mocker: mocker)
     }
 
     /// Asynchronously waits at most `timeout` interval for a successfuly assertion of
@@ -107,16 +118,19 @@ public struct PropertyVerifyBuilder<T: MockableService, ParentBuilder: Assertion
     @discardableResult
     public func setCalledEventually(_ count: Count,
                                     before timeout: TimeoutDuration = .seconds(1),
-                                    file: StaticString = #file,
-                                    line: UInt = #line) async -> ParentBuilder {
+                                    fileID: StaticString = #fileID,
+                                    filePath: StaticString = #filePath,
+                                    line: UInt = #line,
+                                    column: UInt = #column) async -> ParentBuilder {
         await mocker.verify(
             member: setMember,
             count: count,
-            assertion: assertion,
             timeout: timeout,
-            file: file,
-            line: line
+            fileID: fileID,
+            filePath: filePath,
+            line: line,
+            column: column
         )
-        return .init(mocker: mocker, assertion: assertion)
+        return .init(mocker: mocker)
     }
 }

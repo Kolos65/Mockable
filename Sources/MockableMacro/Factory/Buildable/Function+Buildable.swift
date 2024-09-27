@@ -118,13 +118,6 @@ extension FunctionRequirement {
                 colon: .colonToken(),
                 expression: try caseSpecifier(wrapParams: false)
             )
-            if kind == .verify {
-                LabeledExprSyntax(
-                    label: NS.assertion,
-                    colon: .colonToken(),
-                    expression: DeclReferenceExprSyntax(baseName: NS.assertion)
-                )
-            }
         }
         let statements = CodeBlockItemListSyntax {
             FunctionCallExprSyntax(

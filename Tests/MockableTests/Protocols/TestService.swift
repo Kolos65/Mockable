@@ -5,7 +5,7 @@
 //  Created by Kolos Foltanyi on 2023. 11. 24..
 //
 
-import MockableTest
+import Mockable
 import Foundation
 
 @Mockable

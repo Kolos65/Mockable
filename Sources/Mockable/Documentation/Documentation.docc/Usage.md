@@ -17,7 +17,7 @@ protocol ProductService {
 ```
 A mock implementation named `MockProductService` will be generated, that can be used in unit tests like this:
 ```swift
-import MockableTest
+import Mockable
 
 lazy var productService = MockProductService()
 lazy var cartService = CartServiceImpl(productService: productService)
@@ -140,6 +140,9 @@ when(productService).url(newValue: .value(nil)).performOnSet {
 
 ## Verify
 You can verify invocations of your mock service using the `verify(_ service:)` clause.
+
+> **Mockable** supports both *XCTest* and *Swift Testing* by using Pointfree's [swift-issue-reporting](https://github.com/pointfreeco/swift-issue-reporting) to dynamically report test failures with the appropriate test framework.
+
 There are three kind of verifications:
 * [`called(_:)`](https://kolos65.github.io/Mockable/documentation/mockable/functionverifybuilder/called(_:file:line:)): Asserts invocation count based on the given value.
 * [`getCalled(_:)`](https://kolos65.github.io/Mockable/documentation/mockable/propertyverifybuilder/getcalled(_:file:line:)): Available for mutable properties only, asserts property access count.
