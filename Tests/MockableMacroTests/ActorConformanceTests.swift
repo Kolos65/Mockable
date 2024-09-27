@@ -32,8 +32,9 @@ final class ActorConformanceTests: MockableMacroTestCase {
             }
 
             #if MOCKING
-            actor MockTest: Test, MockableService {
-                private let mocker = Mocker<MockTest>()
+            actor MockTest: Test, Mockable.MockableService {
+                typealias Mocker = Mockable.Mocker<MockTest>
+                private let mocker = Mocker()
                 @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
                 nonisolated func given() -> ReturnBuilder {
                     .init(mocker: mocker)
@@ -43,13 +44,13 @@ final class ActorConformanceTests: MockableMacroTestCase {
                     .init(mocker: mocker)
                 }
                 @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead. ")
-                nonisolated func verify(with assertion: @escaping MockableAssertion) -> VerifyBuilder {
+                nonisolated func verify(with assertion: @escaping Mockable.MockableAssertion) -> VerifyBuilder {
                     .init(mocker: mocker, assertion: assertion)
                 }
-                func reset(_ scopes: Set<MockerScope> = .all) {
+                func reset(_ scopes: Set<Mockable.MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                init(policy: MockerPolicy? = nil) {
+                init(policy: Mockable.MockerPolicy? = nil) {
                     if let policy {
                         mocker.policy = policy
                     }
@@ -86,7 +87,7 @@ final class ActorConformanceTests: MockableMacroTestCase {
                         }
                     }
                 }
-                enum Member: Matchable, CaseIdentifiable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable {
                     case m1_foo
                     case m2_quz
                     case m3_bar(number: Parameter<Int>)
@@ -106,59 +107,59 @@ final class ActorConformanceTests: MockableMacroTestCase {
                         }
                     }
                 }
-                struct ReturnBuilder: EffectBuilder {
-                    private let mocker: Mocker<MockTest>
-                    init(mocker: Mocker<MockTest>) {
+                struct ReturnBuilder: Mockable.EffectBuilder {
+                    private let mocker: Mocker
+                    init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    var foo: FunctionReturnBuilder<MockTest, ReturnBuilder, Int, () -> Int> {
+                    var foo: Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Int, () -> Int> {
                         .init(mocker, kind: .m1_foo)
                     }
-                    var quz: FunctionReturnBuilder<MockTest, ReturnBuilder, Int, () -> Int> {
+                    var quz: Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Int, () -> Int> {
                         .init(mocker, kind: .m2_quz)
                     }
-                    func bar(number: Parameter<Int>) -> FunctionReturnBuilder<MockTest, ReturnBuilder, Int, (Int) -> Int> {
+                    func bar(number: Parameter<Int>) -> Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Int, (Int) -> Int> {
                         .init(mocker, kind: .m3_bar(number: number))
                     }
-                    func baz(number: Parameter<Int>) -> FunctionReturnBuilder<MockTest, ReturnBuilder, Int, (Int) -> Int> {
+                    func baz(number: Parameter<Int>) -> Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Int, (Int) -> Int> {
                         .init(mocker, kind: .m4_baz(number: number))
                     }
                 }
-                struct ActionBuilder: EffectBuilder {
-                    private let mocker: Mocker<MockTest>
-                    init(mocker: Mocker<MockTest>) {
+                struct ActionBuilder: Mockable.EffectBuilder {
+                    private let mocker: Mocker
+                    init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    var foo: FunctionActionBuilder<MockTest, ActionBuilder> {
+                    var foo: Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
                         .init(mocker, kind: .m1_foo)
                     }
-                    var quz: FunctionActionBuilder<MockTest, ActionBuilder> {
+                    var quz: Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
                         .init(mocker, kind: .m2_quz)
                     }
-                    func bar(number: Parameter<Int>) -> FunctionActionBuilder<MockTest, ActionBuilder> {
+                    func bar(number: Parameter<Int>) -> Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
                         .init(mocker, kind: .m3_bar(number: number))
                     }
-                    func baz(number: Parameter<Int>) -> FunctionActionBuilder<MockTest, ActionBuilder> {
+                    func baz(number: Parameter<Int>) -> Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
                         .init(mocker, kind: .m4_baz(number: number))
                     }
                 }
-                struct VerifyBuilder: AssertionBuilder {
-                    private let mocker: Mocker<MockTest>
-                    private let assertion: MockableAssertion
-                    init(mocker: Mocker<MockTest>, assertion: @escaping MockableAssertion) {
+                struct VerifyBuilder: Mockable.AssertionBuilder {
+                    private let mocker: Mocker
+                    private let assertion: Mockable.MockableAssertion
+                    init(mocker: Mocker, assertion: @escaping Mockable.MockableAssertion) {
                         self.mocker = mocker
                         self.assertion = assertion
                     }
-                    var foo: FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    var foo: Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
                         .init(mocker, kind: .m1_foo, assertion: assertion)
                     }
-                    var quz: FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    var quz: Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
                         .init(mocker, kind: .m2_quz, assertion: assertion)
                     }
-                    func bar(number: Parameter<Int>) -> FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    func bar(number: Parameter<Int>) -> Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
                         .init(mocker, kind: .m3_bar(number: number), assertion: assertion)
                     }
-                    func baz(number: Parameter<Int>) -> FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    func baz(number: Parameter<Int>) -> Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
                         .init(mocker, kind: .m4_baz(number: number), assertion: assertion)
                     }
                 }

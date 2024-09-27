@@ -86,7 +86,8 @@ extension FunctionRequirement {
             }
         }
         return ReturnClauseSyntax(
-            type: IdentifierTypeSyntax(
+            type: MemberTypeSyntax(
+                baseType: IdentifierTypeSyntax(name: NS.Mockable),
                 name: name,
                 genericArgumentClause: .init(arguments: arguments)
             )

@@ -27,8 +27,18 @@ enum EnumFactory: Factory {
 extension EnumFactory {
     private static var inheritanceClause: InheritanceClauseSyntax {
         InheritanceClauseSyntax {
-            InheritedTypeSyntax(type: IdentifierTypeSyntax(name: NS.Matchable))
-            InheritedTypeSyntax(type: IdentifierTypeSyntax(name: NS.CaseIdentifiable))
+            InheritedTypeSyntax(
+                type: MemberTypeSyntax(
+                    baseType: IdentifierTypeSyntax(name: NS.Mockable),
+                    name: NS.Matchable
+                )
+            )
+            InheritedTypeSyntax(
+                type: MemberTypeSyntax(
+                    baseType: IdentifierTypeSyntax(name: NS.Mockable),
+                    name: NS.CaseIdentifiable
+                )
+            )
         }
     }
 
