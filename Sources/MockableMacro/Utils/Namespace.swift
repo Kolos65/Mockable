@@ -76,6 +76,8 @@ enum NS {
     static let Set: TokenSyntax = "Set"
     static let Void: TokenSyntax = "Void"
     static let Actor: TokenSyntax = "Actor"
+    static let NSObjectProtocol: String = "NSObjectProtocol"
+    static let NSObject: TokenSyntax = "NSObject"
 
     static func Parameter(_ type: String) -> TokenSyntax { "Parameter<\(raw: type)>" }
     static func Param(suffix: String) -> TokenSyntax { "Param\(raw: suffix)" }

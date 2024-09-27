@@ -34,6 +34,10 @@ enum MockFactory: Factory {
 // MARK: - Helpers
 
 extension MockFactory {
+    private static let inheritedTypeMappings: [String: TokenSyntax] = [
+        NS.NSObjectProtocol: NS.NSObject
+    ]
+
     private static func attributes(_ requirements: Requirements) throws -> AttributeListSyntax {
         guard requirements.containsGenericExistentials else { return [] }
         return try AttributeListSyntax {
@@ -57,6 +61,7 @@ extension MockFactory {
 
     private static func inheritanceClause(_ requirements: Requirements) -> InheritanceClauseSyntax {
         InheritanceClauseSyntax {
+            inheritedTypeMappings(requirements)
             InheritedTypeSyntax(type: IdentifierTypeSyntax(
                 name: requirements.syntax.name.trimmed
             ))
@@ -66,6 +71,18 @@ extension MockFactory {
                     name: NS.MockableService
                 )
             )
+        }
+    }
+
+    private static func inheritedTypeMappings(_ requirements: Requirements) -> InheritedTypeListSyntax {
+        guard let inheritanceClause = requirements.syntax.inheritanceClause else { return [] }
+        return InheritedTypeListSyntax {
+            for inheritedType in inheritanceClause.inheritedTypes {
+                if let type = inheritedType.type.as(IdentifierTypeSyntax.self),
+                   let mapping = inheritedTypeMappings[type.name.trimmedDescription] {
+                    InheritedTypeSyntax(type: IdentifierTypeSyntax(name: mapping))
+                }
+            }
         }
     }
 
