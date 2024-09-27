@@ -24,8 +24,9 @@ final class GenericFunctionTests: MockableMacroTestCase {
             }
 
             #if MOCKING
-            final class MockTest: Test, MockableService {
-                private let mocker = Mocker<MockTest>()
+            final class MockTest: Test, Mockable.MockableService {
+                typealias Mocker = Mockable.Mocker<MockTest>
+                private let mocker = Mocker()
                 @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
                 func given() -> ReturnBuilder {
                     .init(mocker: mocker)
@@ -35,13 +36,13 @@ final class GenericFunctionTests: MockableMacroTestCase {
                     .init(mocker: mocker)
                 }
                 @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead. ")
-                func verify(with assertion: @escaping MockableAssertion) -> VerifyBuilder {
+                func verify(with assertion: @escaping Mockable.MockableAssertion) -> VerifyBuilder {
                     .init(mocker: mocker, assertion: assertion)
                 }
-                func reset(_ scopes: Set<MockerScope> = .all) {
+                func reset(_ scopes: Set<Mockable.MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                init(policy: MockerPolicy? = nil) {
+                init(policy: Mockable.MockerPolicy? = nil) {
                     if let policy {
                         mocker.policy = policy
                     }
@@ -53,7 +54,7 @@ final class GenericFunctionTests: MockableMacroTestCase {
                         return producer(item)
                     }
                 }
-                enum Member: Matchable, CaseIdentifiable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable {
                     case m1_foo(item: Parameter<GenericValue>)
                     func match(_ other: Member) -> Bool {
                         switch (self, other) {
@@ -62,32 +63,32 @@ final class GenericFunctionTests: MockableMacroTestCase {
                         }
                     }
                 }
-                struct ReturnBuilder: EffectBuilder {
-                    private let mocker: Mocker<MockTest>
-                    init(mocker: Mocker<MockTest>) {
+                struct ReturnBuilder: Mockable.EffectBuilder {
+                    private let mocker: Mocker
+                    init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    func foo<T>(item: Parameter<(Array<[(Set<T>, String)]>, Int)>) -> FunctionReturnBuilder<MockTest, ReturnBuilder, Void, ((Array<[(Set<T>, String)]>, Int)) -> Void> {
+                    func foo<T>(item: Parameter<(Array<[(Set<T>, String)]>, Int)>) -> Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Void, ((Array<[(Set<T>, String)]>, Int)) -> Void> {
                         .init(mocker, kind: .m1_foo(item: item.eraseToGenericValue()))
                     }
                 }
-                struct ActionBuilder: EffectBuilder {
-                    private let mocker: Mocker<MockTest>
-                    init(mocker: Mocker<MockTest>) {
+                struct ActionBuilder: Mockable.EffectBuilder {
+                    private let mocker: Mocker
+                    init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    func foo<T>(item: Parameter<(Array<[(Set<T>, String)]>, Int)>) -> FunctionActionBuilder<MockTest, ActionBuilder> {
+                    func foo<T>(item: Parameter<(Array<[(Set<T>, String)]>, Int)>) -> Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
                         .init(mocker, kind: .m1_foo(item: item.eraseToGenericValue()))
                     }
                 }
-                struct VerifyBuilder: AssertionBuilder {
-                    private let mocker: Mocker<MockTest>
-                    private let assertion: MockableAssertion
-                    init(mocker: Mocker<MockTest>, assertion: @escaping MockableAssertion) {
+                struct VerifyBuilder: Mockable.AssertionBuilder {
+                    private let mocker: Mocker
+                    private let assertion: Mockable.MockableAssertion
+                    init(mocker: Mocker, assertion: @escaping Mockable.MockableAssertion) {
                         self.mocker = mocker
                         self.assertion = assertion
                     }
-                    func foo<T>(item: Parameter<(Array<[(Set<T>, String)]>, Int)>) -> FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    func foo<T>(item: Parameter<(Array<[(Set<T>, String)]>, Int)>) -> Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
                         .init(mocker, kind: .m1_foo(item: item.eraseToGenericValue()), assertion: assertion)
                     }
                 }
@@ -112,8 +113,9 @@ final class GenericFunctionTests: MockableMacroTestCase {
             }
 
             #if MOCKING
-            final class MockTest: Test, MockableService {
-                private let mocker = Mocker<MockTest>()
+            final class MockTest: Test, Mockable.MockableService {
+                typealias Mocker = Mockable.Mocker<MockTest>
+                private let mocker = Mocker()
                 @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
                 func given() -> ReturnBuilder {
                     .init(mocker: mocker)
@@ -123,13 +125,13 @@ final class GenericFunctionTests: MockableMacroTestCase {
                     .init(mocker: mocker)
                 }
                 @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead. ")
-                func verify(with assertion: @escaping MockableAssertion) -> VerifyBuilder {
+                func verify(with assertion: @escaping Mockable.MockableAssertion) -> VerifyBuilder {
                     .init(mocker: mocker, assertion: assertion)
                 }
-                func reset(_ scopes: Set<MockerScope> = .all) {
+                func reset(_ scopes: Set<Mockable.MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                init(policy: MockerPolicy? = nil) {
+                init(policy: Mockable.MockerPolicy? = nil) {
                     if let policy {
                         mocker.policy = policy
                     }
@@ -141,7 +143,7 @@ final class GenericFunctionTests: MockableMacroTestCase {
                         return producer(item)
                     }
                 }
-                enum Member: Matchable, CaseIdentifiable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable {
                     case m1_genericFunc(item: Parameter<GenericValue>)
                     func match(_ other: Member) -> Bool {
                         switch (self, other) {
@@ -150,32 +152,32 @@ final class GenericFunctionTests: MockableMacroTestCase {
                         }
                     }
                 }
-                struct ReturnBuilder: EffectBuilder {
-                    private let mocker: Mocker<MockTest>
-                    init(mocker: Mocker<MockTest>) {
+                struct ReturnBuilder: Mockable.EffectBuilder {
+                    private let mocker: Mocker
+                    init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    func genericFunc<T, V>(item: Parameter<T>) -> FunctionReturnBuilder<MockTest, ReturnBuilder, V, (T) -> V> {
+                    func genericFunc<T, V>(item: Parameter<T>) -> Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, V, (T) -> V> {
                         .init(mocker, kind: .m1_genericFunc(item: item.eraseToGenericValue()))
                     }
                 }
-                struct ActionBuilder: EffectBuilder {
-                    private let mocker: Mocker<MockTest>
-                    init(mocker: Mocker<MockTest>) {
+                struct ActionBuilder: Mockable.EffectBuilder {
+                    private let mocker: Mocker
+                    init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    func genericFunc<T>(item: Parameter<T>) -> FunctionActionBuilder<MockTest, ActionBuilder> {
+                    func genericFunc<T>(item: Parameter<T>) -> Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
                         .init(mocker, kind: .m1_genericFunc(item: item.eraseToGenericValue()))
                     }
                 }
-                struct VerifyBuilder: AssertionBuilder {
-                    private let mocker: Mocker<MockTest>
-                    private let assertion: MockableAssertion
-                    init(mocker: Mocker<MockTest>, assertion: @escaping MockableAssertion) {
+                struct VerifyBuilder: Mockable.AssertionBuilder {
+                    private let mocker: Mocker
+                    private let assertion: Mockable.MockableAssertion
+                    init(mocker: Mocker, assertion: @escaping Mockable.MockableAssertion) {
                         self.mocker = mocker
                         self.assertion = assertion
                     }
-                    func genericFunc<T>(item: Parameter<T>) -> FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    func genericFunc<T>(item: Parameter<T>) -> Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
                         .init(mocker, kind: .m1_genericFunc(item: item.eraseToGenericValue()), assertion: assertion)
                     }
                 }
@@ -204,8 +206,9 @@ final class GenericFunctionTests: MockableMacroTestCase {
             }
 
             #if MOCKING
-            final class MockTest: Test, MockableService {
-                private let mocker = Mocker<MockTest>()
+            final class MockTest: Test, Mockable.MockableService {
+                typealias Mocker = Mockable.Mocker<MockTest>
+                private let mocker = Mocker()
                 @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
                 func given() -> ReturnBuilder {
                     .init(mocker: mocker)
@@ -215,13 +218,13 @@ final class GenericFunctionTests: MockableMacroTestCase {
                     .init(mocker: mocker)
                 }
                 @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead. ")
-                func verify(with assertion: @escaping MockableAssertion) -> VerifyBuilder {
+                func verify(with assertion: @escaping Mockable.MockableAssertion) -> VerifyBuilder {
                     .init(mocker: mocker, assertion: assertion)
                 }
-                func reset(_ scopes: Set<MockerScope> = .all) {
+                func reset(_ scopes: Set<Mockable.MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                init(policy: MockerPolicy? = nil) {
+                init(policy: Mockable.MockerPolicy? = nil) {
                     if let policy {
                         mocker.policy = policy
                     }
@@ -236,7 +239,7 @@ final class GenericFunctionTests: MockableMacroTestCase {
                         return producer(p1, p2, p3, p4)
                     }
                 }
-                enum Member: Matchable, CaseIdentifiable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable {
                     case m1_method1(p1: Parameter<GenericValue>, p2: Parameter<GenericValue>, p3: Parameter<GenericValue>, p4: Parameter<GenericValue>)
                     func match(_ other: Member) -> Bool {
                         switch (self, other) {
@@ -245,37 +248,37 @@ final class GenericFunctionTests: MockableMacroTestCase {
                         }
                     }
                 }
-                struct ReturnBuilder: EffectBuilder {
-                    private let mocker: Mocker<MockTest>
-                    init(mocker: Mocker<MockTest>) {
+                struct ReturnBuilder: Mockable.EffectBuilder {
+                    private let mocker: Mocker
+                    init(mocker: Mocker) {
                         self.mocker = mocker
                     }
                     func method1<T: Hashable, E, C, I>(
-                            p1: Parameter<T>, p2: Parameter<E>, p3: Parameter<C>, p4: Parameter<I>) -> FunctionReturnBuilder<MockTest, ReturnBuilder, Void, (T, E, C, I) -> Void> where E: Equatable, E: Hashable, C: Codable {
+                            p1: Parameter<T>, p2: Parameter<E>, p3: Parameter<C>, p4: Parameter<I>) -> Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Void, (T, E, C, I) -> Void> where E: Equatable, E: Hashable, C: Codable {
                         .init(mocker, kind: .m1_method1(p1:
                                 p1.eraseToGenericValue(), p2: p2.eraseToGenericValue(), p3: p3.eraseToGenericValue(), p4: p4.eraseToGenericValue()))
                     }
                 }
-                struct ActionBuilder: EffectBuilder {
-                    private let mocker: Mocker<MockTest>
-                    init(mocker: Mocker<MockTest>) {
+                struct ActionBuilder: Mockable.EffectBuilder {
+                    private let mocker: Mocker
+                    init(mocker: Mocker) {
                         self.mocker = mocker
                     }
                     func method1<T: Hashable, E, C, I>(
-                            p1: Parameter<T>, p2: Parameter<E>, p3: Parameter<C>, p4: Parameter<I>) -> FunctionActionBuilder<MockTest, ActionBuilder> where E: Equatable, E: Hashable, C: Codable {
+                            p1: Parameter<T>, p2: Parameter<E>, p3: Parameter<C>, p4: Parameter<I>) -> Mockable.FunctionActionBuilder<MockTest, ActionBuilder> where E: Equatable, E: Hashable, C: Codable {
                         .init(mocker, kind: .m1_method1(p1:
                                 p1.eraseToGenericValue(), p2: p2.eraseToGenericValue(), p3: p3.eraseToGenericValue(), p4: p4.eraseToGenericValue()))
                     }
                 }
-                struct VerifyBuilder: AssertionBuilder {
-                    private let mocker: Mocker<MockTest>
-                    private let assertion: MockableAssertion
-                    init(mocker: Mocker<MockTest>, assertion: @escaping MockableAssertion) {
+                struct VerifyBuilder: Mockable.AssertionBuilder {
+                    private let mocker: Mocker
+                    private let assertion: Mockable.MockableAssertion
+                    init(mocker: Mocker, assertion: @escaping Mockable.MockableAssertion) {
                         self.mocker = mocker
                         self.assertion = assertion
                     }
                     func method1<T: Hashable, E, C, I>(
-                            p1: Parameter<T>, p2: Parameter<E>, p3: Parameter<C>, p4: Parameter<I>) -> FunctionVerifyBuilder<MockTest, VerifyBuilder> where E: Equatable, E: Hashable, C: Codable {
+                            p1: Parameter<T>, p2: Parameter<E>, p3: Parameter<C>, p4: Parameter<I>) -> Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> where E: Equatable, E: Hashable, C: Codable {
                         .init(mocker, kind: .m1_method1(p1:
                                 p1.eraseToGenericValue(), p2: p2.eraseToGenericValue(), p3: p3.eraseToGenericValue(), p4: p4.eraseToGenericValue()), assertion: assertion)
                     }
@@ -302,8 +305,9 @@ final class GenericFunctionTests: MockableMacroTestCase {
 
             #if MOCKING
             @available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *)
-            final class MockTest: Test, MockableService {
-                private let mocker = Mocker<MockTest>()
+            final class MockTest: Test, Mockable.MockableService {
+                typealias Mocker = Mockable.Mocker<MockTest>
+                private let mocker = Mocker()
                 @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
                 func given() -> ReturnBuilder {
                     .init(mocker: mocker)
@@ -313,13 +317,13 @@ final class GenericFunctionTests: MockableMacroTestCase {
                     .init(mocker: mocker)
                 }
                 @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead. ")
-                func verify(with assertion: @escaping MockableAssertion) -> VerifyBuilder {
+                func verify(with assertion: @escaping Mockable.MockableAssertion) -> VerifyBuilder {
                     .init(mocker: mocker, assertion: assertion)
                 }
-                func reset(_ scopes: Set<MockerScope> = .all) {
+                func reset(_ scopes: Set<Mockable.MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                init(policy: MockerPolicy? = nil) {
+                init(policy: Mockable.MockerPolicy? = nil) {
                     if let policy {
                         mocker.policy = policy
                     }
@@ -333,7 +337,7 @@ final class GenericFunctionTests: MockableMacroTestCase {
                         }
                     }
                 }
-                enum Member: Matchable, CaseIdentifiable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable {
                     case m1_prop
                     func match(_ other: Member) -> Bool {
                         switch (self, other) {
@@ -342,32 +346,32 @@ final class GenericFunctionTests: MockableMacroTestCase {
                         }
                     }
                 }
-                struct ReturnBuilder: EffectBuilder {
-                    private let mocker: Mocker<MockTest>
-                    init(mocker: Mocker<MockTest>) {
+                struct ReturnBuilder: Mockable.EffectBuilder {
+                    private let mocker: Mocker
+                    init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    var prop: FunctionReturnBuilder<MockTest, ReturnBuilder, any SomeProtocol<String>, () -> any SomeProtocol<String>> {
+                    var prop: Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, any SomeProtocol<String>, () -> any SomeProtocol<String>> {
                         .init(mocker, kind: .m1_prop)
                     }
                 }
-                struct ActionBuilder: EffectBuilder {
-                    private let mocker: Mocker<MockTest>
-                    init(mocker: Mocker<MockTest>) {
+                struct ActionBuilder: Mockable.EffectBuilder {
+                    private let mocker: Mocker
+                    init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    var prop: FunctionActionBuilder<MockTest, ActionBuilder> {
+                    var prop: Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
                         .init(mocker, kind: .m1_prop)
                     }
                 }
-                struct VerifyBuilder: AssertionBuilder {
-                    private let mocker: Mocker<MockTest>
-                    private let assertion: MockableAssertion
-                    init(mocker: Mocker<MockTest>, assertion: @escaping MockableAssertion) {
+                struct VerifyBuilder: Mockable.AssertionBuilder {
+                    private let mocker: Mocker
+                    private let assertion: Mockable.MockableAssertion
+                    init(mocker: Mocker, assertion: @escaping Mockable.MockableAssertion) {
                         self.mocker = mocker
                         self.assertion = assertion
                     }
-                    var prop: FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    var prop: Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
                         .init(mocker, kind: .m1_prop, assertion: assertion)
                     }
                 }
@@ -393,8 +397,9 @@ final class GenericFunctionTests: MockableMacroTestCase {
 
             #if MOCKING
             @available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *)
-            final class MockTest: Test, MockableService {
-                private let mocker = Mocker<MockTest>()
+            final class MockTest: Test, Mockable.MockableService {
+                typealias Mocker = Mockable.Mocker<MockTest>
+                private let mocker = Mocker()
                 @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
                 func given() -> ReturnBuilder {
                     .init(mocker: mocker)
@@ -404,13 +409,13 @@ final class GenericFunctionTests: MockableMacroTestCase {
                     .init(mocker: mocker)
                 }
                 @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead. ")
-                func verify(with assertion: @escaping MockableAssertion) -> VerifyBuilder {
+                func verify(with assertion: @escaping Mockable.MockableAssertion) -> VerifyBuilder {
                     .init(mocker: mocker, assertion: assertion)
                 }
-                func reset(_ scopes: Set<MockerScope> = .all) {
+                func reset(_ scopes: Set<Mockable.MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                init(policy: MockerPolicy? = nil) {
+                init(policy: Mockable.MockerPolicy? = nil) {
                     if let policy {
                         mocker.policy = policy
                     }
@@ -424,7 +429,7 @@ final class GenericFunctionTests: MockableMacroTestCase {
                         }
                     }
                 }
-                enum Member: Matchable, CaseIdentifiable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable {
                     case m1_prop
                     func match(_ other: Member) -> Bool {
                         switch (self, other) {
@@ -433,32 +438,32 @@ final class GenericFunctionTests: MockableMacroTestCase {
                         }
                     }
                 }
-                struct ReturnBuilder: EffectBuilder {
-                    private let mocker: Mocker<MockTest>
-                    init(mocker: Mocker<MockTest>) {
+                struct ReturnBuilder: Mockable.EffectBuilder {
+                    private let mocker: Mocker
+                    init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    var prop: FunctionReturnBuilder<MockTest, ReturnBuilder, Parent<String, Child<any SomeProtocol<Double>>>, () -> Parent<String, Child<any SomeProtocol<Double>>>> {
+                    var prop: Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Parent<String, Child<any SomeProtocol<Double>>>, () -> Parent<String, Child<any SomeProtocol<Double>>>> {
                         .init(mocker, kind: .m1_prop)
                     }
                 }
-                struct ActionBuilder: EffectBuilder {
-                    private let mocker: Mocker<MockTest>
-                    init(mocker: Mocker<MockTest>) {
+                struct ActionBuilder: Mockable.EffectBuilder {
+                    private let mocker: Mocker
+                    init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    var prop: FunctionActionBuilder<MockTest, ActionBuilder> {
+                    var prop: Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
                         .init(mocker, kind: .m1_prop)
                     }
                 }
-                struct VerifyBuilder: AssertionBuilder {
-                    private let mocker: Mocker<MockTest>
-                    private let assertion: MockableAssertion
-                    init(mocker: Mocker<MockTest>, assertion: @escaping MockableAssertion) {
+                struct VerifyBuilder: Mockable.AssertionBuilder {
+                    private let mocker: Mocker
+                    private let assertion: Mockable.MockableAssertion
+                    init(mocker: Mocker, assertion: @escaping Mockable.MockableAssertion) {
                         self.mocker = mocker
                         self.assertion = assertion
                     }
-                    var prop: FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    var prop: Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
                         .init(mocker, kind: .m1_prop, assertion: assertion)
                     }
                 }
@@ -484,8 +489,9 @@ final class GenericFunctionTests: MockableMacroTestCase {
 
             #if MOCKING
             @available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *)
-            final class MockTest: Test, MockableService {
-                private let mocker = Mocker<MockTest>()
+            final class MockTest: Test, Mockable.MockableService {
+                typealias Mocker = Mockable.Mocker<MockTest>
+                private let mocker = Mocker()
                 @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
                 func given() -> ReturnBuilder {
                     .init(mocker: mocker)
@@ -495,13 +501,13 @@ final class GenericFunctionTests: MockableMacroTestCase {
                     .init(mocker: mocker)
                 }
                 @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead. ")
-                func verify(with assertion: @escaping MockableAssertion) -> VerifyBuilder {
+                func verify(with assertion: @escaping Mockable.MockableAssertion) -> VerifyBuilder {
                     .init(mocker: mocker, assertion: assertion)
                 }
-                func reset(_ scopes: Set<MockerScope> = .all) {
+                func reset(_ scopes: Set<Mockable.MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                init(policy: MockerPolicy? = nil) {
+                init(policy: Mockable.MockerPolicy? = nil) {
                     if let policy {
                         mocker.policy = policy
                     }
@@ -513,7 +519,7 @@ final class GenericFunctionTests: MockableMacroTestCase {
                         return producer()
                     }
                 }
-                enum Member: Matchable, CaseIdentifiable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable {
                     case m1_foo
                     func match(_ other: Member) -> Bool {
                         switch (self, other) {
@@ -522,32 +528,32 @@ final class GenericFunctionTests: MockableMacroTestCase {
                         }
                     }
                 }
-                struct ReturnBuilder: EffectBuilder {
-                    private let mocker: Mocker<MockTest>
-                    init(mocker: Mocker<MockTest>) {
+                struct ReturnBuilder: Mockable.EffectBuilder {
+                    private let mocker: Mocker
+                    init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    func foo() -> FunctionReturnBuilder<MockTest, ReturnBuilder, any SomeProtocol<Double>, () -> any SomeProtocol<Double>> {
+                    func foo() -> Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, any SomeProtocol<Double>, () -> any SomeProtocol<Double>> {
                         .init(mocker, kind: .m1_foo)
                     }
                 }
-                struct ActionBuilder: EffectBuilder {
-                    private let mocker: Mocker<MockTest>
-                    init(mocker: Mocker<MockTest>) {
+                struct ActionBuilder: Mockable.EffectBuilder {
+                    private let mocker: Mocker
+                    init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    func foo() -> FunctionActionBuilder<MockTest, ActionBuilder> {
+                    func foo() -> Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
                         .init(mocker, kind: .m1_foo)
                     }
                 }
-                struct VerifyBuilder: AssertionBuilder {
-                    private let mocker: Mocker<MockTest>
-                    private let assertion: MockableAssertion
-                    init(mocker: Mocker<MockTest>, assertion: @escaping MockableAssertion) {
+                struct VerifyBuilder: Mockable.AssertionBuilder {
+                    private let mocker: Mocker
+                    private let assertion: Mockable.MockableAssertion
+                    init(mocker: Mocker, assertion: @escaping Mockable.MockableAssertion) {
                         self.mocker = mocker
                         self.assertion = assertion
                     }
-                    func foo() -> FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    func foo() -> Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
                         .init(mocker, kind: .m1_foo, assertion: assertion)
                     }
                 }
@@ -573,8 +579,9 @@ final class GenericFunctionTests: MockableMacroTestCase {
 
             #if MOCKING
             @available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *)
-            final class MockTest: Test, MockableService {
-                private let mocker = Mocker<MockTest>()
+            final class MockTest: Test, Mockable.MockableService {
+                typealias Mocker = Mockable.Mocker<MockTest>
+                private let mocker = Mocker()
                 @available(*, deprecated, message: "Use given(_ service:) of Mockable instead. ")
                 func given() -> ReturnBuilder {
                     .init(mocker: mocker)
@@ -584,13 +591,13 @@ final class GenericFunctionTests: MockableMacroTestCase {
                     .init(mocker: mocker)
                 }
                 @available(*, deprecated, message: "Use verify(_ service:) of MockableTest instead. ")
-                func verify(with assertion: @escaping MockableAssertion) -> VerifyBuilder {
+                func verify(with assertion: @escaping Mockable.MockableAssertion) -> VerifyBuilder {
                     .init(mocker: mocker, assertion: assertion)
                 }
-                func reset(_ scopes: Set<MockerScope> = .all) {
+                func reset(_ scopes: Set<Mockable.MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                init(policy: MockerPolicy? = nil) {
+                init(policy: Mockable.MockerPolicy? = nil) {
                     if let policy {
                         mocker.policy = policy
                     }
@@ -602,7 +609,7 @@ final class GenericFunctionTests: MockableMacroTestCase {
                         return producer()
                     }
                 }
-                enum Member: Matchable, CaseIdentifiable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable {
                     case m1_foo
                     func match(_ other: Member) -> Bool {
                         switch (self, other) {
@@ -611,32 +618,32 @@ final class GenericFunctionTests: MockableMacroTestCase {
                         }
                     }
                 }
-                struct ReturnBuilder: EffectBuilder {
-                    private let mocker: Mocker<MockTest>
-                    init(mocker: Mocker<MockTest>) {
+                struct ReturnBuilder: Mockable.EffectBuilder {
+                    private let mocker: Mocker
+                    init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    func foo() -> FunctionReturnBuilder<MockTest, ReturnBuilder, Parent<String, Child<any SomeProtocol<Double>>>, () -> Parent<String, Child<any SomeProtocol<Double>>>> {
+                    func foo() -> Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Parent<String, Child<any SomeProtocol<Double>>>, () -> Parent<String, Child<any SomeProtocol<Double>>>> {
                         .init(mocker, kind: .m1_foo)
                     }
                 }
-                struct ActionBuilder: EffectBuilder {
-                    private let mocker: Mocker<MockTest>
-                    init(mocker: Mocker<MockTest>) {
+                struct ActionBuilder: Mockable.EffectBuilder {
+                    private let mocker: Mocker
+                    init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    func foo() -> FunctionActionBuilder<MockTest, ActionBuilder> {
+                    func foo() -> Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
                         .init(mocker, kind: .m1_foo)
                     }
                 }
-                struct VerifyBuilder: AssertionBuilder {
-                    private let mocker: Mocker<MockTest>
-                    private let assertion: MockableAssertion
-                    init(mocker: Mocker<MockTest>, assertion: @escaping MockableAssertion) {
+                struct VerifyBuilder: Mockable.AssertionBuilder {
+                    private let mocker: Mocker
+                    private let assertion: Mockable.MockableAssertion
+                    init(mocker: Mocker, assertion: @escaping Mockable.MockableAssertion) {
                         self.mocker = mocker
                         self.assertion = assertion
                     }
-                    func foo() -> FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    func foo() -> Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
                         .init(mocker, kind: .m1_foo, assertion: assertion)
                     }
                 }

@@ -91,7 +91,7 @@ extension VariableRequirement {
     private func returnType(
         for kind: BuilderKind,
         using mockType: IdentifierTypeSyntax
-    ) throws -> IdentifierTypeSyntax {
+    ) throws -> MemberTypeSyntax {
         let name = if syntax.isComputed {
             try syntax.isThrowing ? NS.ThrowingFunction(kind) : NS.Function(kind)
         } else {
@@ -108,7 +108,9 @@ extension VariableRequirement {
                 produceType
             }
         }
-        return IdentifierTypeSyntax(
+
+        return MemberTypeSyntax(
+            baseType: IdentifierTypeSyntax(name: NS.Mockable),
             name: name,
             genericArgumentClause: .init(arguments: arguments)
         )

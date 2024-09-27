@@ -60,9 +60,12 @@ extension MockFactory {
             InheritedTypeSyntax(type: IdentifierTypeSyntax(
                 name: requirements.syntax.name.trimmed
             ))
-            InheritedTypeSyntax(type: IdentifierTypeSyntax(
-                name: NS.MockableService
-            ))
+            InheritedTypeSyntax(
+                type: MemberTypeSyntax(
+                    baseType: IdentifierTypeSyntax(name: NS.Mockable),
+                    name: NS.MockableService
+                )
+            )
         }
     }
 

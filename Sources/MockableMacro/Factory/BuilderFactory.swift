@@ -37,8 +37,14 @@ extension BuilderFactory {
     }
 
     private static func inheritedTypes(_ kind: BuilderKind) -> InheritedTypeListSyntax {
-        let effectBuilder = IdentifierTypeSyntax(name: NS.EffectBuilder)
-        let assertionBuilder = IdentifierTypeSyntax(name: NS.AssertionBuilder)
+        let effectBuilder = MemberTypeSyntax(
+            baseType: IdentifierTypeSyntax(name: NS.Mockable),
+            name: NS.EffectBuilder
+        )
+        let assertionBuilder = MemberTypeSyntax(
+            baseType: IdentifierTypeSyntax(name: NS.Mockable),
+            name: NS.AssertionBuilder
+        )
         return [InheritedTypeSyntax(type: kind == .verify ? assertionBuilder : effectBuilder)]
     }
 
@@ -77,7 +83,7 @@ extension BuilderFactory {
             bindingsBuilder: {
                 PatternBindingSyntax(
                     pattern: IdentifierPatternSyntax(identifier: NS.mocker),
-                    typeAnnotation: TypeAnnotationSyntax(type: mockerType(requirements))
+                    typeAnnotation: TypeAnnotationSyntax(type: IdentifierTypeSyntax(name: NS.Mocker))
                 )
             }
         )
@@ -131,7 +137,10 @@ extension BuilderFactory {
     ) -> FunctionSignatureSyntax {
         FunctionSignatureSyntax(
             parameterClause: FunctionParameterClauseSyntax {
-                FunctionParameterSyntax(firstName: NS.mocker, type: mockerType(requirements))
+                FunctionParameterSyntax(
+                    firstName: NS.mocker,
+                    type: IdentifierTypeSyntax(name: NS.Mocker)
+                )
                 if kind == .verify {
                     FunctionParameterSyntax(
                         firstName: NS.assertion,
@@ -142,16 +151,10 @@ extension BuilderFactory {
         )
     }
 
-    private static func mockerType(_ requirements: Requirements) -> IdentifierTypeSyntax {
-        IdentifierTypeSyntax(
-            name: NS.Mocker,
-            genericArgumentClause: GenericArgumentClauseSyntax(arguments: [
-                GenericArgumentSyntax(argument: requirements.syntax.mockType)
-            ])
+    private static var assertionType: MemberTypeSyntax {
+        MemberTypeSyntax(
+            baseType: IdentifierTypeSyntax(name: NS.Mockable),
+            name: NS.MockableAssertion
         )
-    }
-
-    private static var assertionType: IdentifierTypeSyntax {
-        IdentifierTypeSyntax(name: NS.MockableAssertion)
     }
 }

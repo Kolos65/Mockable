@@ -14,6 +14,7 @@ import SwiftSyntax
 enum MemberFactory: Factory {
     static func build(from requirements: Requirements) throws -> MemberBlockItemListSyntax {
         MemberBlockItemListSyntax {
+            mockerAlias(requirements)
             mocker(requirements)
             given(requirements)
             when(requirements)
@@ -35,6 +36,24 @@ extension MemberFactory {
         )
     }
 
+    private static func mockerAlias(_ requirements: Requirements) -> TypeAliasDeclSyntax {
+        TypeAliasDeclSyntax(
+            modifiers: requirements.modifiers,
+            name: NS.Mocker,
+            initializer: TypeInitializerClauseSyntax(
+                value: MemberTypeSyntax(
+                    baseType: IdentifierTypeSyntax(name: NS.Mockable),
+                    name: NS.Mocker,
+                    genericArgumentClause: GenericArgumentClauseSyntax(
+                        arguments: GenericArgumentListSyntax {
+                            GenericArgumentSyntax(argument: requirements.syntax.mockType)
+                        }
+                    )
+                )
+            )
+        )
+    }
+
     private static func mocker(_ requirements: Requirements) -> VariableDeclSyntax {
         VariableDeclSyntax(
             modifiers: [DeclModifierSyntax(name: .keyword(.private))],
@@ -44,14 +63,7 @@ extension MemberFactory {
                 pattern: IdentifierPatternSyntax(identifier: NS.mocker),
                 initializer: InitializerClauseSyntax(
                     value: FunctionCallExprSyntax(
-                        calledExpression: GenericSpecializationExprSyntax(
-                            expression: DeclReferenceExprSyntax(baseName: NS.Mocker),
-                            genericArgumentClause: GenericArgumentClauseSyntax(
-                                arguments: GenericArgumentListSyntax {
-                                    GenericArgumentSyntax(argument: requirements.syntax.mockType)
-                                }
-                            )
-                        ),
+                        calledExpression: DeclReferenceExprSyntax(baseName: NS.Mocker),
                         leftParen: .leftParenToken(),
                         arguments: [],
                         rightParen: .rightParenToken()
@@ -164,7 +176,10 @@ extension MemberFactory {
             secondName: NS.assertion,
             type: AttributedTypeSyntax(
                 attributes: [.attribute(.escaping)],
-                baseType: IdentifierTypeSyntax(name: NS.MockableAssertion)
+                baseType: MemberTypeSyntax(
+                    baseType: IdentifierTypeSyntax(name: NS.Mockable),
+                    name: NS.MockableAssertion
+                )
             )
         )
     }
@@ -178,7 +193,8 @@ extension MemberFactory {
                 genericArgumentClause: GenericArgumentClauseSyntax(
                     arguments: GenericArgumentListSyntax {
                         GenericArgumentSyntax(
-                            argument: IdentifierTypeSyntax(
+                            argument: MemberTypeSyntax(
+                                baseType: IdentifierTypeSyntax(name: NS.Mockable),
                                 name: NS.MockerScope
                             )
                         )
@@ -246,7 +262,10 @@ extension MemberFactory {
                 FunctionParameterSyntax(
                     firstName: NS.policy,
                     type: OptionalTypeSyntax(
-                        wrappedType: IdentifierTypeSyntax(name: NS.MockerPolicy)
+                        wrappedType: MemberTypeSyntax(
+                            baseType: IdentifierTypeSyntax(name: NS.Mockable),
+                            name: NS.MockerPolicy
+                        )
                     ),
                     defaultValue: InitializerClauseSyntax(
                         value: NilLiteralExprSyntax()
