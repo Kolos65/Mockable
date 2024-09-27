@@ -6,7 +6,7 @@
 //
 
 import XCTest
-import MockableTest
+import Mockable
 
 final class GivenTests: XCTestCase {
 

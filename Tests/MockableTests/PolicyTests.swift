@@ -6,7 +6,7 @@
 //
 
 import XCTest
-import MockableTest
+import Mockable
 
 public struct Car: Equatable {
     var name: String

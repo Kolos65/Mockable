@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import IssueReporting
 
 /// A class responsible for mocking and verifying interactions with a mockable service.
 ///
@@ -105,17 +106,20 @@ public class Mocker<Service: MockableService>: @unchecked Sendable {
     /// - Parameters:
     ///   - member: The member to verify.
     ///   - count: The expected number of invocations.
-    ///   - assertion: Assertion function to use.
     public func verify(member: Member,
                        count: Count,
-                       assertion: MockableAssertion,
-                       file: StaticString = #file,
-                       line: UInt = #line) {
+                       fileID: StaticString = #fileID,
+                       filePath: StaticString = #filePath,
+                       line: UInt = #line,
+                       column: UInt = #column) {
         let matches = invocations.filter(member.match)
         let message = """
         Expected \(count) invocation(s) of \(member.name), but was \(matches.count).",
         """
-        assertion(count.satisfies(matches.count), message, file, line)
+        guard count.satisfies(matches.count) else {
+            reportIssue(message, fileID: fileID, filePath: filePath, line: line, column: column)
+            return
+        }
     }
 
     /// Verifies the number of times a member should be called.
@@ -123,14 +127,14 @@ public class Mocker<Service: MockableService>: @unchecked Sendable {
     /// - Parameters:
     ///   - member: The member to verify.
     ///   - count: The expected number of invocations.
-    ///   - assertion: Assertion function to use.
     ///   - timeout: The maximum time it will wait for assertion to be true
     public func verify(member: Member,
                        count: Count,
-                       assertion: @escaping MockableAssertion,
                        timeout: TimeoutDuration,
-                       file: StaticString = #file,
-                       line: UInt = #line) async {
+                       fileID: StaticString = #fileID,
+                       filePath: StaticString = #filePath,
+                       line: UInt = #line,
+                       column: UInt = #column) async {
         do {
             try await withTimeout(after: timeout.duration) {
                 for await invocations in self.invocationsStream {
@@ -147,7 +151,10 @@ public class Mocker<Service: MockableService>: @unchecked Sendable {
             let message = """
             Expected \(count) invocation(s) of \(member.name) before \(timeout.duration) s, but was \(matches.count).
             """
-            assertion(count.satisfies(matches.count), message, file, line)
+            guard count.satisfies(matches.count) else {
+                reportIssue(message, fileID: fileID, filePath: filePath, line: line, column: column)
+                return
+            }
         }
     }
 

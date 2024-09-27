@@ -16,9 +16,9 @@ enum MemberFactory: Factory {
         MemberBlockItemListSyntax {
             mockerAlias(requirements)
             mocker(requirements)
-            given(requirements)
-            when(requirements)
-            verify(requirements)
+            clause(requirements, name: NS.given, type: NS.ReturnBuilder, message: Messages.givenMessage)
+            clause(requirements, name: NS.when, type: NS.ActionBuilder, message: Messages.whenMessage)
+            clause(requirements, name: NS.verify, type: NS.VerifyBuilder, message: Messages.verifyMessage)
             reset(requirements)
             defaultInit(requirements)
         }
@@ -73,53 +73,45 @@ extension MemberFactory {
         }
     }
 
-    private static func given(_ requirements: Requirements) -> FunctionDeclSyntax {
-        FunctionDeclSyntax(
-            attributes: unavailableAttribute(message: Messages.givenMessage),
+    private static func clause(
+        _ requirements: Requirements,
+        name: TokenSyntax,
+        type: TokenSyntax,
+        message: String
+    ) -> VariableDeclSyntax {
+        VariableDeclSyntax(
+            attributes: unavailableAttribute(message: message),
             modifiers: clauseModifiers(requirements),
-            name: NS.given,
-            signature: .init(
-                parameterClause: FunctionParameterClauseSyntax(parameters: []),
-                returnClause: ReturnClauseSyntax(
-                    type: IdentifierTypeSyntax(name: NS.ReturnBuilder)
+            bindingSpecifier: .keyword(.var),
+            bindings: PatternBindingListSyntax {
+                PatternBindingSyntax(
+                    pattern: IdentifierPatternSyntax(identifier: name),
+                    typeAnnotation: TypeAnnotationSyntax(type: IdentifierTypeSyntax(name: type)),
+                    accessorBlock: AccessorBlockSyntax(
+                        accessors: .getter(builderInit)
+                    )
                 )
-            ),
-            body: builderInit(arguments: [mockerArgument])
+            }
         )
     }
-    private static func when(_ requirements: Requirements) -> FunctionDeclSyntax {
-        FunctionDeclSyntax(
-            attributes: unavailableAttribute(message: Messages.whenMessage),
-            modifiers: clauseModifiers(requirements),
-            name: NS.when,
-            signature: .init(
-                parameterClause: FunctionParameterClauseSyntax(parameters: []),
-                returnClause: ReturnClauseSyntax(
-                    type: IdentifierTypeSyntax(name: NS.ActionBuilder)
-                )
-            ),
-            body: builderInit(arguments: [mockerArgument])
-        )
+
+    private static var builderInit: CodeBlockItemListSyntax {
+        CodeBlockItemListSyntax {
+            FunctionCallExprSyntax(
+                calledExpression: MemberAccessExprSyntax(name: NS._init),
+                leftParen: .leftParenToken(),
+                arguments: [
+                    LabeledExprSyntax(
+                        label: NS.mocker,
+                        colon: .colonToken(),
+                        expression: DeclReferenceExprSyntax(baseName: NS.mocker)
+                    )
+                ],
+                rightParen: .rightParenToken()
+            )
+        }
     }
-    private static func verify(_ requirements: Requirements) -> FunctionDeclSyntax {
-        FunctionDeclSyntax(
-            attributes: unavailableAttribute(message: Messages.verifyMessage),
-            modifiers: clauseModifiers(requirements),
-            name: NS.verify,
-            signature: .init(
-                parameterClause: FunctionParameterClauseSyntax(
-                    parameters: [assertionParameter]
-                ),
-                returnClause: ReturnClauseSyntax(
-                    type: IdentifierTypeSyntax(name: NS.VerifyBuilder)
-                )
-            ),
-            body: builderInit(arguments: [
-                mockerArgument.with(\.trailingComma, .commaToken()),
-                assertionArgument
-            ])
-        )
-    }
+
     private static func reset(_ requirements: Requirements) -> FunctionDeclSyntax {
         FunctionDeclSyntax(
             modifiers: requirements.modifiers,
@@ -139,49 +131,6 @@ extension MemberFactory {
             modifiers.append(DeclModifierSyntax(name: .keyword(.nonisolated)))
         }
         return modifiers
-    }
-
-    private static func builderInit(arguments: LabeledExprListSyntax) -> CodeBlockSyntax {
-        CodeBlockSyntax(
-            statements: CodeBlockItemListSyntax {
-                FunctionCallExprSyntax(
-                    calledExpression: MemberAccessExprSyntax(name: NS._init),
-                    leftParen: .leftParenToken(),
-                    arguments: arguments,
-                    rightParen: .rightParenToken()
-                )
-            }
-        )
-    }
-
-    private static var mockerArgument: LabeledExprSyntax {
-        LabeledExprSyntax(
-            label: NS.mocker,
-            colon: .colonToken(),
-            expression: DeclReferenceExprSyntax(baseName: NS.mocker)
-        )
-    }
-
-    private static var assertionArgument: LabeledExprSyntax {
-        LabeledExprSyntax(
-            label: NS.assertion,
-            colon: .colonToken(),
-            expression: DeclReferenceExprSyntax(baseName: NS.assertion)
-        )
-    }
-
-    private static var assertionParameter: FunctionParameterSyntax {
-        FunctionParameterSyntax(
-            firstName: NS.with,
-            secondName: NS.assertion,
-            type: AttributedTypeSyntax(
-                attributes: [.attribute(.escaping)],
-                baseType: MemberTypeSyntax(
-                    baseType: IdentifierTypeSyntax(name: NS.Mockable),
-                    name: NS.MockableAssertion
-                )
-            )
-        )
     }
 
     private static var scopesParameter: FunctionParameterSyntax {

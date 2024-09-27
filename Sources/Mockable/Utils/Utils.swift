@@ -27,7 +27,7 @@
 ///
 /// - Parameter service: The mockable service for which return values are specified.
 /// - Returns: The service's return value builder.
-public func given<T: MockableService>(_ service: T) -> T.ReturnBuilder { service.given() }
+public func given<T: MockableService>(_ service: T) -> T.ReturnBuilder { service.given }
 
 /// Creates a proxy for building actions for members of the given service.
 ///
@@ -51,4 +51,22 @@ public func given<T: MockableService>(_ service: T) -> T.ReturnBuilder { service
 ///
 /// - Parameter service: The mockable service for which actions are specified.
 /// - Returns: The service's action builder.
-public func when<T: MockableService>(_ service: T) -> T.ActionBuilder { service.when() }
+public func when<T: MockableService>(_ service: T) -> T.ActionBuilder { service.when }
+
+/// Creates a proxy for verifying invocations of members of the given service.
+///
+/// Example usage of `verify(_ service:)`:
+/// ```swift
+/// verify(productService)
+///     // assert fetch(for:) was called between 1 and 5 times
+///     .fetch(for: .any).called(.from(1, to: 5))
+///     // assert checkout(with:) was called between exactly 10 times
+///     .checkout(with: .any).called(10)
+///     // assert url property was accessed at least 2 times
+///     .url().getCalled(.moreOrEqual(to: 2))
+///     // assert url property was never set to nil
+///     .url(newValue: .value(nil)).setCalled(.never)
+/// ```
+/// - Parameter service: The mockable service for which invocations are verified.
+/// - Returns: The service's verification builder.
+public func verify<T: MockableService>(_ service: T) -> T.VerifyBuilder { service.verify }

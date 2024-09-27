@@ -20,7 +20,7 @@ let devPlugins: [Target.PluginUsage] = [
 let devTargets: [Target] = [
     .testTarget(
         name: "MockableTests",
-        dependencies: ["MockableTest"],
+        dependencies: ["Mockable"],
         swiftSettings: [.define("MOCKING")],
         plugins: devPlugins
     ),
@@ -42,24 +42,19 @@ let package = Package(
         .library(
             name: "Mockable",
             targets: ["Mockable"]
-        ),
-        .library(
-            name: "MockableTest",
-            targets: ["MockableTest"]
-        ),
+        )
     ],
     dependencies: ifDev(add: devDependencies) + [
-        .package(url: "https://github.com/swiftlang/swift-syntax.git", "509.0.0"..<"511.0.0")
+        .package(url: "https://github.com/swiftlang/swift-syntax.git", "509.0.0"..<"511.0.0"),
+        .package(url: "https://github.com/pointfreeco/swift-issue-reporting", .upToNextMajor(from: "1.4.1"))
     ],
     targets: ifDev(add: devTargets) + [
         .target(
             name: "Mockable",
-            dependencies: ["MockableMacro"],
-            plugins: ifDev(add: devPlugins)
-        ),
-        .target(
-            name: "MockableTest",
-            dependencies: ["Mockable"],
+            dependencies: [
+                "MockableMacro",
+                .product(name: "IssueReporting", package: "swift-issue-reporting")
+            ],
             plugins: ifDev(add: devPlugins)
         ),
         .macro(
