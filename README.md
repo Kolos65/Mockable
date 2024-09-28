@@ -287,7 +287,7 @@ However, it is common to prefer avoiding this strict default behavior in favor o
 for example, void or optional return values do not need explicit `given` registration.
 
 Use [`MockerPolicy`](https://kolos65.github.io/Mockable/documentation/mockable/mockerpolicy) (which is an [option set](https://developer.apple.com/documentation/swift/optionset)) to implicitly mock:
-* only one kind of return value: `.relaxedMockable`
+* only one kind of return value: `.relaxedMocked`
 * construct a custom set of policies: `[.relaxedVoid, .relaxedOptional]`
 * or opt for a fully relaxed mode: `.relaxed`.
 
@@ -301,14 +301,14 @@ You have two options to override the default strict behavior of the library:
     MockerPolicy.default = .relaxedVoid
     ```
 
-The `.relaxedMockable` policy in combination with the [`Mockable`](https://kolos65.github.io/Mockable/documentation/mockable/mockable) protocol can be used to set an implicit return value for custom (or even built in) types:
+The `.relaxedMocked` policy in combination with the [`Mocked`](https://kolos65.github.io/Mockable/documentation/mockable/mocked) protocol can be used to set an implicit return value for custom (or even built in) types:
 ```swift
 struct Car {
     var name: String
     var seats: Int
 }
 
-extension Car: Mockable {
+extension Car: Mocked {
     static var mock: Car {
         Car(name: "Mock Car", seats: 4)
     }
@@ -331,7 +331,7 @@ protocol CarService {
 
 func testCarService() {
     func test() {
-        let mock = MockCarService(policy: .relaxedMockable)
+        let mock = MockCarService(policy: .relaxedMocked)
         // Implictly mocked without a given registration:
         let car = mock.getCar()
         let cars = mock.getCars()

@@ -186,7 +186,7 @@ However, it is common to prefer avoiding this strict default behavior in favor o
 for example, void or optional return values do not need explicit `given` registration.
 
 Use the Use [`MockerPolicy`](https://kolos65.github.io/Mockable/documentation/mockable/mockerpolicy) (which is an [option set](https://developer.apple.com/documentation/swift/optionset)) to implicitly mock:
-* only one kind of return value: `.relaxedMockable`
+* only one kind of return value: `.relaxedMocked`
 * construct a custom set of policies: `[.relaxedVoid, .relaxedOptional]`
 * or opt for a fully relaxed mode: `.relaxed`.
 
