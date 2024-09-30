@@ -104,6 +104,9 @@ extension VariableRequirement {
             if let returnType = try variableReturnType(for: kind) {
                 returnType
             }
+            if let errorType = try errorType(for: kind) {
+                errorType
+            }
             if let produceType = try variableProduceType(for: kind) {
                 produceType
             }
@@ -114,6 +117,18 @@ extension VariableRequirement {
             name: name,
             genericArgumentClause: .init(arguments: arguments)
         )
+    }
+
+    private func errorType(for kind: BuilderKind) throws -> GenericArgumentSyntax? {
+        guard try syntax.isThrowing && syntax.isComputed && kind == .return else { return nil }
+        #if canImport(SwiftSyntax600)
+        guard let errorType = try syntax.errorType else {
+            return GenericArgumentSyntax(argument: IdentifierTypeSyntax(name: NS.Error))
+        }
+        return GenericArgumentSyntax(argument: errorType.trimmed)
+        #else
+        return GenericArgumentSyntax(argument: IdentifierTypeSyntax(name: NS.Error))
+        #endif
     }
 
     private func variableReturnType(for kind: BuilderKind) throws -> GenericArgumentSyntax? {

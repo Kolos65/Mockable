@@ -13,22 +13,33 @@ extension FunctionDeclSyntax {
     }
 
     var isThrowing: Bool {
+        #if canImport(SwiftSyntax600)
+        signature.effectSpecifiers?.throwsClause?.throwsSpecifier.tokenKind == .keyword(.throws)
+        #else
         signature.effectSpecifiers?.throwsSpecifier?.tokenKind == .keyword(.throws)
+        #endif
     }
 
     var closureType: FunctionTypeSyntax {
         let params = signature.parameterClause.parameters
             .map { $0.resolvedType(for: .parameter) }
 
+        #if canImport(SwiftSyntax600)
+        let effectSpecifiers = TypeEffectSpecifiersSyntax(
+            throwsClause: isThrowing ? .init(throwsSpecifier: .keyword(.throws)) : nil
+        )
+        #else
+        let effectSpecifiers = TypeEffectSpecifiersSyntax(
+            throwsSpecifier: isThrowing ? .keyword(.throws) : nil
+        )
+        #endif
         return FunctionTypeSyntax(
             parameters: TupleTypeElementListSyntax {
                 for param in params {
                     TupleTypeElementSyntax(type: param)
                 }
             },
-            effectSpecifiers: .init(
-                throwsSpecifier: isThrowing ? .keyword(.throws) : nil
-            ),
+            effectSpecifiers: effectSpecifiers,
             returnClause: signature.returnClause ?? .init(type: IdentifierTypeSyntax(name: NS.Void))
         )
     }
@@ -43,3 +54,11 @@ extension FunctionDeclSyntax {
         }
     }
 }
+
+#if canImport(SwiftSyntax600)
+extension FunctionDeclSyntax {
+    var errorType: TypeSyntax? {
+        signature.effectSpecifiers?.throwsClause?.type
+    }
+}
+#endif

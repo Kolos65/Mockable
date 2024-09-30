@@ -72,12 +72,12 @@ protocol TestProtocol: Actor, Sendable where Item2: Identifiable {
 
     // MARK: Attributes
 
-    @available(iOS 15, *)
+    @available(iOS 16, *)
     init(attributed: String)
 
-    @available(iOS 15, *)
+    @available(iOS 16, *)
     var attributedProp: Int { get }
 
-    @available(iOS 15, *)
+    @available(iOS 16, *)
     func attributedTest()
 }

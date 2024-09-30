@@ -40,12 +40,13 @@ final class VerifyTests: XCTestCase {
             .getUser(for: .any).called(.exactly(1))
     }
 
+    @MainActor
     func test_givenMockFunctionIsCalledAsyncrhonously_whenCountVerified_assertsMatchingCounts() async {
         given(mock).getUser(for: .any).willReturn(.test1)
 
         Task {
             try await Task.sleep(seconds: 0.5)
-            _ = try self.mock.getUser(for: UUID())
+            _ = try mock.getUser(for: UUID())
         }
 
         verify(mock).getUser(for: .any).called(.never)
@@ -75,6 +76,7 @@ final class VerifyTests: XCTestCase {
             .name().setCalled(.once)
     }
 
+    @MainActor
     func test_givenMockPropertyAccessedAsynchronously_whenCountVerified_assertsGetterAndSetter() async {
         let testName = "Name"
 

@@ -81,6 +81,9 @@ extension FunctionRequirement {
             if let returnType = functionReturnType(for: kind) {
                 returnType
             }
+            if let errorType = errorType(for: kind) {
+                errorType
+            }
             if let produceType = functionProduceType(for: kind) {
                 produceType
             }
@@ -92,6 +95,18 @@ extension FunctionRequirement {
                 genericArgumentClause: .init(arguments: arguments)
             )
         )
+    }
+
+    private func errorType(for kind: BuilderKind) -> GenericArgumentSyntax? {
+        guard syntax.isThrowing && kind == .return else { return nil }
+        #if canImport(SwiftSyntax600)
+        guard let errorType = syntax.errorType else {
+            return GenericArgumentSyntax(argument: IdentifierTypeSyntax(name: NS.Error))
+        }
+        return GenericArgumentSyntax(argument: errorType.trimmed)
+        #else
+        return GenericArgumentSyntax(argument: IdentifierTypeSyntax(name: NS.Error))
+        #endif
     }
 
     private func functionReturnType(for kind: BuilderKind) -> GenericArgumentSyntax? {

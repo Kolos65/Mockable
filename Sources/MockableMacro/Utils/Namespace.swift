@@ -41,6 +41,7 @@ enum NS {
     static let addInvocation: TokenSyntax = "addInvocation"
     static let performActions: TokenSyntax = "performActions"
     static let policy: TokenSyntax = "policy"
+    static let error: TokenSyntax = "error"
     static let iOS: TokenSyntax = "iOS"
     static let macOS: TokenSyntax = "macOS"
     static let tvOS: TokenSyntax = "tvOS"
@@ -73,6 +74,7 @@ enum NS {
     static let Set: TokenSyntax = "Set"
     static let Void: TokenSyntax = "Void"
     static let Actor: TokenSyntax = "Actor"
+    static let Error: TokenSyntax = "Error"
     static let NSObjectProtocol: String = "NSObjectProtocol"
     static let NSObject: TokenSyntax = "NSObject"
 

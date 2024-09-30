@@ -14,7 +14,7 @@
 ///     .fetch(for: .any)
 ///     .called(.from(1, to: 5))
 /// ```
-public enum Count: ExpressibleByIntegerLiteral {
+public enum Count: ExpressibleByIntegerLiteral, Sendable {
     /// The associated type for the integer literal.
     public typealias IntegerLiteralType = Int
 

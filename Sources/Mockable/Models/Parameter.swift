@@ -6,7 +6,7 @@
 //
 
 /// An enumeration representing different types of parameters used in mocking.
-public enum Parameter<Value> {
+public enum Parameter<Value>: @unchecked Sendable {
     /// Matches any value.
     case any
     /// Matches a specific value.
