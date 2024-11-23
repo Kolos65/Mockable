@@ -45,7 +45,7 @@ let package = Package(
         )
     ],
     dependencies: ifDev(add: devDependencies) + [
-        .package(url: "https://github.com/swiftlang/swift-syntax.git", "509.0.0"..<"511.0.0"),
+        .package(url: "https://github.com/swiftlang/swift-syntax.git", "600.0.0"..<"600.1.0"),
         .package(url: "https://github.com/pointfreeco/swift-issue-reporting", .upToNextMajor(from: "1.4.3"))
     ],
     targets: ifDev(add: devTargets) + [
