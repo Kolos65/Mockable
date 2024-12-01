@@ -39,6 +39,9 @@ extension EnumFactory {
                     name: NS.CaseIdentifiable
                 )
             )
+            InheritedTypeSyntax(
+                type: IdentifierTypeSyntax(name: NS.Sendable)
+            )
         }
     }
 

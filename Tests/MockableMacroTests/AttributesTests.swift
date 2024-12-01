@@ -54,21 +54,21 @@ final class AttributesTests: MockableMacroTestCase {
                 typealias Mocker = Mockable.Mocker<MockAttributeTest>
                 private let mocker = Mocker()
                 @available(*, deprecated, message: "Use given(_ service:) instead. ")
-                var given: ReturnBuilder {
+                nonisolated var given: ReturnBuilder {
                     .init(mocker: mocker)
                 }
                 @available(*, deprecated, message: "Use when(_ service:) instead. ")
-                var when: ActionBuilder {
+                nonisolated var when: ActionBuilder {
                     .init(mocker: mocker)
                 }
                 @available(*, deprecated, message: "Use verify(_ service:) instead. ")
-                var verify: VerifyBuilder {
+                nonisolated var verify: VerifyBuilder {
                     .init(mocker: mocker)
                 }
-                func reset(_ scopes: Set<Mockable.MockerScope> = .all) {
+                nonisolated func reset(_ scopes: Set<Mockable.MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                init(policy: Mockable.MockerPolicy? = nil) {
+                nonisolated init(policy: Mockable.MockerPolicy? = nil) {
                     if let policy {
                         mocker.policy = policy
                     }
@@ -115,7 +115,7 @@ final class AttributesTests: MockableMacroTestCase {
                         }
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
                     case m1_prop
                     case m2_prop2
                     case m3_test

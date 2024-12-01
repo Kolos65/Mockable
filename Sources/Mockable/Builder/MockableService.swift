@@ -12,7 +12,7 @@
 public protocol MockableService {
 
     /// A type representing the members of the mocked protocol.
-    associatedtype Member: Matchable, CaseIdentifiable
+    associatedtype Member: Matchable, CaseIdentifiable, Sendable
 
     /// A builder responsible for registering return values.
     associatedtype ReturnBuilder: Builder<Self>

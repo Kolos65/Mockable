@@ -30,7 +30,7 @@ enum MemberFactory: Factory {
 extension MemberFactory {
     private static func defaultInit(_ requirements: Requirements) -> InitializerDeclSyntax {
         InitializerDeclSyntax(
-            modifiers: requirements.modifiers,
+            modifiers: requirements.isActor ? requirements.modifiers : memberModifiers(requirements),
             signature: .init(parameterClause: defaultInitParameters),
             body: .init { CodeBlockItemSyntax(item: .expr(mockerAssignmentWithPolicy)) }
         )
@@ -81,7 +81,7 @@ extension MemberFactory {
     ) -> VariableDeclSyntax {
         VariableDeclSyntax(
             attributes: unavailableAttribute(message: message),
-            modifiers: clauseModifiers(requirements),
+            modifiers: memberModifiers(requirements),
             bindingSpecifier: .keyword(.var),
             bindings: PatternBindingListSyntax {
                 PatternBindingSyntax(
@@ -114,7 +114,7 @@ extension MemberFactory {
 
     private static func reset(_ requirements: Requirements) -> FunctionDeclSyntax {
         FunctionDeclSyntax(
-            modifiers: requirements.modifiers,
+            modifiers: memberModifiers(requirements),
             name: NS.reset,
             signature: .init(
                 parameterClause: FunctionParameterClauseSyntax(
@@ -125,11 +125,9 @@ extension MemberFactory {
         )
     }
 
-    private static func clauseModifiers(_ requirements: Requirements) -> DeclModifierListSyntax {
+    private static func memberModifiers(_ requirements: Requirements) -> DeclModifierListSyntax {
         var modifiers = requirements.modifiers
-        if requirements.isActor {
-            modifiers.append(DeclModifierSyntax(name: .keyword(.nonisolated)))
-        }
+        modifiers.append(DeclModifierSyntax(name: .keyword(.nonisolated)))
         return modifiers
     }
 
