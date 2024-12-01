@@ -81,6 +81,7 @@ enum NS {
     static let Error: TokenSyntax = "Error"
     static let NSObjectProtocol: String = "NSObjectProtocol"
     static let NSObject: TokenSyntax = "NSObject"
+    static let Sendable: TokenSyntax = "Sendable"
 
     static func Parameter(_ type: String) -> TokenSyntax { "Parameter<\(raw: type)>" }
     static func Param(suffix: String) -> TokenSyntax { "Param\(raw: suffix)" }

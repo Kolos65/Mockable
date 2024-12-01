@@ -47,7 +47,7 @@ final class ActorConformanceTests: MockableMacroTestCase {
                 nonisolated var verify: VerifyBuilder {
                     .init(mocker: mocker)
                 }
-                func reset(_ scopes: Set<Mockable.MockerScope> = .all) {
+                nonisolated func reset(_ scopes: Set<Mockable.MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
                 init(policy: Mockable.MockerPolicy? = nil) {
@@ -87,7 +87,7 @@ final class ActorConformanceTests: MockableMacroTestCase {
                         }
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
                     case m1_foo
                     case m2_quz
                     case m3_bar(number: Parameter<Int>)

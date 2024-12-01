@@ -166,11 +166,11 @@ public class Mocker<Service: MockableService>: @unchecked Sendable {
             guard scopes.contains(scope) else { return }
             switch scope {
             case .given:
-                returns.removeAll()
+                returns = [:]
             case .when:
-                actions.removeAll()
+                actions = [:]
             case .verify:
-                invocations.removeAll()
+                invocations = []
             }
         }
     }

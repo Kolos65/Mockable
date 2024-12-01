@@ -34,21 +34,21 @@ final class AccessModifierTests: MockableMacroTestCase {
                 public typealias Mocker = Mockable.Mocker<MockTest>
                 private let mocker = Mocker()
                 @available(*, deprecated, message: "Use given(_ service:) instead. ")
-                public var given: ReturnBuilder {
+                public nonisolated var given: ReturnBuilder {
                     .init(mocker: mocker)
                 }
                 @available(*, deprecated, message: "Use when(_ service:) instead. ")
-                public var when: ActionBuilder {
+                public nonisolated var when: ActionBuilder {
                     .init(mocker: mocker)
                 }
                 @available(*, deprecated, message: "Use verify(_ service:) instead. ")
-                public var verify: VerifyBuilder {
+                public nonisolated var verify: VerifyBuilder {
                     .init(mocker: mocker)
                 }
-                public func reset(_ scopes: Set<Mockable.MockerScope> = .all) {
+                public nonisolated func reset(_ scopes: Set<Mockable.MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                public init(policy: Mockable.MockerPolicy? = nil) {
+                public nonisolated init(policy: Mockable.MockerPolicy? = nil) {
                     if let policy {
                         mocker.policy = policy
                     }
@@ -71,7 +71,7 @@ final class AccessModifierTests: MockableMacroTestCase {
                         }
                     }
                 }
-                public enum Member: Mockable.Matchable, Mockable.CaseIdentifiable {
+                public enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
                     case m1_foo
                     case m2_bar(number: Parameter<Int>)
                     public func match(_ other: Member) -> Bool {
@@ -148,21 +148,21 @@ final class AccessModifierTests: MockableMacroTestCase {
                 typealias Mocker = Mockable.Mocker<MockTest>
                 private let mocker = Mocker()
                 @available(*, deprecated, message: "Use given(_ service:) instead. ")
-                var given: ReturnBuilder {
+                nonisolated var given: ReturnBuilder {
                     .init(mocker: mocker)
                 }
                 @available(*, deprecated, message: "Use when(_ service:) instead. ")
-                var when: ActionBuilder {
+                nonisolated var when: ActionBuilder {
                     .init(mocker: mocker)
                 }
                 @available(*, deprecated, message: "Use verify(_ service:) instead. ")
-                var verify: VerifyBuilder {
+                nonisolated var verify: VerifyBuilder {
                     .init(mocker: mocker)
                 }
-                func reset(_ scopes: Set<Mockable.MockerScope> = .all) {
+                nonisolated func reset(_ scopes: Set<Mockable.MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                init(policy: Mockable.MockerPolicy? = nil) {
+                nonisolated init(policy: Mockable.MockerPolicy? = nil) {
                     if let policy {
                         mocker.policy = policy
                     }
@@ -183,7 +183,7 @@ final class AccessModifierTests: MockableMacroTestCase {
                         }
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
                     case m1_foo
                     case m2_bar(number: Parameter<Int>)
                     func match(_ other: Member) -> Bool {
@@ -258,21 +258,21 @@ final class AccessModifierTests: MockableMacroTestCase {
                 public typealias Mocker = Mockable.Mocker<MockTest>
                 private let mocker = Mocker()
                 @available(*, deprecated, message: "Use given(_ service:) instead. ")
-                public var given: ReturnBuilder {
+                public nonisolated var given: ReturnBuilder {
                     .init(mocker: mocker)
                 }
                 @available(*, deprecated, message: "Use when(_ service:) instead. ")
-                public var when: ActionBuilder {
+                public nonisolated var when: ActionBuilder {
                     .init(mocker: mocker)
                 }
                 @available(*, deprecated, message: "Use verify(_ service:) instead. ")
-                public var verify: VerifyBuilder {
+                public nonisolated var verify: VerifyBuilder {
                     .init(mocker: mocker)
                 }
-                public func reset(_ scopes: Set<Mockable.MockerScope> = .all) {
+                public nonisolated func reset(_ scopes: Set<Mockable.MockerScope> = .all) {
                     mocker.reset(scopes: scopes)
                 }
-                public init(policy: Mockable.MockerPolicy? = nil) {
+                public nonisolated init(policy: Mockable.MockerPolicy? = nil) {
                     if let policy {
                         mocker.policy = policy
                     }
@@ -284,7 +284,7 @@ final class AccessModifierTests: MockableMacroTestCase {
                         return producer()
                     }
                 }
-                public enum Member: Mockable.Matchable, Mockable.CaseIdentifiable {
+                public enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
                     case m1_foo
                     public func match(_ other: Member) -> Bool {
                         switch (self, other) {
