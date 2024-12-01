@@ -5,7 +5,11 @@
 //  Created by Kolos Foltanyi on 2024. 03. 28..
 //
 
+#if canImport(SwiftSyntax600) || swift(<6)
 import SwiftSyntax
+#else
+@preconcurrency import SwiftSyntax
+#endif
 
 /// Factory to generate the mock service declaration.
 ///
