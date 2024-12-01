@@ -27,17 +27,38 @@ jobs:
         run: commitlint -x @commitlint/config-conventional --from=${{ github.event.pull_request.base.sha }} --to=${{ github.event.pull_request.head.sha }}
 
   test:
-    name: Build Package and Run Tests
-    runs-on: macOS-13
+    name: Build and Test using Swift 5.9
+    runs-on: macos-14
+    env:
+      MOCKABLE_TEST: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Swift
-        uses: swift-actions/setup-swift@v1
-        with:
-          swift-version: '5.9'
+      - name: Select Xcode 15.2 (Swift 5.9.2)
+        run: |
+          sudo xcode-select -s /Applications/Xcode_15.2.app
+          swift -version
 
       - name: Run Tests
         run: |
           Scripts/test.sh
+
+  test-swift6:
+    name: Build and Test using Swift 6
+    runs-on: macos-14
+    env:
+      MOCKABLE_LINT: true
+      MOCKABLE_TEST: true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Select Xcode 16 (Swift 6.0)
+        run: |
+          sudo xcode-select -s /Applications/Xcode_16.app
+          swift --version
+
+      - name: Run Tests
+        run: |
+          Scripts/lint.sh & Scripts/test.sh
