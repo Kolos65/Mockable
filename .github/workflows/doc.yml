@@ -9,13 +9,9 @@ jobs:
   update_docs:
     name: Update Documentation
     runs-on: macOS-13
-
+    env:
+      MOCKABLE_DOC: true
     steps:
-    - name: Set up Swift
-      uses: swift-actions/setup-swift@v1
-      with:
-        swift-version: '5.9'
-  
     - name: Checkout main branch
       uses: actions/checkout@v4
       with:

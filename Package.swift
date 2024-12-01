@@ -3,21 +3,25 @@
 import PackageDescription
 import CompilerPluginSupport
 
-let isDev = Context.environment["MOCKABLE_DEV"].flatMap(Bool.init) ?? false
+let test = Context.environment["MOCKABLE_TEST"].flatMap(Bool.init) ?? false
+let lint = Context.environment["MOCKABLE_LINT"].flatMap(Bool.init) ?? false
+let doc = Context.environment["MOCKABLE_DOC"].flatMap(Bool.init) ?? false
 
-func ifDev<T>(add list: [T]) -> [T] { isDev ? list : [] }
+func when<T>(_ condition: Bool, _ list: [T]) -> [T] { condition ? list : [] }
 
-let devDependencies: [Package.Dependency] = [
-    .package(url: "https://github.com/pointfreeco/swift-macro-testing", exact: "0.5.2"),
-    .package(url: "https://github.com/realm/SwiftLint", exact: "0.55.1"),
+let devDependencies: [Package.Dependency] = when(test, [
+    .package(url: "https://github.com/pointfreeco/swift-macro-testing", exact: "0.5.2")
+]) + when(lint, [
+    .package(url: "https://github.com/realm/SwiftLint", exact: "0.57.1"),
+]) + when(doc, [
     .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.3.0")
-]
+])
 
-let devPlugins: [Target.PluginUsage] = [
+let devPlugins: [Target.PluginUsage] = when(lint, [
     .plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLint")
-]
+])
 
-let devTargets: [Target] = [
+let devTargets: [Target] = when(test, [
     .testTarget(
         name: "MockableTests",
         dependencies: ["Mockable"],
@@ -33,7 +37,7 @@ let devTargets: [Target] = [
         ],
         swiftSettings: [.define("MOCKING")]
     )
-]
+])
 
 let package = Package(
     name: "Mockable",
@@ -44,18 +48,18 @@ let package = Package(
             targets: ["Mockable"]
         )
     ],
-    dependencies: ifDev(add: devDependencies) + [
+    dependencies: devDependencies + [
         .package(url: "https://github.com/swiftlang/swift-syntax.git", "509.0.0"..<"601.0.0"),
         .package(url: "https://github.com/pointfreeco/swift-issue-reporting", .upToNextMajor(from: "1.4.1"))
     ],
-    targets: ifDev(add: devTargets) + [
+    targets: devTargets + [
         .target(
             name: "Mockable",
             dependencies: [
                 "MockableMacro",
                 .product(name: "IssueReporting", package: "swift-issue-reporting")
             ],
-            plugins: ifDev(add: devPlugins)
+            plugins: devPlugins
         ),
         .macro(
             name: "MockableMacro",
@@ -63,7 +67,7 @@ let package = Package(
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
             ],
-            plugins: ifDev(add: devPlugins)
+            plugins: devPlugins
         )
     ],
     swiftLanguageVersions: [.v5, .version("6")]
