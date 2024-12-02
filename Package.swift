@@ -59,6 +59,9 @@ let package = Package(
                 "MockableMacro",
                 .product(name: "IssueReporting", package: "swift-issue-reporting")
             ],
+            swiftSettings: [
+                .enableExperimentalFeature("StrictConcurrency")
+            ],
             plugins: devPlugins
         ),
         .macro(
@@ -66,6 +69,9 @@ let package = Package(
             dependencies: [
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
+            ],
+            swiftSettings: [
+                .enableExperimentalFeature("StrictConcurrency")
             ],
             plugins: devPlugins
         )
