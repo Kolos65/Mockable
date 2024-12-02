@@ -50,14 +50,14 @@ let package = Package(
     ],
     dependencies: devDependencies + [
         .package(url: "https://github.com/swiftlang/swift-syntax.git", "509.0.0"..<"601.0.0"),
-        .package(url: "https://github.com/pointfreeco/swift-issue-reporting", .upToNextMajor(from: "1.4.1"))
+        .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay", .upToNextMajor(from: "1.4.1"))
     ],
     targets: devTargets + [
         .target(
             name: "Mockable",
             dependencies: [
                 "MockableMacro",
-                .product(name: "IssueReporting", package: "swift-issue-reporting")
+                .product(name: "IssueReporting", package: "xctest-dynamic-overlay")
             ],
             swiftSettings: [
                 .enableExperimentalFeature("StrictConcurrency")
