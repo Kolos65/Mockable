@@ -123,12 +123,19 @@ extension VariableRequirement {
         guard try syntax.isThrowing && syntax.isComputed && kind == .return else { return nil }
         #if canImport(SwiftSyntax600)
         guard let errorType = try syntax.errorType else {
-            return GenericArgumentSyntax(argument: IdentifierTypeSyntax(name: NS.Error))
+            return GenericArgumentSyntax(argument: defaultErrorType)
         }
         return GenericArgumentSyntax(argument: errorType.trimmed)
         #else
-        return GenericArgumentSyntax(argument: IdentifierTypeSyntax(name: NS.Error))
+        return GenericArgumentSyntax(argument: defaultErrorType)
         #endif
+    }
+
+    private var defaultErrorType: some TypeSyntaxProtocol {
+        SomeOrAnyTypeSyntax(
+            someOrAnySpecifier: .keyword(.any),
+            constraint: IdentifierTypeSyntax(name: NS.Error)
+        )
     }
 
     private func variableReturnType(for kind: BuilderKind) throws -> GenericArgumentSyntax? {
