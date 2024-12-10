@@ -60,7 +60,8 @@ let package = Package(
                 .product(name: "IssueReporting", package: "xctest-dynamic-overlay")
             ],
             swiftSettings: [
-                .enableExperimentalFeature("StrictConcurrency")
+                .enableExperimentalFeature("StrictConcurrency"),
+                .enableUpcomingFeature("ExistentialAny")
             ],
             plugins: devPlugins
         ),
@@ -71,7 +72,8 @@ let package = Package(
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
             ],
             swiftSettings: [
-                .enableExperimentalFeature("StrictConcurrency")
+                .enableExperimentalFeature("StrictConcurrency"),
+                .enableUpcomingFeature("ExistentialAny")
             ],
             plugins: devPlugins
         )

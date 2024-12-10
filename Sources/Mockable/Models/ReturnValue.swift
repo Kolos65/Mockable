@@ -15,7 +15,7 @@ public enum ReturnValue {
     case `return`(Any)
 
     /// A case representing an error to be thrown.
-    case `throw`(Error)
+    case `throw`(any Error)
 
     /// A case representing a value producer to be invoked.
     case produce(Any)
