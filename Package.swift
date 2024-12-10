@@ -25,7 +25,11 @@ let devTargets: [Target] = when(test, [
     .testTarget(
         name: "MockableTests",
         dependencies: ["Mockable"],
-        swiftSettings: [.define("MOCKING")],
+        swiftSettings: [
+            .define("MOCKING"),
+            .enableExperimentalFeature("StrictConcurrency"),
+            .enableUpcomingFeature("ExistentialAny")
+        ],
         plugins: devPlugins
     ),
     .testTarget(
