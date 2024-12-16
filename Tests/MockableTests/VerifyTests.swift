@@ -7,7 +7,7 @@
 
 import XCTest
 import Foundation
-import Mockable
+@testable import Mockable
 
 final class VerifyTests: XCTestCase {
 
@@ -108,5 +108,22 @@ final class VerifyTests: XCTestCase {
         verify(mock)
             .retrieveItem(item: Parameter<Int>.any)
             .called(.atLeastOnce)
+    }
+
+    @MainActor
+    func test_givenAsyncVerification_whenSatisfied_verifiesEarlyBeforeTimeout() async throws {
+        given(mock).getUser(for: .any).willReturn(.test1)
+
+        Task {
+            try await Task.sleep(for: .seconds(1))
+            _ = try self.mock.getUser(for: UUID())
+        }
+
+        let verify = verify(mock)
+
+        try await withTimeout(after: 3) {
+            await verify.getUser(for: .any)
+                .calledEventually(.atLeastOnce, before: .seconds(5))
+        }
     }
 }

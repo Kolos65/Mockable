@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Combine
 import IssueReporting
 
 /// A class responsible for mocking and verifying interactions with a mockable service.
@@ -28,37 +27,23 @@ public class Mocker<Service: MockableService>: @unchecked Sendable {
 
     // MARK: Private Properties
 
-    /// A serial dispatch queue for thread safety when accessing mutable properties.
-    private let queue = DispatchQueue(label: "com.mockable.mocker")
     /// Dictionary to store expected return values for each member.
-    private var _returns = [Member: [Return]]()
+    private var returns = LockIsolated<[Member: [Return]]>([:])
     /// Dictionary to store actions to be performed on each member.
-    private var _actions = [Member: [Action]]()
+    private var actions = LockIsolated<[Member: [Action]]>([:])
     /// Array to store invocations of members.
-    @Published private var _invocations = [Member]()
-
-    /// Synchornized access to return values
-    private var returns: [Member: [Return]] {
-        get { queue.sync { _returns } }
-        set { queue.sync { _returns = newValue } }
+    private lazy var invocations = LockIsolated<[Member]>([]) { newValue in
+        Task {
+            #if swift(>=6)
+            self.invocationsSubject.send(newValue)
+            #else
+            await self.invocationsSubject.send(newValue)
+            #endif
+        }
     }
 
-    /// Synchornized access to actions
-    private var actions: [Member: [Action]] {
-        get { queue.sync { _actions } }
-        set { queue.sync { _actions = newValue } }
-    }
-
-    /// Synchornized access to invocations
-    private var invocations: [Member] {
-        get { queue.sync { _invocations } }
-        set { queue.sync { _invocations = newValue } }
-    }
-
-    /// Async stream of invocations
-    private var invocationsStream: AsyncStream<[Member]> {
-        $_invocations.receive(on: queue).stream
-    }
+    /// Subject to track invocations.
+    private var invocationsSubject = AsyncSubject<[Member]>([])
 
     /// Resolved relaxation policy to use when missing return values.
     private var currentPolicy: MockerPolicy {
@@ -78,7 +63,9 @@ public class Mocker<Service: MockableService>: @unchecked Sendable {
     ///
     /// - Parameter member: The member for which the invocation is added.
     public func addInvocation(for member: Member) {
-        invocations.append(member)
+        invocations.withValue { invocations in
+            invocations.append(member)
+        }
     }
 
     /// Specifies an expected return value for a member.
@@ -88,7 +75,9 @@ public class Mocker<Service: MockableService>: @unchecked Sendable {
     ///   - returnValue: The expected return value.
     public func addReturnValue(_ returnValue: ReturnValue, for member: Member) {
         let given = Return(member: member, returnValue: returnValue)
-        returns[member] = (returns[member] ?? []) + [given]
+        returns.withValue { returns in
+            returns[member] = (returns[member] ?? []) + [given]
+        }
     }
 
     /// Specifies an action to be performed on a member.
@@ -98,7 +87,9 @@ public class Mocker<Service: MockableService>: @unchecked Sendable {
     ///   - action: The action to be performed.
     public func addAction(_ action: @escaping () -> Void, for member: Member) {
         let action = Action(member: member, action: action)
-        actions[action.member] = (actions[action.member] ?? []) + [action]
+        actions.withValue { actions in
+            actions[action.member] = (actions[action.member] ?? []) + [action]
+        }
     }
 
     /// Verifies the number of times a member has been called.
@@ -112,7 +103,7 @@ public class Mocker<Service: MockableService>: @unchecked Sendable {
                        filePath: StaticString = #filePath,
                        line: UInt = #line,
                        column: UInt = #column) {
-        let matches = invocations.filter(member.match)
+        let matches = invocations.value.filter(member.match)
         let message = """
         Expected \(count) invocation(s) of \(member.name), but was \(matches.count).",
         """
@@ -137,7 +128,7 @@ public class Mocker<Service: MockableService>: @unchecked Sendable {
                        column: UInt = #column) async {
         do {
             try await withTimeout(after: timeout.duration) {
-                for await invocations in self.invocationsStream {
+                for await invocations in self.invocationsSubject {
                     let matches = invocations.filter(member.match)
                     if count.satisfies(matches.count) {
                         break
@@ -147,7 +138,7 @@ public class Mocker<Service: MockableService>: @unchecked Sendable {
                 }
             }
         } catch {
-            let matches = invocations.filter(member.match)
+            let matches = invocations.value.filter(member.match)
             let message = """
             Expected \(count) invocation(s) of \(member.name) before \(timeout.duration) s, but was \(matches.count).
             """
@@ -166,11 +157,11 @@ public class Mocker<Service: MockableService>: @unchecked Sendable {
             guard scopes.contains(scope) else { return }
             switch scope {
             case .given:
-                returns = [:]
+                returns.setValue([:])
             case .when:
-                actions = [:]
+                actions.setValue([:])
             case .verify:
-                invocations = []
+                invocations.setValue([])
             }
         }
     }
@@ -179,9 +170,11 @@ public class Mocker<Service: MockableService>: @unchecked Sendable {
     ///
     /// - Parameter member: The member for which actions should be performed.
     public func performActions(for member: Member) {
-        guard let actions = actions[member] else { return }
-        let matches = actions.filter { member.match($0.member) }
-        matches.forEach { $0.action() }
+        actions.withValue { actions in
+            guard let actions = actions[member] else { return }
+            let matches = actions.filter { member.match($0.member) }
+            matches.forEach { $0.action() }
+        }
     }
 
     /// Mocks a member, performing associated actions and providing the expected return value.
@@ -238,52 +231,53 @@ extension Mocker {
         addInvocation(for: member)
         performActions(for: member)
 
-        let matchCount = returns[member]?
-            .filter { member.match($0.member) }
-            .count ?? 0
+        // swiftlint:disable:next closure_body_length
+        return try returns.withValue { returns in
+            let matchCount = returns[member]?
+                .filter { member.match($0.member) }
+                .count ?? 0
 
-        guard var candidates = returns[member], matchCount != 0 else {
-            if case .value(let value) = fallback {
-                return value
-            } else {
-                let message = notMockedMessage(member, value: V.self)
-                fatalError(message)
-            }
-        }
-
-        for index in candidates.indices {
-            let match = candidates[index]
-            guard member.match(match.member) else { continue }
-
-            let removeMatch: () -> Void = {
-                guard matchCount > 1 else { return }
-                candidates.remove(at: index)
-                self.returns[member] = candidates
-            }
-            switch match.returnValue {
-            case .return(let value):
-                guard let value = value as? V else { continue }
-                removeMatch()
-                return value
-            case .throw(let error):
-                removeMatch()
-                throw error
-            case .produce(let producer):
-                do {
-                    let value = try producerResolver(producer)
-                    removeMatch()
+            guard var candidates = returns[member], matchCount != 0 else {
+                if case .value(let value) = fallback {
                     return value
-                } catch ProducerCastError.typeMismatch {
-                    continue
-                } catch {
-                    removeMatch()
-                    throw error
+                } else {
+                    fatalError(notMockedMessage(member, value: V.self))
                 }
             }
-        }
 
-        let message = genericNotMockedMessage(member, value: V.self)
-        fatalError(message)
+            for index in candidates.indices {
+                let match = candidates[index]
+                guard member.match(match.member) else { continue }
+
+                let removeMatch: (inout [Member: [Return]]) -> Void = { returns in
+                    guard matchCount > 1 else { return }
+                    candidates.remove(at: index)
+                    returns[member] = candidates
+                }
+                switch match.returnValue {
+                case .return(let value):
+                    guard let value = value as? V else { continue }
+                    removeMatch(&returns)
+                    return value
+                case .throw(let error):
+                    removeMatch(&returns)
+                    throw error
+                case .produce(let producer):
+                    do {
+                        let value = try producerResolver(producer)
+                        removeMatch(&returns)
+                        return value
+                    } catch ProducerCastError.typeMismatch {
+                        continue
+                    } catch {
+                        removeMatch(&returns)
+                        throw error
+                    }
+                }
+            }
+
+            fatalError(genericNotMockedMessage(member, value: V.self))
+        }
     }
 }
 
