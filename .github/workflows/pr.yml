@@ -62,3 +62,15 @@ jobs:
       - name: Run Tests
         run: |
           Scripts/lint.sh & Scripts/test.sh
+
+  test-linux:
+    name: Build and Test on Linux
+    runs-on: ubuntu-latest
+    env:
+      MOCKABLE_TEST: true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Run Tests
+        run: |
+          Scripts/test.sh

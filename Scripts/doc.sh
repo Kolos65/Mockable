@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 swift package \
  --allow-writing-to-directory ./docs \
