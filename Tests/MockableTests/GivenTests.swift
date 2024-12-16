@@ -276,4 +276,36 @@ final class GivenTests: XCTestCase {
 
         XCTAssertEqual(user.age, 100)
     }
+
+    @MainActor
+    func test_givenConcurrentGivens_whenCalled_synchronizedCorrectly() async throws {
+        // Register return values concurrently
+        await withTaskGroup(of: Void.self) { @MainActor group in
+            for _ in (0..<50) {
+                group.addTask { @MainActor in given(self.mock).getUser(for: .any).willReturn(.test1) }
+                group.addTask { @MainActor in given(self.mock).getUser(for: .any).willReturn(.test2) }
+            }
+            await group.waitForAll()
+        }
+
+        // Concurrent calls
+        await withTaskGroup(of: Void.self) { @MainActor group in
+            let id = UUID()
+            for _ in (0..<50) {
+                group.addTask { @MainActor in _ = try? self.mock.getUser(for: id) }
+                group.addTask { @MainActor in _ = try? self.mock.getUser(for: id) }
+            }
+            await group.waitForAll()
+        }
+
+        // Concurrent verifications
+        await withTaskGroup(of: Void.self) { @MainActor group in
+            let verify = verify(self.mock)
+            for index in (0..<100) {
+                group.addTask { await verify.getUser(for: .any).calledEventually(.moreOrEqual(to: index)) }
+                group.addTask { verify.getUser(for: .any).called(100) }
+            }
+            await group.waitForAll()
+        }
+    }
 }

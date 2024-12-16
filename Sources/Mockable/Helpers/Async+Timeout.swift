@@ -17,6 +17,7 @@ public struct TimeoutError: Error {}
 /// - Returns: Returns the result of `work` if it completed in time.
 /// - Throws: Throws ``TimedOutError`` if the timeout expires before `work` completes.
 ///   If `work` throws an error before the timeout expires, that error is propagated to the caller.
+@discardableResult
 func withTimeout<Value: Sendable>(
     after maxDuration: TimeInterval,
     _ operation: @Sendable @escaping () async throws -> Value
