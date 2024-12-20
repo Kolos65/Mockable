@@ -17,6 +17,7 @@ import SwiftSyntax
 enum MockFactory: Factory {
     static func build(from requirements: Requirements) throws -> DeclSyntax {
         let classDecl = ClassDeclSyntax(
+            leadingTrivia: leadingTrivia(requirements),
             attributes: try attributes(requirements),
             modifiers: modifiers(requirements),
             classKeyword: classKeyword(requirements),
@@ -38,6 +39,10 @@ enum MockFactory: Factory {
 // MARK: - Helpers
 
 extension MockFactory {
+    private static func leadingTrivia(_ requirements: Requirements) -> Trivia {
+        requirements.syntax.leadingTrivia
+    }
+    
     private static let inheritedTypeMappings: [String: TokenSyntax] = [
         NS.NSObjectProtocol: NS.NSObject
     ]
