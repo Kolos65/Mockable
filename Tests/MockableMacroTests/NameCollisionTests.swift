@@ -30,15 +30,15 @@ final class NameCollisionTests: MockableMacroTestCase {
                 typealias Mocker = Mockable.Mocker<MockTest>
                 private let mocker = Mocker()
                 @available(*, deprecated, message: "Use given(_ service:) instead. ")
-                nonisolated var given: ReturnBuilder {
+                nonisolated var _given: ReturnBuilder {
                     .init(mocker: mocker)
                 }
                 @available(*, deprecated, message: "Use when(_ service:) instead. ")
-                nonisolated var when: ActionBuilder {
+                nonisolated var _when: ActionBuilder {
                     .init(mocker: mocker)
                 }
                 @available(*, deprecated, message: "Use verify(_ service:) instead. ")
-                nonisolated var verify: VerifyBuilder {
+                nonisolated var _verify: VerifyBuilder {
                     .init(mocker: mocker)
                 }
                 nonisolated func reset(_ scopes: Set<Mockable.MockerScope> = .all) {
@@ -140,15 +140,15 @@ final class NameCollisionTests: MockableMacroTestCase {
                 typealias Mocker = Mockable.Mocker<MockTest>
                 private let mocker = Mocker()
                 @available(*, deprecated, message: "Use given(_ service:) instead. ")
-                nonisolated var given: ReturnBuilder {
+                nonisolated var _given: ReturnBuilder {
                     .init(mocker: mocker)
                 }
                 @available(*, deprecated, message: "Use when(_ service:) instead. ")
-                nonisolated var when: ActionBuilder {
+                nonisolated var _when: ActionBuilder {
                     .init(mocker: mocker)
                 }
                 @available(*, deprecated, message: "Use verify(_ service:) instead. ")
-                nonisolated var verify: VerifyBuilder {
+                nonisolated var _verify: VerifyBuilder {
                     .init(mocker: mocker)
                 }
                 nonisolated func reset(_ scopes: Set<Mockable.MockerScope> = .all) {
@@ -248,15 +248,15 @@ final class NameCollisionTests: MockableMacroTestCase {
                 typealias Mocker = Mockable.Mocker<MockTest>
                 private let mocker = Mocker()
                 @available(*, deprecated, message: "Use given(_ service:) instead. ")
-                nonisolated var given: ReturnBuilder {
+                nonisolated var _given: ReturnBuilder {
                     .init(mocker: mocker)
                 }
                 @available(*, deprecated, message: "Use when(_ service:) instead. ")
-                nonisolated var when: ActionBuilder {
+                nonisolated var _when: ActionBuilder {
                     .init(mocker: mocker)
                 }
                 @available(*, deprecated, message: "Use verify(_ service:) instead. ")
-                nonisolated var verify: VerifyBuilder {
+                nonisolated var _verify: VerifyBuilder {
                     .init(mocker: mocker)
                 }
                 nonisolated func reset(_ scopes: Set<Mockable.MockerScope> = .all) {

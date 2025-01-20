@@ -16,9 +16,9 @@ enum MemberFactory: Factory {
         MemberBlockItemListSyntax {
             mockerAlias(requirements)
             mocker(requirements)
-            clause(requirements, name: NS.given, type: NS.ReturnBuilder, message: Messages.givenMessage)
-            clause(requirements, name: NS.when, type: NS.ActionBuilder, message: Messages.whenMessage)
-            clause(requirements, name: NS.verify, type: NS.VerifyBuilder, message: Messages.verifyMessage)
+            clause(requirements, name: NS._given, type: NS.ReturnBuilder, message: Messages.givenMessage)
+            clause(requirements, name: NS._when, type: NS.ActionBuilder, message: Messages.whenMessage)
+            clause(requirements, name: NS._verify, type: NS.VerifyBuilder, message: Messages.verifyMessage)
             reset(requirements)
             defaultInit(requirements)
         }
