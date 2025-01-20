@@ -162,6 +162,8 @@ identifier_name:
   excluded:
     - to
     - id
+  allowed_symbols:
+    - _
 vertical_parameter_alignment:
   severity: error
 vertical_whitespace:

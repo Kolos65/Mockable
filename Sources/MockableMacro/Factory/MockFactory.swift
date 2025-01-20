@@ -42,7 +42,7 @@ extension MockFactory {
     private static func leadingTrivia(_ requirements: Requirements) -> Trivia {
         requirements.syntax.leadingTrivia
     }
-    
+
     private static let inheritedTypeMappings: [String: TokenSyntax] = [
         NS.NSObjectProtocol: NS.NSObject
     ]

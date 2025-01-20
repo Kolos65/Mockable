@@ -28,11 +28,11 @@ public protocol MockableService {
     typealias Action = MemberAction<Member>
 
     /// A builder proxy for specifying return values.
-    var given: ReturnBuilder { get }
+    var _given: ReturnBuilder { get }
 
     /// A builder proxy for specifying actions.
-    var when: ActionBuilder { get }
+    var _when: ActionBuilder { get }
 
     /// The builder proxy for verifying invocations.
-    var verify: VerifyBuilder { get }
+    var _verify: VerifyBuilder { get }
 }
