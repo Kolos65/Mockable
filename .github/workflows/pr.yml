@@ -3,7 +3,7 @@ name: pull-request-validation
 on:
   pull_request:
     branches:
-      - '*'
+      - "*"
 
 jobs:
   lint:
@@ -18,7 +18,7 @@ jobs:
       - name: Install Node.js and NPM
         uses: actions/setup-node@v4
         with:
-          node-version: '14'
+          node-version: "14"
 
       - name: Install commitlint
         run: npm install -g @commitlint/cli@11.0.0 @commitlint/config-conventional@11.0.0
@@ -66,11 +66,17 @@ jobs:
   test-linux:
     name: Build and Test on Linux
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        swift: ["5.9", "6.0"]
     env:
       MOCKABLE_TEST: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: ${{ matrix.swift }}
       - name: Run Tests
         run: |
           Scripts/test.sh
