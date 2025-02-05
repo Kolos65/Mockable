@@ -245,9 +245,9 @@ You can verify invocations of your mock service using the `verify(_ service:)` c
 > **Mockable** supports both *XCTest* and *Swift Testing* by using Pointfree's [swift-issue-reporting](https://github.com/pointfreeco/swift-issue-reporting) to dynamically report test failures with the appropriate test framework.
 
 There are three kind of verifications:
-* [`called(_:)`](https://kolos65.github.io/Mockable/documentation/mockable/functionverifybuilder/called(_:file:line:)): Asserts invocation count based on the given value.
-* [`getCalled(_:)`](https://kolos65.github.io/Mockable/documentation/mockable/propertyverifybuilder/getcalled(_:file:line:)): Available for mutable properties only, asserts property access count.
-* [`setCalled(_:)`](https://kolos65.github.io/Mockable/documentation/mockable/propertyverifybuilder/setcalled(_:file:line:)): Available for mutable properties only, asserts property assignment count.
+* [`called(_:)`](https://kolos65.github.io/Mockable/documentation/mockable/functionverifybuilder/called(_:fileid:filepath:line:column:)): Asserts invocation count based on the given value.
+* [`getCalled(_:)`](https://kolos65.github.io/Mockable/documentation/mockable/propertyverifybuilder/getcalled(_:fileid:filepath:line:column:)): Available for mutable properties only, asserts property access count.
+* [`setCalled(_:)`](https://kolos65.github.io/Mockable/documentation/mockable/propertyverifybuilder/setcalled(_:fileid:filepath:line:column:)): Available for mutable properties only, asserts property assignment count.
 
 Here are some example assertions:
 ```swift
@@ -263,9 +263,9 @@ verify(productService)
 ```
 
 If you are testing asynchronous code and cannot write sync assertions you can use the async counterparts of the above verifications:
-* [`calledEventually(_:before:)`](https://kolos65.github.io/Mockable/documentation/mockable/functionverifybuilder/calledeventually(_:before:file:line:)): Wait until timeout or invocation count satisfied.
-* [`getCalledEventually(_:before:)`](https://kolos65.github.io/Mockable/documentation/mockable/propertyverifybuilder/getcalledeventually(_:before:file:line:)): Wait until timeout or property access count satisfied.
-* [`setSalledEventually(_:before:)`](https://kolos65.github.io/Mockable/documentation/mockable/propertyverifybuilder/setcalledeventually(_:before:file:line:)): Wait until timeout or property assignment count satisfied.
+* [`calledEventually(_:before:)`](https://kolos65.github.io/Mockable/documentation/mockable/functionverifybuilder/calledeventually(_:before:fileid:filepath:line:column:)): Wait until timeout or invocation count satisfied.
+* [`getCalledEventually(_:before:)`](https://kolos65.github.io/Mockable/documentation/mockable/propertyverifybuilder/getcalledeventually(_:before:fileid:filepath:line:column:)): Wait until timeout or property access count satisfied.
+* [`setSalledEventually(_:before:)`](https://kolos65.github.io/Mockable/documentation/mockable/propertyverifybuilder/setcalledeventually(_:before:fileid:filepath:line:column:)): Wait until timeout or property assignment count satisfied.
 
 Here are some examples of async verifications:
 ```swift
@@ -388,6 +388,7 @@ Remember to add the noted type to your `Matcher` using the `register()` function
 
 - [ ] **Static Requirements**: Static members cannot be used on protocols and are not supported.</br>
 - [ ] **Protocol Inheritance**: Due to limitations of the macro system, inherited protocol requirements won't be implemented.</br>
+- [ ] **Return Type Overloads**: Requirements with overloaded return types are not supported in favour of supporting generic return types.
 - [ ] **Rethrows functions**: Rethrowing function requirements are always implemented with non-throwing functions.</br>
 - [ ] **Non-escaping function parameters**: Non-escaping closure parameters cannot be stored and are not supported.</br>
 - [ ] **Subscripts** are not supported (yet).</br>
