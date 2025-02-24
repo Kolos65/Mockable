@@ -34,7 +34,7 @@ public class Mocker<Service: MockableService>: @unchecked Sendable {
     /// Array to store invocations of members.
     private lazy var invocations = LockIsolated<[Member]>([]) { newValue in
         Task {
-            #if swift(>=6)
+            #if swift(>=6.0) && !swift(>=6.1)
             self.invocationsSubject.send(newValue)
             #else
             await self.invocationsSubject.send(newValue)
