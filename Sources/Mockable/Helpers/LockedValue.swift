@@ -1,5 +1,5 @@
 //
-//  LockIsolated.swift
+//  LockedValue.swift
 //  Mockable
 //
 //  Created by Kolos Foltanyi on 2024. 12. 16..
@@ -11,7 +11,7 @@ import Foundation
 /// If you trust the sendability of the underlying value, consider using ``UncheckedSendable``,
 /// instead.
 @dynamicMemberLookup
-final class LockIsolated<Value>: @unchecked Sendable {
+final class LockedValue<Value>: @unchecked Sendable {
     private var _value: Value
     private let lock = NSRecursiveLock()
     private var didSet: ((Value) -> Void)?
@@ -24,7 +24,7 @@ final class LockIsolated<Value>: @unchecked Sendable {
     }
 
     subscript<Subject>(dynamicMember keyPath: KeyPath<Value, Subject>) -> Subject {
-        self.lock.sync {
+        self.lock.criticalRegion {
             self._value[keyPath: keyPath]
         }
     }
@@ -35,7 +35,7 @@ final class LockIsolated<Value>: @unchecked Sendable {
     ///
     /// ```swift
     /// // Isolate an integer for concurrent read/write access:
-    /// var count = LockIsolated(0)
+    /// var count = LockedValue(0)
     ///
     /// func increment() {
     ///   // Safely increment it:
@@ -48,7 +48,7 @@ final class LockIsolated<Value>: @unchecked Sendable {
     func withValue<T>(
         _ operation: (inout Value) throws -> T
     ) rethrows -> T {
-        try self.lock.sync {
+        try self.lock.criticalRegion {
             var value = self._value
             defer {
                 self._value = value
@@ -62,7 +62,7 @@ final class LockIsolated<Value>: @unchecked Sendable {
     ///
     /// ```swift
     /// // Isolate an integer for concurrent read/write access:
-    /// var count = LockIsolated(0)
+    /// var count = LockedValue(0)
     ///
     /// func reset() {
     ///   // Reset it:
@@ -88,16 +88,16 @@ final class LockIsolated<Value>: @unchecked Sendable {
     ///
     /// - Parameter newValue: The value to replace the current isolated value with.
     func setValue(_ newValue: @autoclosure () throws -> Value) rethrows {
-        try self.lock.sync {
+        try self.lock.criticalRegion {
             self._value = try newValue()
             self.didSet?(self._value)
         }
     }
 }
 
-extension LockIsolated where Value: Sendable {
+extension LockedValue where Value: Sendable {
     var value: Value {
-        self.lock.sync {
+        self.lock.criticalRegion {
             self._value
         }
     }
@@ -117,7 +117,7 @@ extension LockIsolated where Value: Sendable {
 
 extension NSRecursiveLock {
     @inlinable @discardableResult
-    func sync<R>(work: () throws -> R) rethrows -> R {
+    func criticalRegion<R>(work: () throws -> R) rethrows -> R {
         self.lock()
         defer { self.unlock() }
         return try work()
