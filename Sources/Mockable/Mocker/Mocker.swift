@@ -28,11 +28,11 @@ public class Mocker<Service: MockableService>: @unchecked Sendable {
     // MARK: Private Properties
 
     /// Dictionary to store expected return values for each member.
-    private var returns = LockIsolated<[Member: [Return]]>([:])
+    private var returns = LockedValue<[Member: [Return]]>([:])
     /// Dictionary to store actions to be performed on each member.
-    private var actions = LockIsolated<[Member: [Action]]>([:])
+    private var actions = LockedValue<[Member: [Action]]>([:])
     /// Array to store invocations of members.
-    private lazy var invocations = LockIsolated<[Member]>([]) { newValue in
+    private lazy var invocations = LockedValue<[Member]>([]) { newValue in
         Task {
             #if swift(>=6.0) && !swift(>=6.1)
             self.invocationsSubject.send(newValue)
