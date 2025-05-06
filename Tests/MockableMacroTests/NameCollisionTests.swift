@@ -63,7 +63,7 @@ final class NameCollisionTests: MockableMacroTestCase {
                         return producer(name)
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_fetchData(for: Parameter<Int>)
                     case m2_fetchData(for: Parameter<String>)
                     func match(_ other: Member) -> Bool {
@@ -173,7 +173,7 @@ final class NameCollisionTests: MockableMacroTestCase {
                         return producer(name)
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_fetchData(forA: Parameter<String>)
                     case m2_fetchData(forB: Parameter<String>)
                     func match(_ other: Member) -> Bool {
@@ -274,7 +274,7 @@ final class NameCollisionTests: MockableMacroTestCase {
                         return producer(param)
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_repeat(param: Parameter<Bool>)
                     func match(_ other: Member) -> Bool {
                         switch (self, other) {

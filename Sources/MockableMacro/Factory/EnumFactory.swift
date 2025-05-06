@@ -40,7 +40,10 @@ extension EnumFactory {
                 )
             )
             InheritedTypeSyntax(
-                type: IdentifierTypeSyntax(name: NS.Sendable)
+                type: MemberTypeSyntax(
+                    baseType: IdentifierTypeSyntax(name: NS.Swift),
+                    name: NS.Sendable
+                )
             )
         }
     }

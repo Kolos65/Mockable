@@ -54,7 +54,7 @@ final class GenericFunctionTests: MockableMacroTestCase {
                         return producer(item)
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_foo(item: Parameter<GenericValue>)
                     func match(_ other: Member) -> Bool {
                         switch (self, other) {
@@ -141,7 +141,7 @@ final class GenericFunctionTests: MockableMacroTestCase {
                         return producer(item)
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_genericFunc(item: Parameter<GenericValue>)
                     func match(_ other: Member) -> Bool {
                         switch (self, other) {
@@ -235,7 +235,7 @@ final class GenericFunctionTests: MockableMacroTestCase {
                         return producer(p1, p2, p3, p4)
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_method1(p1: Parameter<GenericValue>, p2: Parameter<GenericValue>, p3: Parameter<GenericValue>, p4: Parameter<GenericValue>)
                     func match(_ other: Member) -> Bool {
                         switch (self, other) {
@@ -331,7 +331,7 @@ final class GenericFunctionTests: MockableMacroTestCase {
                         }
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_prop
                     func match(_ other: Member) -> Bool {
                         switch (self, other) {
@@ -421,7 +421,7 @@ final class GenericFunctionTests: MockableMacroTestCase {
                         }
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_prop
                     func match(_ other: Member) -> Bool {
                         switch (self, other) {
@@ -509,7 +509,7 @@ final class GenericFunctionTests: MockableMacroTestCase {
                         return producer()
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_foo
                     func match(_ other: Member) -> Bool {
                         switch (self, other) {
@@ -597,7 +597,7 @@ final class GenericFunctionTests: MockableMacroTestCase {
                         return producer()
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_foo
                     func match(_ other: Member) -> Bool {
                         switch (self, other) {

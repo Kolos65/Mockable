@@ -54,7 +54,7 @@ final class ExoticParameterTests: MockableMacroTestCase {
                         return producer(&value)
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_modifyValue(Parameter<Int>)
                     func match(_ other: Member) -> Bool {
                         switch (self, other) {
@@ -141,7 +141,7 @@ final class ExoticParameterTests: MockableMacroTestCase {
                         return producer(values)
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_printValues(Parameter<[Int]>)
                     func match(_ other: Member) -> Bool {
                         switch (self, other) {
@@ -228,7 +228,7 @@ final class ExoticParameterTests: MockableMacroTestCase {
                         return producer(operation)
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_execute(operation: Parameter<() throws -> Void>)
                     func match(_ other: Member) -> Bool {
                         switch (self, other) {

@@ -68,7 +68,7 @@ final class TypedThrowsTests_Swift6: MockableMacroTestCase {
                         }
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_baz
                     case m2_foo
                     func match(_ other: Member) -> Bool {

@@ -115,7 +115,7 @@ final class AttributesTests: MockableMacroTestCase {
                         }
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_prop
                     case m2_prop2
                     case m3_test
