@@ -67,7 +67,7 @@ final class PropertyRequirementTests: MockableMacroTestCase {
                         }
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_computedInt
                     case m2_computedString
                     func match(_ other: Member) -> Bool {
@@ -191,7 +191,7 @@ final class PropertyRequirementTests: MockableMacroTestCase {
                         mocker.performActions(for: member)
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_get_mutableInt
                     case m1_set_mutableInt(newValue: Parameter<Int>)
                     case m2_get_mutableString
@@ -322,7 +322,7 @@ final class PropertyRequirementTests: MockableMacroTestCase {
                         }
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_throwingProperty
                     case m2_asyncProperty
                     case m3_asyncThrowingProperty

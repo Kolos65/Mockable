@@ -89,7 +89,7 @@ final class ActorConformanceTests: MockableMacroTestCase {
                         }
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_foo
                     case m2_quz
                     case m3_bar(number: Parameter<Int>)
@@ -244,7 +244,7 @@ final class ActorConformanceTests: MockableMacroTestCase {
                         }
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_foo
                     case m2_quz
                     case m3_bar(number: Parameter<Int>)

@@ -56,7 +56,7 @@ final class AssociatedTypeTests: MockableMacroTestCase {
                         return producer(item)
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_foo(item: Parameter<Item>)
                     func match(_ other: Member) -> Bool {
                         switch (self, other) {
@@ -145,7 +145,7 @@ final class AssociatedTypeTests: MockableMacroTestCase {
                         return producer(item)
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_foo(item: Parameter<Item>)
                     func match(_ other: Member) -> Bool {
                         switch (self, other) {
@@ -234,7 +234,7 @@ final class AssociatedTypeTests: MockableMacroTestCase {
                         return producer(item)
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_foo(item: Parameter<Item>)
                     func match(_ other: Member) -> Bool {
                         switch (self, other) {

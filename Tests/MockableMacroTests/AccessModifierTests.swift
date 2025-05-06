@@ -71,7 +71,7 @@ final class AccessModifierTests: MockableMacroTestCase {
                         }
                     }
                 }
-                public enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
+                public enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_foo
                     case m2_bar(number: Parameter<Int>)
                     public func match(_ other: Member) -> Bool {
@@ -183,7 +183,7 @@ final class AccessModifierTests: MockableMacroTestCase {
                         }
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_foo
                     case m2_bar(number: Parameter<Int>)
                     func match(_ other: Member) -> Bool {
@@ -284,7 +284,7 @@ final class AccessModifierTests: MockableMacroTestCase {
                         return producer()
                     }
                 }
-                public enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
+                public enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_foo
                     public func match(_ other: Member) -> Bool {
                         switch (self, other) {

@@ -53,7 +53,7 @@ final class InitRequirementTests: MockableMacroTestCase {
                 }
                 init(name: String) {
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     func match(_ other: Member) -> Bool {
                         switch (self, other) {
                         }
@@ -131,7 +131,7 @@ final class InitRequirementTests: MockableMacroTestCase {
                 }
                 init(name value: String, _ index: Int) {
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     func match(_ other: Member) -> Bool {
                         switch (self, other) {
                         }

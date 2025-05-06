@@ -62,7 +62,7 @@ final class DocCommentsTests: MockableMacroTestCase {
                         }
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Sendable {
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_foo
                     func match(_ other: Member) -> Bool {
                         switch (self, other) {
