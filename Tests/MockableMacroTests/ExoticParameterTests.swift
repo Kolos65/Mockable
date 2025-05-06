@@ -269,4 +269,91 @@ final class ExoticParameterTests: MockableMacroTestCase {
             """
         }
     }
+
+    func test_reserved_keyword_parameter() {
+        assertMacro {
+          """
+          @Mockable
+          protocol Test {
+              func foo(for: String)
+          }
+          """
+        } expansion: {
+            """
+            protocol Test {
+                func foo(for: String)
+            }
+
+            #if MOCKING
+            final class MockTest: Test, Mockable.MockableService {
+                typealias Mocker = Mockable.Mocker<MockTest>
+                private let mocker = Mocker()
+                @available(*, deprecated, message: "Use given(_ service:) instead. ")
+                nonisolated var _given: ReturnBuilder {
+                    .init(mocker: mocker)
+                }
+                @available(*, deprecated, message: "Use when(_ service:) instead. ")
+                nonisolated var _when: ActionBuilder {
+                    .init(mocker: mocker)
+                }
+                @available(*, deprecated, message: "Use verify(_ service:) instead. ")
+                nonisolated var _verify: VerifyBuilder {
+                    .init(mocker: mocker)
+                }
+                nonisolated func reset(_ scopes: Set<Mockable.MockerScope> = .all) {
+                    mocker.reset(scopes: scopes)
+                }
+                nonisolated init(policy: Mockable.MockerPolicy? = nil) {
+                    if let policy {
+                        mocker.policy = policy
+                    }
+                }
+                func foo(for: String) {
+                    let member: Member = .m1_foo(for: .value(`for`))
+                    mocker.mock(member) { producer in
+                        let producer = try cast(producer) as (String) -> Void
+                        return producer(`for`)
+                    }
+                }
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                    case m1_foo(for: Parameter<String>)
+                    func match(_ other: Member) -> Bool {
+                        switch (self, other) {
+                        case (.m1_foo(for: let leftFor), .m1_foo(for: let rightFor)):
+                            return leftFor.match(rightFor)
+                        }
+                    }
+                }
+                struct ReturnBuilder: Mockable.Builder {
+                    private let mocker: Mocker
+                    init(mocker: Mocker) {
+                        self.mocker = mocker
+                    }
+                    func foo(for: Parameter<String>) -> Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Void, (String) -> Void> {
+                        .init(mocker, kind: .m1_foo(for: `for`))
+                    }
+                }
+                struct ActionBuilder: Mockable.Builder {
+                    private let mocker: Mocker
+                    init(mocker: Mocker) {
+                        self.mocker = mocker
+                    }
+                    func foo(for: Parameter<String>) -> Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
+                        .init(mocker, kind: .m1_foo(for: `for`))
+                    }
+                }
+                struct VerifyBuilder: Mockable.Builder {
+                    private let mocker: Mocker
+                    init(mocker: Mocker) {
+                        self.mocker = mocker
+                    }
+                    func foo(for: Parameter<String>) -> Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                        .init(mocker, kind: .m1_foo(for: `for`))
+                    }
+                }
+            }
+            #endif
+            """
+        }
+    }
 }

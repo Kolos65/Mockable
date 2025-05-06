@@ -107,7 +107,7 @@ extension FunctionRequirement {
 
     private func wrappedParameterExpression(for functionParameter: FunctionParameterSyntax) -> ExprSyntax {
         let isGeneric = syntax.containsGenericType(in: functionParameter)
-        let functionParamName = functionParameter.secondName ?? functionParameter.firstName
+        let functionParamName = (functionParameter.secondName ?? functionParameter.firstName).declNameOrVarCallName
         let functionCallExpr = FunctionCallExprSyntax(
             calledExpression: MemberAccessExprSyntax(name: isGeneric ? NS.generic : NS.value),
             leftParen: .leftParenToken(),
@@ -121,7 +121,7 @@ extension FunctionRequirement {
 
     private func parameterExpression(for functionParameter: FunctionParameterSyntax) -> ExprSyntax {
         let isGeneric = syntax.containsGenericType(in: functionParameter)
-        let functionParamName = functionParameter.secondName ?? functionParameter.firstName
+        let functionParamName = (functionParameter.secondName ?? functionParameter.firstName).declNameOrVarCallName
         if isGeneric {
             return ExprSyntax(
                 FunctionCallExprSyntax(

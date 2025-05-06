@@ -7,8 +7,6 @@
 
 import MacroTesting
 import XCTest
-import SwiftSyntax
-@testable import Mockable
 
 final class AccessModifierTests: MockableMacroTestCase {
     func test_public_modifier() {
