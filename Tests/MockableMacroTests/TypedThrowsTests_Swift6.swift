@@ -8,7 +8,6 @@
 import MacroTesting
 import XCTest
 import SwiftSyntax
-@testable import Mockable
 
 #if canImport(SwiftSyntax600)
 final class TypedThrowsTests_Swift6: MockableMacroTestCase {

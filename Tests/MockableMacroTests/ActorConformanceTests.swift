@@ -7,8 +7,6 @@
 
 import MacroTesting
 import XCTest
-import SwiftSyntax
-@testable import Mockable
 
 final class ActorConformanceTests: MockableMacroTestCase {
     func test_global_actor_conformance() {

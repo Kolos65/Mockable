@@ -107,3 +107,8 @@ protocol TestGlobalActor {
 protocol TestSendable: Sendable {
     func foo(param: Int) -> String
 }
+
+@Mockable
+public protocol TestReservedKeyword {
+    func example(for: String) async throws -> String
+}

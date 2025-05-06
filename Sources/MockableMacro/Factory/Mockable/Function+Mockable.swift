@@ -171,7 +171,7 @@ extension FunctionRequirement {
             arguments: LabeledExprListSyntax {
                 for parameter in syntax.signature.parameterClause.parameters {
                     let parameterReference = DeclReferenceExprSyntax(
-                        baseName: parameter.secondName?.trimmed ?? parameter.firstName.trimmed
+                        baseName: (parameter.secondName?.trimmed ?? parameter.firstName.trimmed).declNameOrVarCallName
                     )
                     if parameter.isInout {
                         LabeledExprSyntax(expression: InOutExprSyntax(expression: parameterReference))
