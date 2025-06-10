@@ -143,4 +143,15 @@ extension Requirements {
             return false
         }
     }
+    #if canImport(SwiftSyntax601)
+    
+    private static func hasParametrizedProtocolRequirement(_ argument: GenericArgumentSyntax.Argument) -> Bool {
+        switch argument {
+        case .type(let type):
+            return hasParametrizedProtocolRequirement(type)
+        default:
+            return false
+        }
+    }
+    #endif
 }
