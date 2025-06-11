@@ -10,7 +10,7 @@ let doc = Context.environment["MOCKABLE_DOC"].flatMap(Bool.init) ?? false
 func when<T>(_ condition: Bool, _ list: [T]) -> [T] { condition ? list : [] }
 
 let devDependencies: [Package.Dependency] = when(test, [
-    .package(url: "https://github.com/pointfreeco/swift-macro-testing", exact: "0.5.2")
+    .package(url: "https://github.com/pointfreeco/swift-macro-testing", exact: "0.6.3")
 ]) + when(lint, [
     .package(url: "https://github.com/realm/SwiftLint", exact: "0.57.1"),
 ]) + when(doc, [
@@ -53,7 +53,7 @@ let package = Package(
         )
     ],
     dependencies: devDependencies + [
-        .package(url: "https://github.com/swiftlang/swift-syntax.git", "509.0.0"..<"601.0.0"),
+        .package(url: "https://github.com/swiftlang/swift-syntax.git", "509.0.0"..<"602.0.0"),
         .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay", .upToNextMajor(from: "1.4.1"))
     ],
     targets: devTargets + [

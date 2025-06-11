@@ -137,7 +137,16 @@ extension Requirements {
         } else if let type = type.as(IdentifierTypeSyntax.self),
                   let argumentClause = type.genericArgumentClause {
             return argumentClause.arguments.contains {
+                #if canImport(SwiftSyntax601)
+                switch $0.argument {
+                case .type(let type):
+                    return hasParametrizedProtocolRequirement(type)
+                default:
+                    return false
+                }
+                #else
                 return hasParametrizedProtocolRequirement($0.argument)
+                #endif
             }
         } else {
             return false
