@@ -38,7 +38,7 @@ extension MemberFactory {
 
     private static func mockerAlias(_ requirements: Requirements) -> TypeAliasDeclSyntax {
         TypeAliasDeclSyntax(
-            modifiers: requirements.modifiers,
+            modifiers: requirements.modifiers.filter({ $0.name.tokenKind != .keyword(.nonisolated) }),
             name: NS.Mocker,
             initializer: TypeInitializerClauseSyntax(
                 value: MemberTypeSyntax(
@@ -127,7 +127,10 @@ extension MemberFactory {
 
     private static func memberModifiers(_ requirements: Requirements) -> DeclModifierListSyntax {
         var modifiers = requirements.modifiers
-        modifiers.append(DeclModifierSyntax(name: .keyword(.nonisolated)))
+        if !modifiers.contains(where: { $0.name.tokenKind == .keyword(.nonisolated) }) {
+            modifiers.append(DeclModifierSyntax(name: .keyword(.nonisolated)))
+        }
+
         return modifiers
     }
 
