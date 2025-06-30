@@ -14,7 +14,14 @@ import SwiftSyntax
 enum EnumFactory: Factory {
     static func build(from requirements: Requirements) throws -> EnumDeclSyntax {
         EnumDeclSyntax(
-            modifiers: requirements.modifiers,
+            modifiers: {
+                var modifiers = requirements.modifiers
+                if !modifiers.contains(where: { $0.name.tokenKind == .keyword(.nonisolated) }) {
+                    modifiers.append(DeclModifierSyntax(name: .keyword(.nonisolated)))
+                }
+
+                return modifiers
+            }(),
             name: NS.Member,
             inheritanceClause: inheritanceClause,
             memberBlock: MemberBlockSyntax(members: try members(requirements))
