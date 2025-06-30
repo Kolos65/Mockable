@@ -126,12 +126,7 @@ extension MemberFactory {
     }
 
     private static func memberModifiers(_ requirements: Requirements) -> DeclModifierListSyntax {
-        var modifiers = requirements.modifiers
-        if !modifiers.contains(where: { $0.name.tokenKind == .keyword(.nonisolated) }) {
-            modifiers.append(DeclModifierSyntax(name: .keyword(.nonisolated)))
-        }
-
-        return modifiers
+        requirements.modifiers
     }
 
     private static var scopesParameter: FunctionParameterSyntax {
