@@ -37,7 +37,16 @@ extension ConformanceFactory {
         try MemberBlockItemListSyntax {
             for function in requirements.functions {
                 MemberBlockItemSyntax(
-                    decl: try function.implement(with: requirements.modifiers)
+                    decl: try function.implement(
+                        with: {
+                            var modifiers = requirements.modifiers
+                            if function.syntax.attributes.contains("MainActor") {
+                                modifiers.remove(keyword: .nonisolated)
+                            }
+
+                            return modifiers
+                        }()
+                    )
                 )
             }
         }

@@ -15,6 +15,21 @@ extension DeclModifierListSyntax {
         }
     }
 
+    func firstIndex(of keyword: Keyword) -> SyntaxChildrenIndex? {
+        firstIndex { modifier in
+            guard case .keyword(let k) = modifier.name.tokenKind else { return false }
+            return k == keyword
+        }
+    }
+
+    mutating func remove(keyword: Keyword) {
+        guard let index = firstIndex(of: keyword) else {
+            return
+        }
+
+        remove(at: index)
+    }
+
     func appending(_ other: DeclModifierListSyntax) -> DeclModifierListSyntax {
         self + Array(other)
     }

@@ -62,7 +62,14 @@ extension BuilderFactory {
                 MemberBlockItemSyntax(
                     decl: try function.builder(
                         of: kind,
-                        with: requirements.modifiers,
+                        with: {
+                            var modifiers = requirements.modifiers
+                            if function.syntax.attributes.contains("MainActor") {
+                                modifiers.remove(keyword: .nonisolated)
+                            }
+
+                            return modifiers
+                        }(),
                         using: requirements.syntax.mockType
                     )
                 )
