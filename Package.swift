@@ -53,7 +53,7 @@ let package = Package(
         )
     ],
     dependencies: devDependencies + [
-        .package(url: "https://github.com/swiftlang/swift-syntax.git", "509.0.0"..<"602.0.0"),
+        .package(url: "https://github.com/swiftlang/swift-syntax.git", "509.0.0"..<"603.0.0"),
         .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay", .upToNextMajor(from: "1.6.1"))
     ],
     targets: devTargets + [
