@@ -67,10 +67,11 @@ final class TypedThrowsTests_Swift6: MockableMacroTestCase {
                         }
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                #if swift(>=6.1)
+                nonisolated enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_baz
                     case m2_foo
-                    func match(_ other: Member) -> Bool {
+                    nonisolated func match(_ other: Member) -> Bool {
                         switch (self, other) {
                         case (.m1_baz, .m1_baz):
                             return true
@@ -81,39 +82,55 @@ final class TypedThrowsTests_Swift6: MockableMacroTestCase {
                         }
                     }
                 }
+                #else
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                    case m1_baz
+                    case m2_foo
+                    nonisolated func match(_ other: Member) -> Bool {
+                        switch (self, other) {
+                        case (.m1_baz, .m1_baz):
+                            return true
+                        case (.m2_foo, .m2_foo):
+                            return true
+                        default:
+                            return false
+                        }
+                    }
+                }
+                #endif
                 struct ReturnBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    var baz: Mockable.ThrowingFunctionReturnBuilder<MockTypedErrorProtocol, ReturnBuilder, String, ExampleError, () throws -> String> {
+                    nonisolated var baz: Mockable.ThrowingFunctionReturnBuilder<MockTypedErrorProtocol, ReturnBuilder, String, ExampleError, () throws -> String> {
                         .init(mocker, kind: .m1_baz)
                     }
-                    func foo() -> Mockable.ThrowingFunctionReturnBuilder<MockTypedErrorProtocol, ReturnBuilder, Void, ExampleError, () throws -> Void> {
+                    nonisolated func foo() -> Mockable.ThrowingFunctionReturnBuilder<MockTypedErrorProtocol, ReturnBuilder, Void, ExampleError, () throws -> Void> {
                         .init(mocker, kind: .m2_foo)
                     }
                 }
                 struct ActionBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    var baz: Mockable.ThrowingFunctionActionBuilder<MockTypedErrorProtocol, ActionBuilder> {
+                    nonisolated var baz: Mockable.ThrowingFunctionActionBuilder<MockTypedErrorProtocol, ActionBuilder> {
                         .init(mocker, kind: .m1_baz)
                     }
-                    func foo() -> Mockable.ThrowingFunctionActionBuilder<MockTypedErrorProtocol, ActionBuilder> {
+                    nonisolated func foo() -> Mockable.ThrowingFunctionActionBuilder<MockTypedErrorProtocol, ActionBuilder> {
                         .init(mocker, kind: .m2_foo)
                     }
                 }
                 struct VerifyBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    var baz: Mockable.ThrowingFunctionVerifyBuilder<MockTypedErrorProtocol, VerifyBuilder> {
+                    nonisolated var baz: Mockable.ThrowingFunctionVerifyBuilder<MockTypedErrorProtocol, VerifyBuilder> {
                         .init(mocker, kind: .m1_baz)
                     }
-                    func foo() -> Mockable.ThrowingFunctionVerifyBuilder<MockTypedErrorProtocol, VerifyBuilder> {
+                    nonisolated func foo() -> Mockable.ThrowingFunctionVerifyBuilder<MockTypedErrorProtocol, VerifyBuilder> {
                         .init(mocker, kind: .m2_foo)
                     }
                 }

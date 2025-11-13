@@ -126,9 +126,10 @@ extension MemberFactory {
     }
 
     private static func memberModifiers(_ requirements: Requirements) -> DeclModifierListSyntax {
-        var modifiers = requirements.modifiers
-        modifiers.append(DeclModifierSyntax(name: .keyword(.nonisolated)))
-        return modifiers
+        DeclModifierListSyntax {
+            requirements.modifiers
+            DeclModifierSyntax(name: .keyword(.nonisolated))
+        }
     }
 
     private static var scopesParameter: FunctionParameterSyntax {

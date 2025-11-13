@@ -50,7 +50,7 @@ extension Requirements {
             guard case .keyword(let keyword) = modifier.name.tokenKind else {
                 return true
             }
-            return keyword != .private
+            return keyword != .private && keyword != .nonisolated
         }
     }
 

@@ -16,8 +16,13 @@ extension FunctionRequirement: Buildable {
         using mockType: IdentifierTypeSyntax
     ) throws -> DeclSyntax {
         let decl = FunctionDeclSyntax(
-            attributes: syntax.attributes.trimmed.with(\.trailingTrivia, .newline),
-            modifiers: modifiers,
+            attributes: syntax.attributes
+                .filter(allowedNames: [NS.available.text])
+                .trimmed.with(\.trailingTrivia, .newline),
+            modifiers: DeclModifierListSyntax {
+                modifiers
+                DeclModifierSyntax(name: .keyword(.nonisolated))
+            },
             name: syntax.name.trimmed,
             genericParameterClause: genericParameterClause(for: kind),
             signature: signature(for: kind, using: mockType),

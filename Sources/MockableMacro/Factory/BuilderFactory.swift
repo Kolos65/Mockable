@@ -88,7 +88,10 @@ extension BuilderFactory {
         _ requirements: Requirements
     ) -> InitializerDeclSyntax {
         InitializerDeclSyntax(
-            modifiers: requirements.modifiers,
+            modifiers: DeclModifierListSyntax {
+                requirements.modifiers
+                DeclModifierSyntax(name: .keyword(.nonisolated))
+            },
             signature: initializerSignature(kind, requirements)
         ) {
             InfixOperatorExprSyntax(

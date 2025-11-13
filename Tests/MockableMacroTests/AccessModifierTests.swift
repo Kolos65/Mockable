@@ -69,10 +69,11 @@ final class AccessModifierTests: MockableMacroTestCase {
                         }
                     }
                 }
-                public enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                #if swift(>=6.1)
+                public nonisolated enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_foo
                     case m2_bar(number: Parameter<Int>)
-                    public func match(_ other: Member) -> Bool {
+                    public nonisolated func match(_ other: Member) -> Bool {
                         switch (self, other) {
                         case (.m1_foo, .m1_foo):
                             return true
@@ -83,39 +84,55 @@ final class AccessModifierTests: MockableMacroTestCase {
                         }
                     }
                 }
+                #else
+                public enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                    case m1_foo
+                    case m2_bar(number: Parameter<Int>)
+                    public nonisolated func match(_ other: Member) -> Bool {
+                        switch (self, other) {
+                        case (.m1_foo, .m1_foo):
+                            return true
+                        case (.m2_bar(number: let leftNumber), .m2_bar(number: let rightNumber)):
+                            return leftNumber.match(rightNumber)
+                        default:
+                            return false
+                        }
+                    }
+                }
+                #endif
                 public struct ReturnBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    public init(mocker: Mocker) {
+                    public nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    public var foo: Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Int, () -> Int> {
+                    public nonisolated var foo: Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Int, () -> Int> {
                         .init(mocker, kind: .m1_foo)
                     }
-                    public func bar(number: Parameter<Int>) -> Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Int, (Int) -> Int> {
+                    public nonisolated func bar(number: Parameter<Int>) -> Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Int, (Int) -> Int> {
                         .init(mocker, kind: .m2_bar(number: number))
                     }
                 }
                 public struct ActionBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    public init(mocker: Mocker) {
+                    public nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    public var foo: Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
+                    public nonisolated var foo: Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
                         .init(mocker, kind: .m1_foo)
                     }
-                    public func bar(number: Parameter<Int>) -> Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
+                    public nonisolated func bar(number: Parameter<Int>) -> Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
                         .init(mocker, kind: .m2_bar(number: number))
                     }
                 }
                 public struct VerifyBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    public init(mocker: Mocker) {
+                    public nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    public var foo: Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    public nonisolated var foo: Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
                         .init(mocker, kind: .m1_foo)
                     }
-                    public func bar(number: Parameter<Int>) -> Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    public nonisolated func bar(number: Parameter<Int>) -> Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
                         .init(mocker, kind: .m2_bar(number: number))
                     }
                 }
@@ -181,10 +198,11 @@ final class AccessModifierTests: MockableMacroTestCase {
                         }
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                #if swift(>=6.1)
+                nonisolated enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_foo
                     case m2_bar(number: Parameter<Int>)
-                    func match(_ other: Member) -> Bool {
+                    nonisolated func match(_ other: Member) -> Bool {
                         switch (self, other) {
                         case (.m1_foo, .m1_foo):
                             return true
@@ -195,39 +213,55 @@ final class AccessModifierTests: MockableMacroTestCase {
                         }
                     }
                 }
+                #else
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                    case m1_foo
+                    case m2_bar(number: Parameter<Int>)
+                    nonisolated func match(_ other: Member) -> Bool {
+                        switch (self, other) {
+                        case (.m1_foo, .m1_foo):
+                            return true
+                        case (.m2_bar(number: let leftNumber), .m2_bar(number: let rightNumber)):
+                            return leftNumber.match(rightNumber)
+                        default:
+                            return false
+                        }
+                    }
+                }
+                #endif
                 struct ReturnBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    var foo: Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Int, () -> Int> {
+                    nonisolated var foo: Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Int, () -> Int> {
                         .init(mocker, kind: .m1_foo)
                     }
-                    func bar(number: Parameter<Int>) -> Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Int, (Int) -> Int> {
+                    nonisolated func bar(number: Parameter<Int>) -> Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Int, (Int) -> Int> {
                         .init(mocker, kind: .m2_bar(number: number))
                     }
                 }
                 struct ActionBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    var foo: Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
+                    nonisolated var foo: Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
                         .init(mocker, kind: .m1_foo)
                     }
-                    func bar(number: Parameter<Int>) -> Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
+                    nonisolated func bar(number: Parameter<Int>) -> Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
                         .init(mocker, kind: .m2_bar(number: number))
                     }
                 }
                 struct VerifyBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    var foo: Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    nonisolated var foo: Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
                         .init(mocker, kind: .m1_foo)
                     }
-                    func bar(number: Parameter<Int>) -> Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    nonisolated func bar(number: Parameter<Int>) -> Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
                         .init(mocker, kind: .m2_bar(number: number))
                     }
                 }
@@ -282,39 +316,51 @@ final class AccessModifierTests: MockableMacroTestCase {
                         return producer()
                     }
                 }
-                public enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                #if swift(>=6.1)
+                public nonisolated enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_foo
-                    public func match(_ other: Member) -> Bool {
+                    public nonisolated func match(_ other: Member) -> Bool {
                         switch (self, other) {
                         case (.m1_foo, .m1_foo):
                             return true
                         }
                     }
                 }
+                #else
+                public enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                    case m1_foo
+                    public nonisolated func match(_ other: Member) -> Bool {
+                        switch (self, other) {
+                        case (.m1_foo, .m1_foo):
+                            return true
+                        }
+                    }
+                }
+                #endif
                 public struct ReturnBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    public init(mocker: Mocker) {
+                    public nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    public func foo() -> Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Void, () -> Void> {
+                    public nonisolated func foo() -> Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Void, () -> Void> {
                         .init(mocker, kind: .m1_foo)
                     }
                 }
                 public struct ActionBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    public init(mocker: Mocker) {
+                    public nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    public func foo() -> Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
+                    public nonisolated func foo() -> Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
                         .init(mocker, kind: .m1_foo)
                     }
                 }
                 public struct VerifyBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    public init(mocker: Mocker) {
+                    public nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    public func foo() -> Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    public nonisolated func foo() -> Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
                         .init(mocker, kind: .m1_foo)
                     }
                 }

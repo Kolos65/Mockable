@@ -112,3 +112,18 @@ protocol TestSendable: Sendable {
 public protocol TestReservedKeyword {
     func example(for: String) async throws -> String
 }
+
+#if swift(>=6.1)
+@Mockable
+nonisolated protocol NonisolatedProtocol {
+    func foo()
+}
+#endif
+
+@Mockable
+protocol AttributedRequirementProtocol {
+    #if swift(>=0)
+    @available(*, deprecated)
+    #endif
+    func foo()
+}
