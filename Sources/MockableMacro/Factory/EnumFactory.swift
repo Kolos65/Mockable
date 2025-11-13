@@ -12,12 +12,18 @@ import SwiftSyntax
 /// Generates an enum that represents the given requirements as an enum case.
 /// The enum declaration also contains the implementation of the `match(_:)` function.
 enum EnumFactory: Factory {
-    static func build(from requirements: Requirements) throws -> EnumDeclSyntax {
-        EnumDeclSyntax(
-            modifiers: requirements.modifiers,
-            name: NS.Member,
-            inheritanceClause: inheritanceClause,
-            memberBlock: MemberBlockSyntax(members: try members(requirements))
+    static func build(from requirements: Requirements) throws -> IfConfigDeclSyntax {
+        SwiftVersionHelper.condition(
+            minimumVersion: .swift_6_1,
+            gte: .decls(
+                try MemberBlockItemListSyntax {
+                    try enumDeclaration(requirements, nonisolated: true)
+                }
+            ), else: .decls(
+                try MemberBlockItemListSyntax {
+                    try enumDeclaration(requirements, nonisolated: false)
+                }
+            )
         )
     }
 }
@@ -25,6 +31,23 @@ enum EnumFactory: Factory {
 // MARK: - Helpers
 
 extension EnumFactory {
+    private static func enumDeclaration(
+        _ requirements: Requirements,
+        nonisolated: Bool
+    ) throws -> EnumDeclSyntax {
+        EnumDeclSyntax(
+            modifiers: DeclModifierListSyntax {
+                requirements.modifiers
+                if nonisolated {
+                    DeclModifierSyntax(name: .keyword(.nonisolated))
+                }
+            },
+            name: NS.Member,
+            inheritanceClause: inheritanceClause,
+            memberBlock: MemberBlockSyntax(members: try members(requirements))
+        )
+    }
+
     private static var inheritanceClause: InheritanceClauseSyntax {
         InheritanceClauseSyntax {
             InheritedTypeSyntax(
@@ -83,7 +106,10 @@ extension EnumFactory {
             try matcherSwitch(requirements)
         }
         let decl = FunctionDeclSyntax(
-            modifiers: requirements.modifiers,
+            modifiers: DeclModifierListSyntax {
+                requirements.modifiers
+                DeclModifierSyntax(name: .keyword(.nonisolated))
+            },
             name: NS.match,
             signature: signature,
             body: .init(statements: statement)

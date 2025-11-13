@@ -67,10 +67,11 @@ final class PropertyRequirementTests: MockableMacroTestCase {
                         }
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                #if swift(>=6.1)
+                nonisolated enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_computedInt
                     case m2_computedString
-                    func match(_ other: Member) -> Bool {
+                    nonisolated func match(_ other: Member) -> Bool {
                         switch (self, other) {
                         case (.m1_computedInt, .m1_computedInt):
                             return true
@@ -81,39 +82,55 @@ final class PropertyRequirementTests: MockableMacroTestCase {
                         }
                     }
                 }
+                #else
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                    case m1_computedInt
+                    case m2_computedString
+                    nonisolated func match(_ other: Member) -> Bool {
+                        switch (self, other) {
+                        case (.m1_computedInt, .m1_computedInt):
+                            return true
+                        case (.m2_computedString, .m2_computedString):
+                            return true
+                        default:
+                            return false
+                        }
+                    }
+                }
+                #endif
                 struct ReturnBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    var computedInt: Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Int, () -> Int> {
+                    nonisolated var computedInt: Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Int, () -> Int> {
                         .init(mocker, kind: .m1_computedInt)
                     }
-                    var computedString: Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, String, () -> String> {
+                    nonisolated var computedString: Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, String, () -> String> {
                         .init(mocker, kind: .m2_computedString)
                     }
                 }
                 struct ActionBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    var computedInt: Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
+                    nonisolated var computedInt: Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
                         .init(mocker, kind: .m1_computedInt)
                     }
-                    var computedString: Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
+                    nonisolated var computedString: Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
                         .init(mocker, kind: .m2_computedString)
                     }
                 }
                 struct VerifyBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    var computedInt: Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    nonisolated var computedInt: Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
                         .init(mocker, kind: .m1_computedInt)
                     }
-                    var computedString: Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    nonisolated var computedString: Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
                         .init(mocker, kind: .m2_computedString)
                     }
                 }
@@ -191,12 +208,13 @@ final class PropertyRequirementTests: MockableMacroTestCase {
                         mocker.performActions(for: member)
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                #if swift(>=6.1)
+                nonisolated enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_get_mutableInt
                     case m1_set_mutableInt(newValue: Parameter<Int>)
                     case m2_get_mutableString
                     case m2_set_mutableString(newValue: Parameter<String>)
-                    func match(_ other: Member) -> Bool {
+                    nonisolated func match(_ other: Member) -> Bool {
                         switch (self, other) {
                         case (.m1_get_mutableInt, .m1_get_mutableInt):
                             return true
@@ -211,21 +229,43 @@ final class PropertyRequirementTests: MockableMacroTestCase {
                         }
                     }
                 }
+                #else
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                    case m1_get_mutableInt
+                    case m1_set_mutableInt(newValue: Parameter<Int>)
+                    case m2_get_mutableString
+                    case m2_set_mutableString(newValue: Parameter<String>)
+                    nonisolated func match(_ other: Member) -> Bool {
+                        switch (self, other) {
+                        case (.m1_get_mutableInt, .m1_get_mutableInt):
+                            return true
+                        case (.m1_set_mutableInt(newValue: let leftNewValue), .m1_set_mutableInt(newValue: let rightNewValue)):
+                            return leftNewValue.match(rightNewValue)
+                        case (.m2_get_mutableString, .m2_get_mutableString):
+                            return true
+                        case (.m2_set_mutableString(newValue: let leftNewValue), .m2_set_mutableString(newValue: let rightNewValue)):
+                            return leftNewValue.match(rightNewValue)
+                        default:
+                            return false
+                        }
+                    }
+                }
+                #endif
                 struct ReturnBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    var mutableInt: Mockable.PropertyReturnBuilder<MockTest, ReturnBuilder, Int> {
+                    nonisolated var mutableInt: Mockable.PropertyReturnBuilder<MockTest, ReturnBuilder, Int> {
                         .init(mocker, kind: .m1_get_mutableInt)
                     }
-                    var mutableString: Mockable.PropertyReturnBuilder<MockTest, ReturnBuilder, String> {
+                    nonisolated var mutableString: Mockable.PropertyReturnBuilder<MockTest, ReturnBuilder, String> {
                         .init(mocker, kind: .m2_get_mutableString)
                     }
                 }
                 struct ActionBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
                     func mutableInt(newValue: Parameter<Int> = .any) -> Mockable.PropertyActionBuilder<MockTest, ActionBuilder> {
@@ -237,7 +277,7 @@ final class PropertyRequirementTests: MockableMacroTestCase {
                 }
                 struct VerifyBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
                     func mutableInt(newValue: Parameter<Int> = .any) -> Mockable.PropertyVerifyBuilder<MockTest, VerifyBuilder> {
@@ -322,11 +362,12 @@ final class PropertyRequirementTests: MockableMacroTestCase {
                         }
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                #if swift(>=6.1)
+                nonisolated enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_throwingProperty
                     case m2_asyncProperty
                     case m3_asyncThrowingProperty
-                    func match(_ other: Member) -> Bool {
+                    nonisolated func match(_ other: Member) -> Bool {
                         switch (self, other) {
                         case (.m1_throwingProperty, .m1_throwingProperty):
                             return true
@@ -339,48 +380,67 @@ final class PropertyRequirementTests: MockableMacroTestCase {
                         }
                     }
                 }
+                #else
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                    case m1_throwingProperty
+                    case m2_asyncProperty
+                    case m3_asyncThrowingProperty
+                    nonisolated func match(_ other: Member) -> Bool {
+                        switch (self, other) {
+                        case (.m1_throwingProperty, .m1_throwingProperty):
+                            return true
+                        case (.m2_asyncProperty, .m2_asyncProperty):
+                            return true
+                        case (.m3_asyncThrowingProperty, .m3_asyncThrowingProperty):
+                            return true
+                        default:
+                            return false
+                        }
+                    }
+                }
+                #endif
                 struct ReturnBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    var throwingProperty: Mockable.ThrowingFunctionReturnBuilder<MockTest, ReturnBuilder, Int, any Error, () throws -> Int> {
+                    nonisolated var throwingProperty: Mockable.ThrowingFunctionReturnBuilder<MockTest, ReturnBuilder, Int, any Error, () throws -> Int> {
                         .init(mocker, kind: .m1_throwingProperty)
                     }
-                    var asyncProperty: Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, String, () -> String> {
+                    nonisolated var asyncProperty: Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, String, () -> String> {
                         .init(mocker, kind: .m2_asyncProperty)
                     }
-                    var asyncThrowingProperty: Mockable.ThrowingFunctionReturnBuilder<MockTest, ReturnBuilder, String, any Error, () throws -> String> {
+                    nonisolated var asyncThrowingProperty: Mockable.ThrowingFunctionReturnBuilder<MockTest, ReturnBuilder, String, any Error, () throws -> String> {
                         .init(mocker, kind: .m3_asyncThrowingProperty)
                     }
                 }
                 struct ActionBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    var throwingProperty: Mockable.ThrowingFunctionActionBuilder<MockTest, ActionBuilder> {
+                    nonisolated var throwingProperty: Mockable.ThrowingFunctionActionBuilder<MockTest, ActionBuilder> {
                         .init(mocker, kind: .m1_throwingProperty)
                     }
-                    var asyncProperty: Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
+                    nonisolated var asyncProperty: Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
                         .init(mocker, kind: .m2_asyncProperty)
                     }
-                    var asyncThrowingProperty: Mockable.ThrowingFunctionActionBuilder<MockTest, ActionBuilder> {
+                    nonisolated var asyncThrowingProperty: Mockable.ThrowingFunctionActionBuilder<MockTest, ActionBuilder> {
                         .init(mocker, kind: .m3_asyncThrowingProperty)
                     }
                 }
                 struct VerifyBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    var throwingProperty: Mockable.ThrowingFunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    nonisolated var throwingProperty: Mockable.ThrowingFunctionVerifyBuilder<MockTest, VerifyBuilder> {
                         .init(mocker, kind: .m1_throwingProperty)
                     }
-                    var asyncProperty: Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    nonisolated var asyncProperty: Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
                         .init(mocker, kind: .m2_asyncProperty)
                     }
-                    var asyncThrowingProperty: Mockable.ThrowingFunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    nonisolated var asyncThrowingProperty: Mockable.ThrowingFunctionVerifyBuilder<MockTest, VerifyBuilder> {
                         .init(mocker, kind: .m3_asyncThrowingProperty)
                     }
                 }

@@ -43,6 +43,7 @@ enum NS {
     static let performActions: TokenSyntax = "performActions"
     static let policy: TokenSyntax = "policy"
     static let error: TokenSyntax = "error"
+    static let swift: TokenSyntax = "swift"
     static let iOS: TokenSyntax = "iOS"
     static let macOS: TokenSyntax = "macOS"
     static let tvOS: TokenSyntax = "tvOS"
@@ -55,6 +56,7 @@ enum NS {
     static let _init: TokenSyntax = "init"
     static let _star: TokenSyntax = "*"
     static let _for: TokenSyntax = "for"
+    static let _gte: String = ">="
     static let get_: String = "get_"
     static let set_: String = "set_"
 

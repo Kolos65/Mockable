@@ -115,12 +115,13 @@ final class AttributesTests: MockableMacroTestCase {
                         }
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                #if swift(>=6.1)
+                nonisolated enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_prop
                     case m2_prop2
                     case m3_test
                     case m4_test2
-                    func match(_ other: Member) -> Bool {
+                    nonisolated func match(_ other: Member) -> Bool {
                         switch (self, other) {
                         case (.m1_prop, .m1_prop):
                             return true
@@ -135,69 +136,91 @@ final class AttributesTests: MockableMacroTestCase {
                         }
                     }
                 }
+                #else
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                    case m1_prop
+                    case m2_prop2
+                    case m3_test
+                    case m4_test2
+                    nonisolated func match(_ other: Member) -> Bool {
+                        switch (self, other) {
+                        case (.m1_prop, .m1_prop):
+                            return true
+                        case (.m2_prop2, .m2_prop2):
+                            return true
+                        case (.m3_test, .m3_test):
+                            return true
+                        case (.m4_test2, .m4_test2):
+                            return true
+                        default:
+                            return false
+                        }
+                    }
+                }
+                #endif
                 struct ReturnBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
                     @available(iOS 15, *)
-                    var prop: Mockable.FunctionReturnBuilder<MockAttributeTest, ReturnBuilder, Int, () -> Int> {
+                    nonisolated var prop: Mockable.FunctionReturnBuilder<MockAttributeTest, ReturnBuilder, Int, () -> Int> {
                         .init(mocker, kind: .m1_prop)
                     }
                     @available(iOS 15, *)
-                    var prop2: Mockable.FunctionReturnBuilder<MockAttributeTest, ReturnBuilder, Int, () -> Int> {
+                    nonisolated var prop2: Mockable.FunctionReturnBuilder<MockAttributeTest, ReturnBuilder, Int, () -> Int> {
                         .init(mocker, kind: .m2_prop2)
                     }
                     @available(iOS 15, *)
-                    func test() -> Mockable.FunctionReturnBuilder<MockAttributeTest, ReturnBuilder, Void, () -> Void> {
+                    nonisolated func test() -> Mockable.FunctionReturnBuilder<MockAttributeTest, ReturnBuilder, Void, () -> Void> {
                         .init(mocker, kind: .m3_test)
                     }
                     @available(iOS 15, *)
-                    func test2() -> Mockable.FunctionReturnBuilder<MockAttributeTest, ReturnBuilder, Void, () -> Void> {
+                    nonisolated func test2() -> Mockable.FunctionReturnBuilder<MockAttributeTest, ReturnBuilder, Void, () -> Void> {
                         .init(mocker, kind: .m4_test2)
                     }
                 }
                 struct ActionBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
                     @available(iOS 15, *)
-                    var prop: Mockable.FunctionActionBuilder<MockAttributeTest, ActionBuilder> {
+                    nonisolated var prop: Mockable.FunctionActionBuilder<MockAttributeTest, ActionBuilder> {
                         .init(mocker, kind: .m1_prop)
                     }
                     @available(iOS 15, *)
-                    var prop2: Mockable.FunctionActionBuilder<MockAttributeTest, ActionBuilder> {
+                    nonisolated var prop2: Mockable.FunctionActionBuilder<MockAttributeTest, ActionBuilder> {
                         .init(mocker, kind: .m2_prop2)
                     }
                     @available(iOS 15, *)
-                    func test() -> Mockable.FunctionActionBuilder<MockAttributeTest, ActionBuilder> {
+                    nonisolated func test() -> Mockable.FunctionActionBuilder<MockAttributeTest, ActionBuilder> {
                         .init(mocker, kind: .m3_test)
                     }
                     @available(iOS 15, *)
-                    func test2() -> Mockable.FunctionActionBuilder<MockAttributeTest, ActionBuilder> {
+                    nonisolated func test2() -> Mockable.FunctionActionBuilder<MockAttributeTest, ActionBuilder> {
                         .init(mocker, kind: .m4_test2)
                     }
                 }
                 struct VerifyBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
                     @available(iOS 15, *)
-                    var prop: Mockable.FunctionVerifyBuilder<MockAttributeTest, VerifyBuilder> {
+                    nonisolated var prop: Mockable.FunctionVerifyBuilder<MockAttributeTest, VerifyBuilder> {
                         .init(mocker, kind: .m1_prop)
                     }
                     @available(iOS 15, *)
-                    var prop2: Mockable.FunctionVerifyBuilder<MockAttributeTest, VerifyBuilder> {
+                    nonisolated var prop2: Mockable.FunctionVerifyBuilder<MockAttributeTest, VerifyBuilder> {
                         .init(mocker, kind: .m2_prop2)
                     }
                     @available(iOS 15, *)
-                    func test() -> Mockable.FunctionVerifyBuilder<MockAttributeTest, VerifyBuilder> {
+                    nonisolated func test() -> Mockable.FunctionVerifyBuilder<MockAttributeTest, VerifyBuilder> {
                         .init(mocker, kind: .m3_test)
                     }
                     @available(iOS 15, *)
-                    func test2() -> Mockable.FunctionVerifyBuilder<MockAttributeTest, VerifyBuilder> {
+                    nonisolated func test2() -> Mockable.FunctionVerifyBuilder<MockAttributeTest, VerifyBuilder> {
                         .init(mocker, kind: .m4_test2)
                     }
                 }

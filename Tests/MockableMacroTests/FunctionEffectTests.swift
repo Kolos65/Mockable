@@ -63,10 +63,11 @@ final class FunctionEffectTests: MockableMacroTestCase {
                         return try producer()
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                #if swift(>=6.1)
+                nonisolated enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_returnsAndThrows
                     case m2_canThrowError
-                    func match(_ other: Member) -> Bool {
+                    nonisolated func match(_ other: Member) -> Bool {
                         switch (self, other) {
                         case (.m1_returnsAndThrows, .m1_returnsAndThrows):
                             return true
@@ -77,39 +78,55 @@ final class FunctionEffectTests: MockableMacroTestCase {
                         }
                     }
                 }
+                #else
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                    case m1_returnsAndThrows
+                    case m2_canThrowError
+                    nonisolated func match(_ other: Member) -> Bool {
+                        switch (self, other) {
+                        case (.m1_returnsAndThrows, .m1_returnsAndThrows):
+                            return true
+                        case (.m2_canThrowError, .m2_canThrowError):
+                            return true
+                        default:
+                            return false
+                        }
+                    }
+                }
+                #endif
                 struct ReturnBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    func returnsAndThrows() -> Mockable.ThrowingFunctionReturnBuilder<MockTest, ReturnBuilder, String, any Error, () throws -> String> {
+                    nonisolated func returnsAndThrows() -> Mockable.ThrowingFunctionReturnBuilder<MockTest, ReturnBuilder, String, any Error, () throws -> String> {
                         .init(mocker, kind: .m1_returnsAndThrows)
                     }
-                    func canThrowError() -> Mockable.ThrowingFunctionReturnBuilder<MockTest, ReturnBuilder, Void, any Error, () throws -> Void> {
+                    nonisolated func canThrowError() -> Mockable.ThrowingFunctionReturnBuilder<MockTest, ReturnBuilder, Void, any Error, () throws -> Void> {
                         .init(mocker, kind: .m2_canThrowError)
                     }
                 }
                 struct ActionBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    func returnsAndThrows() -> Mockable.ThrowingFunctionActionBuilder<MockTest, ActionBuilder> {
+                    nonisolated func returnsAndThrows() -> Mockable.ThrowingFunctionActionBuilder<MockTest, ActionBuilder> {
                         .init(mocker, kind: .m1_returnsAndThrows)
                     }
-                    func canThrowError() -> Mockable.ThrowingFunctionActionBuilder<MockTest, ActionBuilder> {
+                    nonisolated func canThrowError() -> Mockable.ThrowingFunctionActionBuilder<MockTest, ActionBuilder> {
                         .init(mocker, kind: .m2_canThrowError)
                     }
                 }
                 struct VerifyBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    func returnsAndThrows() -> Mockable.ThrowingFunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    nonisolated func returnsAndThrows() -> Mockable.ThrowingFunctionVerifyBuilder<MockTest, VerifyBuilder> {
                         .init(mocker, kind: .m1_returnsAndThrows)
                     }
-                    func canThrowError() -> Mockable.ThrowingFunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    nonisolated func canThrowError() -> Mockable.ThrowingFunctionVerifyBuilder<MockTest, VerifyBuilder> {
                         .init(mocker, kind: .m2_canThrowError)
                     }
                 }
@@ -164,39 +181,51 @@ final class FunctionEffectTests: MockableMacroTestCase {
                         return producer(operation)
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                #if swift(>=6.1)
+                nonisolated enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_execute(operation: Parameter<() throws -> Void>)
-                    func match(_ other: Member) -> Bool {
+                    nonisolated func match(_ other: Member) -> Bool {
                         switch (self, other) {
                         case (.m1_execute(operation: let leftOperation), .m1_execute(operation: let rightOperation)):
                             return leftOperation.match(rightOperation)
                         }
                     }
                 }
+                #else
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                    case m1_execute(operation: Parameter<() throws -> Void>)
+                    nonisolated func match(_ other: Member) -> Bool {
+                        switch (self, other) {
+                        case (.m1_execute(operation: let leftOperation), .m1_execute(operation: let rightOperation)):
+                            return leftOperation.match(rightOperation)
+                        }
+                    }
+                }
+                #endif
                 struct ReturnBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    func execute(operation: Parameter<() throws -> Void>) -> Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Void, (@escaping () throws -> Void) -> Void> {
+                    nonisolated func execute(operation: Parameter<() throws -> Void>) -> Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Void, (@escaping () throws -> Void) -> Void> {
                         .init(mocker, kind: .m1_execute(operation: operation))
                     }
                 }
                 struct ActionBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    func execute(operation: Parameter<() throws -> Void>) -> Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
+                    nonisolated func execute(operation: Parameter<() throws -> Void>) -> Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
                         .init(mocker, kind: .m1_execute(operation: operation))
                     }
                 }
                 struct VerifyBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    func execute(operation: Parameter<() throws -> Void>) -> Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    nonisolated func execute(operation: Parameter<() throws -> Void>) -> Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
                         .init(mocker, kind: .m1_execute(operation: operation))
                     }
                 }
@@ -269,11 +298,12 @@ final class FunctionEffectTests: MockableMacroTestCase {
                         return try producer(param)
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                #if swift(>=6.1)
+                nonisolated enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_asyncFunction
                     case m2_asyncThrowingFunction
                     case m3_asyncParamFunction(param: Parameter<() async throws -> Void>)
-                    func match(_ other: Member) -> Bool {
+                    nonisolated func match(_ other: Member) -> Bool {
                         switch (self, other) {
                         case (.m1_asyncFunction, .m1_asyncFunction):
                             return true
@@ -286,48 +316,67 @@ final class FunctionEffectTests: MockableMacroTestCase {
                         }
                     }
                 }
+                #else
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                    case m1_asyncFunction
+                    case m2_asyncThrowingFunction
+                    case m3_asyncParamFunction(param: Parameter<() async throws -> Void>)
+                    nonisolated func match(_ other: Member) -> Bool {
+                        switch (self, other) {
+                        case (.m1_asyncFunction, .m1_asyncFunction):
+                            return true
+                        case (.m2_asyncThrowingFunction, .m2_asyncThrowingFunction):
+                            return true
+                        case (.m3_asyncParamFunction(param: let leftParam), .m3_asyncParamFunction(param: let rightParam)):
+                            return leftParam.match(rightParam)
+                        default:
+                            return false
+                        }
+                    }
+                }
+                #endif
                 struct ReturnBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    func asyncFunction() -> Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Void, () -> Void> {
+                    nonisolated func asyncFunction() -> Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Void, () -> Void> {
                         .init(mocker, kind: .m1_asyncFunction)
                     }
-                    func asyncThrowingFunction() -> Mockable.ThrowingFunctionReturnBuilder<MockTest, ReturnBuilder, Void, any Error, () throws -> Void> {
+                    nonisolated func asyncThrowingFunction() -> Mockable.ThrowingFunctionReturnBuilder<MockTest, ReturnBuilder, Void, any Error, () throws -> Void> {
                         .init(mocker, kind: .m2_asyncThrowingFunction)
                     }
-                    func asyncParamFunction(param: Parameter<() async throws -> Void>) -> Mockable.ThrowingFunctionReturnBuilder<MockTest, ReturnBuilder, Void, any Error, (@escaping () async throws -> Void) throws -> Void> {
+                    nonisolated func asyncParamFunction(param: Parameter<() async throws -> Void>) -> Mockable.ThrowingFunctionReturnBuilder<MockTest, ReturnBuilder, Void, any Error, (@escaping () async throws -> Void) throws -> Void> {
                         .init(mocker, kind: .m3_asyncParamFunction(param: param))
                     }
                 }
                 struct ActionBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    func asyncFunction() -> Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
+                    nonisolated func asyncFunction() -> Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
                         .init(mocker, kind: .m1_asyncFunction)
                     }
-                    func asyncThrowingFunction() -> Mockable.ThrowingFunctionActionBuilder<MockTest, ActionBuilder> {
+                    nonisolated func asyncThrowingFunction() -> Mockable.ThrowingFunctionActionBuilder<MockTest, ActionBuilder> {
                         .init(mocker, kind: .m2_asyncThrowingFunction)
                     }
-                    func asyncParamFunction(param: Parameter<() async throws -> Void>) -> Mockable.ThrowingFunctionActionBuilder<MockTest, ActionBuilder> {
+                    nonisolated func asyncParamFunction(param: Parameter<() async throws -> Void>) -> Mockable.ThrowingFunctionActionBuilder<MockTest, ActionBuilder> {
                         .init(mocker, kind: .m3_asyncParamFunction(param: param))
                     }
                 }
                 struct VerifyBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    func asyncFunction() -> Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    nonisolated func asyncFunction() -> Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
                         .init(mocker, kind: .m1_asyncFunction)
                     }
-                    func asyncThrowingFunction() -> Mockable.ThrowingFunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    nonisolated func asyncThrowingFunction() -> Mockable.ThrowingFunctionVerifyBuilder<MockTest, VerifyBuilder> {
                         .init(mocker, kind: .m2_asyncThrowingFunction)
                     }
-                    func asyncParamFunction(param: Parameter<() async throws -> Void>) -> Mockable.ThrowingFunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    nonisolated func asyncParamFunction(param: Parameter<() async throws -> Void>) -> Mockable.ThrowingFunctionVerifyBuilder<MockTest, VerifyBuilder> {
                         .init(mocker, kind: .m3_asyncParamFunction(param: param))
                     }
                 }

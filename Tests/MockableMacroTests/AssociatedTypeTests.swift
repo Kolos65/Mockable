@@ -56,39 +56,51 @@ final class AssociatedTypeTests: MockableMacroTestCase {
                         return producer(item)
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                #if swift(>=6.1)
+                nonisolated enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_foo(item: Parameter<Item>)
-                    func match(_ other: Member) -> Bool {
+                    nonisolated func match(_ other: Member) -> Bool {
                         switch (self, other) {
                         case (.m1_foo(item: let leftItem), .m1_foo(item: let rightItem)):
                             return leftItem.match(rightItem)
                         }
                     }
                 }
+                #else
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                    case m1_foo(item: Parameter<Item>)
+                    nonisolated func match(_ other: Member) -> Bool {
+                        switch (self, other) {
+                        case (.m1_foo(item: let leftItem), .m1_foo(item: let rightItem)):
+                            return leftItem.match(rightItem)
+                        }
+                    }
+                }
+                #endif
                 struct ReturnBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    func foo(item: Parameter<Item>) -> Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Item, (Item) -> Item> {
+                    nonisolated func foo(item: Parameter<Item>) -> Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Item, (Item) -> Item> {
                         .init(mocker, kind: .m1_foo(item: item))
                     }
                 }
                 struct ActionBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    func foo(item: Parameter<Item>) -> Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
+                    nonisolated func foo(item: Parameter<Item>) -> Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
                         .init(mocker, kind: .m1_foo(item: item))
                     }
                 }
                 struct VerifyBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    func foo(item: Parameter<Item>) -> Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    nonisolated func foo(item: Parameter<Item>) -> Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
                         .init(mocker, kind: .m1_foo(item: item))
                     }
                 }
@@ -145,39 +157,51 @@ final class AssociatedTypeTests: MockableMacroTestCase {
                         return producer(item)
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                #if swift(>=6.1)
+                nonisolated enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_foo(item: Parameter<Item>)
-                    func match(_ other: Member) -> Bool {
+                    nonisolated func match(_ other: Member) -> Bool {
                         switch (self, other) {
                         case (.m1_foo(item: let leftItem), .m1_foo(item: let rightItem)):
                             return leftItem.match(rightItem)
                         }
                     }
                 }
+                #else
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                    case m1_foo(item: Parameter<Item>)
+                    nonisolated func match(_ other: Member) -> Bool {
+                        switch (self, other) {
+                        case (.m1_foo(item: let leftItem), .m1_foo(item: let rightItem)):
+                            return leftItem.match(rightItem)
+                        }
+                    }
+                }
+                #endif
                 struct ReturnBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    func foo(item: Parameter<Item>) -> Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Item, (Item) -> Item> {
+                    nonisolated func foo(item: Parameter<Item>) -> Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Item, (Item) -> Item> {
                         .init(mocker, kind: .m1_foo(item: item))
                     }
                 }
                 struct ActionBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    func foo(item: Parameter<Item>) -> Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
+                    nonisolated func foo(item: Parameter<Item>) -> Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
                         .init(mocker, kind: .m1_foo(item: item))
                     }
                 }
                 struct VerifyBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    func foo(item: Parameter<Item>) -> Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    nonisolated func foo(item: Parameter<Item>) -> Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
                         .init(mocker, kind: .m1_foo(item: item))
                     }
                 }
@@ -234,39 +258,51 @@ final class AssociatedTypeTests: MockableMacroTestCase {
                         return producer(item)
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                #if swift(>=6.1)
+                nonisolated enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_foo(item: Parameter<Item>)
-                    func match(_ other: Member) -> Bool {
+                    nonisolated func match(_ other: Member) -> Bool {
                         switch (self, other) {
                         case (.m1_foo(item: let leftItem), .m1_foo(item: let rightItem)):
                             return leftItem.match(rightItem)
                         }
                     }
                 }
+                #else
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                    case m1_foo(item: Parameter<Item>)
+                    nonisolated func match(_ other: Member) -> Bool {
+                        switch (self, other) {
+                        case (.m1_foo(item: let leftItem), .m1_foo(item: let rightItem)):
+                            return leftItem.match(rightItem)
+                        }
+                    }
+                }
+                #endif
                 struct ReturnBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    func foo(item: Parameter<Item>) -> Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Item, (Item) -> Item> {
+                    nonisolated func foo(item: Parameter<Item>) -> Mockable.FunctionReturnBuilder<MockTest, ReturnBuilder, Item, (Item) -> Item> {
                         .init(mocker, kind: .m1_foo(item: item))
                     }
                 }
                 struct ActionBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    func foo(item: Parameter<Item>) -> Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
+                    nonisolated func foo(item: Parameter<Item>) -> Mockable.FunctionActionBuilder<MockTest, ActionBuilder> {
                         .init(mocker, kind: .m1_foo(item: item))
                     }
                 }
                 struct VerifyBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    func foo(item: Parameter<Item>) -> Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
+                    nonisolated func foo(item: Parameter<Item>) -> Mockable.FunctionVerifyBuilder<MockTest, VerifyBuilder> {
                         .init(mocker, kind: .m1_foo(item: item))
                     }
                 }

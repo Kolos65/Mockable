@@ -54,39 +54,51 @@ final class InheritedTypeMappingTests: MockableMacroTestCase {
                         return producer()
                     }
                 }
-                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                #if swift(>=6.1)
+                nonisolated enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
                     case m1_foo
-                    func match(_ other: Member) -> Bool {
+                    nonisolated func match(_ other: Member) -> Bool {
                         switch (self, other) {
                         case (.m1_foo, .m1_foo):
                             return true
                         }
                     }
                 }
+                #else
+                enum Member: Mockable.Matchable, Mockable.CaseIdentifiable, Swift.Sendable {
+                    case m1_foo
+                    nonisolated func match(_ other: Member) -> Bool {
+                        switch (self, other) {
+                        case (.m1_foo, .m1_foo):
+                            return true
+                        }
+                    }
+                }
+                #endif
                 struct ReturnBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    func foo() -> Mockable.FunctionReturnBuilder<MockTestObject, ReturnBuilder, Void, () -> Void> {
+                    nonisolated func foo() -> Mockable.FunctionReturnBuilder<MockTestObject, ReturnBuilder, Void, () -> Void> {
                         .init(mocker, kind: .m1_foo)
                     }
                 }
                 struct ActionBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    func foo() -> Mockable.FunctionActionBuilder<MockTestObject, ActionBuilder> {
+                    nonisolated func foo() -> Mockable.FunctionActionBuilder<MockTestObject, ActionBuilder> {
                         .init(mocker, kind: .m1_foo)
                     }
                 }
                 struct VerifyBuilder: Mockable.Builder {
                     private let mocker: Mocker
-                    init(mocker: Mocker) {
+                    nonisolated init(mocker: Mocker) {
                         self.mocker = mocker
                     }
-                    func foo() -> Mockable.FunctionVerifyBuilder<MockTestObject, VerifyBuilder> {
+                    nonisolated func foo() -> Mockable.FunctionVerifyBuilder<MockTestObject, VerifyBuilder> {
                         .init(mocker, kind: .m1_foo)
                     }
                 }

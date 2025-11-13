@@ -115,7 +115,7 @@ final class VerifyTests: XCTestCase {
         given(mock).getUser(for: .any).willReturn(.test1)
 
         Task {
-            try await Task.sleep(for: .seconds(1))
+            try await Task.sleep(seconds: 1)
             _ = try self.mock.getUser(for: UUID())
         }
 

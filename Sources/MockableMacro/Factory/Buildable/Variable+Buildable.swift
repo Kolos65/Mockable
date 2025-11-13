@@ -32,8 +32,13 @@ extension VariableRequirement {
         using mockType: IdentifierTypeSyntax
     ) throws -> DeclSyntax {
         let variableDecl = VariableDeclSyntax(
-            attributes: syntax.attributes.trimmed.with(\.trailingTrivia, .newline),
-            modifiers: modifiers,
+            attributes: syntax.attributes
+                .filter(allowedNames: [NS.available.text])
+                .trimmed.with(\.trailingTrivia, .newline),
+            modifiers: DeclModifierListSyntax {
+                modifiers
+                DeclModifierSyntax(name: .keyword(.nonisolated))
+            },
             bindingSpecifier: .keyword(.var),
             bindings: try PatternBindingListSyntax {
                 PatternBindingSyntax(

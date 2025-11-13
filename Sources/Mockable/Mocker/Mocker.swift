@@ -32,12 +32,12 @@ public class Mocker<Service: MockableService>: @unchecked Sendable {
     /// Dictionary to store actions to be performed on each member.
     private var actions = LockedValue<[Member: [Action]]>([:])
     /// Array to store invocations of members.
-    private lazy var invocations = LockedValue<[Member]>([]) { newValue in
+    private lazy var invocations = LockedValue<[Member]>([]) { [invocationsSubject] newValue in
         Task {
             #if swift(>=6.0) && !swift(>=6.1)
-            self.invocationsSubject.send(newValue)
+            invocationsSubject.send(newValue)
             #else
-            await self.invocationsSubject.send(newValue)
+            await invocationsSubject.send(newValue)
             #endif
         }
     }
@@ -127,8 +127,8 @@ public class Mocker<Service: MockableService>: @unchecked Sendable {
                        line: UInt = #line,
                        column: UInt = #column) async {
         do {
-            try await withTimeout(after: timeout.duration) {
-                for await invocations in self.invocationsSubject {
+            try await withTimeout(after: timeout.duration) { [invocationsSubject] in
+                for await invocations in invocationsSubject {
                     let matches = invocations.filter(member.match)
                     if count.satisfies(matches.count) {
                         break
