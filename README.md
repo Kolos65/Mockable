@@ -42,6 +42,24 @@ Add the **Mockable** target to all targets that contain protocols you want to mo
 
 Read the [installation guide](https://kolos65.github.io/Mockable/documentation/mockable/installation/) of the documentation for more details on how to integrate **Mockable** with your project.
 
+> [!TIP]
+> When using the plugin for the first time, be sure to trust and enable
+> it when prompted. If a macros build warning exists, select it to trust
+> and enable the macros as well.
+
+For unattended use (e.g. on CI), package plugin and macro validations can be disabled with either of the following:
+
+* Using `xcodebuild` options:
+  ```bash
+  -skipMacroValidation
+  ```
+
+* Setting Xcode defaults:
+  ```bash
+  defaults write com.apple.dt.Xcode IDESkipPackagePluginFingerprintValidatation -bool YES
+  defaults write com.apple.dt.Xcode IDESkipMacroFingerprintValidation -bool YES
+  ```
+
 ## Configuration
 
 Since `@Mockable` is a [peer macro](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/attributes/#attached), 
