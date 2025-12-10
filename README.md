@@ -40,6 +40,10 @@ The library can be installed using Swift Package Manager.
 
 Add the **Mockable** target to all targets that contain protocols you want to mock. **Mockable** does not depend on the `XCTest` framework so it can be added to any target.
 
+When using the plugin for the first time, be sure to **trust and enable** it when prompted. For unattended usage (e.g. on the CI), macro validation can be disabled with either of the following:
+* Using an **xcodebuild** flag: `-skipMacroValidation`
+* Setting Xcode defaults: `defaults write com.apple.dt.Xcode IDESkipMacroFingerprintValidation -bool YES`
+
 Read the [installation guide](https://kolos65.github.io/Mockable/documentation/mockable/installation/) of the documentation for more details on how to integrate **Mockable** with your project.
 
 ## Configuration
