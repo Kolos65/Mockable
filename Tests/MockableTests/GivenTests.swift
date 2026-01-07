@@ -7,6 +7,7 @@
 
 import XCTest
 import Mockable
+@testable import TestingShared
 
 final class GivenTests: XCTestCase {
 
