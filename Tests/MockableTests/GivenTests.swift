@@ -289,7 +289,7 @@ final class GivenTests: XCTestCase {
 
         XCTAssertEqual(actual, expected)
     }
-    
+
     func test_givenResult_willThrow() throws {
         let expected = UserError.notFound
         let result: Result<User, any Error> = .failure(expected)
