@@ -14,21 +14,21 @@ final class Matchers: @unchecked Sendable {
     private var matchers: [MatcherType] = []
 
     func reset() {
-        lock.withLock {
-            matchers = []
-        }
+        lock.lock()
+        defer { lock.unlock() }
+        matchers = []
     }
 
     func reversed() -> [MatcherType] {
-        lock.withLock {
-            Array(matchers.reversed())
-        }
+        lock.lock()
+        defer { lock.unlock() }
+        return Array(matchers.reversed())
     }
 
     func append(_ matcher: MatcherType) {
-        lock.withLock {
-            matchers.append(matcher)
-        }
+        lock.lock()
+        defer { lock.unlock() }
+        matchers.append(matcher)
     }
 }
 
