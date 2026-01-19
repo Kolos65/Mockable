@@ -65,6 +65,22 @@ public struct ThrowingFunctionReturnBuilder<
         mocker.addReturnValue(.produce(producer), for: member)
         return .init(mocker: mocker)
     }
+
+    /// Registers a result type that automatically emits a value when successful or throws a failure
+    ///
+    /// - Parameter result: The result type wrapping a value or error.
+    /// - Returns:  The parent builder, used for chaining additional specifications.
+    @discardableResult
+    public func willHandleResult(_ result: Result<ReturnType, ErrorType>) -> ParentBuilder {
+        switch result {
+
+        case let .success(value):
+            mocker.addReturnValue(.return(value), for: member)
+        case let .failure(error):
+            mocker.addReturnValue(.throw(error), for: member)
+        }
+        return .init(mocker: mocker)
+    }
 }
 
 extension ThrowingFunctionReturnBuilder where ReturnType == Void {

@@ -7,6 +7,7 @@
 
 import XCTest
 import Mockable
+@testable import TestingShared
 
 final class GivenTests: XCTestCase {
 
@@ -275,6 +276,30 @@ final class GivenTests: XCTestCase {
         mock.change(user: &user)
 
         XCTAssertEqual(user.age, 100)
+    }
+
+    func test_givenResult_willEmitSuccess() throws {
+        let expected = User.test1
+        let result: Result<User, any Error> = .success(expected)
+
+        given(mock)
+            .getUser(for: .any)
+            .willHandleResult(result)
+
+        let actual = try mock.getUser(for: .init())
+
+        XCTAssertEqual(actual, expected)
+    }
+
+    func test_givenResult_willThrow() throws {
+        let expected = UserError.notFound
+        let result: Result<User, any Error> = .failure(expected)
+
+        given(mock)
+            .getUser(for: .any)
+            .willHandleResult(result)
+
+        XCTAssertThrowsError(try mock.getUser(for: .init()))
     }
 
     @MainActor
