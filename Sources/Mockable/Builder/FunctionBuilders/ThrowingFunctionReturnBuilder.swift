@@ -71,9 +71,8 @@ public struct ThrowingFunctionReturnBuilder<
     /// - Parameter result: The result type wrapping a value or error.
     /// - Returns:  The parent builder, used for chaining additional specifications.
     @discardableResult
-    public func willHandleResult(_ result: Result<ReturnType, ErrorType>) -> ParentBuilder {
+    public func willHandle(_ result: Result<ReturnType, ErrorType>) -> ParentBuilder {
         switch result {
-
         case let .success(value):
             mocker.addReturnValue(.return(value), for: member)
         case let .failure(error):
