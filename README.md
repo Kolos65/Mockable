@@ -198,8 +198,8 @@ verify(productService).fetch(for: .any).called(.once)
 Return values can be specified using a `given(_ service:)` clause. There are three return builders available:
 * [`willReturn(_ value:)`](https://kolos65.github.io/Mockable/documentation/mockable/functionreturnbuilder/willreturn(_:)): Will store the given return value and use it to mock subsequent calls.
 * [`willThrow(_ error:)`](https://kolos65.github.io/Mockable/documentation/mockable/throwingfunctionreturnbuilder/willthrow(_:)): Will store the given error and throw it in subsequent calls. Only available for throwing functions and properties.
-* [`willProduce(_ producer)`](https://kolos65.github.io/Mockable/documentation/mockable/throwingfunctionreturnbuilder/willproduce(_:)): Will use the provided closure for mocking. The closure has the same signature as the mocked function, so for example a function that takes an integer returns a string and can throw will accept a closure of type `(Int) throws -> String`.
-* [`willHandle`](https://kolos65.github.io/Mockable/documentation/mockable/throwingfunctionreturnbuilder/willhandle(_:)): Registers a result type that automatically emits a value when successful or throws a failure. 
+* [`willProduce(_ producer:)`](https://kolos65.github.io/Mockable/documentation/mockable/throwingfunctionreturnbuilder/willproduce(_:)): Will use the provided closure for mocking. The closure has the same signature as the mocked function, so for example a function that takes an integer returns a string and can throw will accept a closure of type `(Int) throws -> String`.
+* [`willHandle(_ result:)`](https://kolos65.github.io/Mockable/documentation/mockable/throwingfunctionreturnbuilder/willhandle(_:)): Registers a result type that automatically emits a value when successful or throws a failure. 
 
 The provided return values are used up in FIFO order and the last one is always kept for any further calls. Here are examples of using return clauses:
 ```swift
