@@ -300,7 +300,7 @@ final class GivenTests: XCTestCase {
 
         XCTAssertThrowsError(try mock.getUser(for: .init()))
     }
-    
+
     @MainActor
     func test_givenConcurrentGivens_whenCalled_synchronizedCorrectly() async throws {
         // Register return values concurrently
