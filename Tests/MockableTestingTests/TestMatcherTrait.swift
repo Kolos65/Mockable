@@ -1,10 +1,10 @@
+#if swift(>=6)
 import Testing
 import Mockable
 @testable import TestingShared
 @testable import MockableTesting
 
 /// One of these tests will invert if the matcher instance is the same.
-#if swift(>=6)
 @Suite(.matcher({ matcher in
     matcher.reset()
     matcher.register(Product.self, match: { lhs, rhs in

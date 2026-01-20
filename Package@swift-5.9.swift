@@ -118,5 +118,5 @@ let package = Package(
             plugins: devPlugins
         ),
     ],
-    swiftLanguageVersions: [.v5, .v6]
+    swiftLanguageVersions: [.v5, .version("6")]
 )
