@@ -8,6 +8,7 @@
 import XCTest
 import Foundation
 @testable import Mockable
+@testable import TestingShared
 
 final class VerifyTests: XCTestCase {
 
