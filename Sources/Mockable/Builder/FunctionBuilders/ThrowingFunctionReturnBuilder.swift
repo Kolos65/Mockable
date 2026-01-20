@@ -66,7 +66,7 @@ public struct ThrowingFunctionReturnBuilder<
         return .init(mocker: mocker)
     }
 
-    /// Registers a result type that automatically emits a value when successful or throws a failure
+    /// Registers a result type that automatically emits a value when successful or throws a failure.
     ///
     /// - Parameter result: The result type wrapping a value or error.
     /// - Returns:  The parent builder, used for chaining additional specifications.
