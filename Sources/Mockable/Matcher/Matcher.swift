@@ -34,7 +34,7 @@ public class Matcher {
 
     // MARK: Private Properties
 
-    private var matchers: [MatcherType] = []
+    private let matchers = LockedValue<[MatcherType]>([])
 
     #if swift(>=6)
     nonisolated(unsafe) private static var `default` = Matcher()
@@ -133,7 +133,7 @@ public class Matcher {
 extension Matcher {
     private func register<T>(_ valueType: T.Type, match: @escaping Comparator<T>) {
         let mirror = Mirror(reflecting: valueType)
-        matchers.append((mirror, match as Any))
+        matchers.withValue { $0.append((mirror, match as Any)) }
     }
 
     private func register<T>(_ valueType: T.Type.Type) {
@@ -143,7 +143,7 @@ extension Matcher {
     private func register<T>(_ valueType: T.Type) where T: Equatable {
         let mirror = Mirror(reflecting: valueType)
         let comparator = comparator(for: T.self)
-        matchers.append((mirror, comparator as Any))
+        matchers.withValue { $0.append((mirror, comparator as Any)) }
     }
 }
 
@@ -181,7 +181,8 @@ extension Matcher {
 
 extension Matcher {
     private func comparator(by mirror: Mirror) -> Any? {
-        matchers.reversed().first { matcher -> Bool in
+        let snapshot = matchers.withValue { $0 }
+        return snapshot.reversed().first { matcher -> Bool in
             matcher.mirror.subjectType == mirror.subjectType
         }?.comparator
     }
