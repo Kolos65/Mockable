@@ -7,31 +7,6 @@
 
 import Foundation
 
-final class Matchers: @unchecked Sendable {
-    typealias MatcherType = (mirror: Mirror, comparator: Any)
-
-    private var lock = NSRecursiveLock()
-    private var matchers: [MatcherType] = []
-
-    func reset() {
-        lock.lock()
-        defer { lock.unlock() }
-        matchers = []
-    }
-
-    func reversed() -> [MatcherType] {
-        lock.lock()
-        defer { lock.unlock() }
-        return Array(matchers.reversed())
-    }
-
-    func append(_ matcher: MatcherType) {
-        lock.lock()
-        defer { lock.unlock() }
-        matchers.append(matcher)
-    }
-}
-
 /// A utility for defining matchers used in mock assertions.
 public final class Matcher: Sendable {
 
@@ -78,7 +53,7 @@ public final class Matcher: Sendable {
     // MARK: - Reset
 
     public func reset() {
-        matchers.reset()
+        matchers.withValue { $0 = [] }
         registerDefaultTypes()
         registerCustomTypes()
     }

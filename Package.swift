@@ -54,7 +54,12 @@ let devTargets: [Target] = when(test, [
     ),
     .testTarget(
         name: "MockableTestingTests",
-        dependencies: ["Mockable", "MockableTesting", "TestingShared"],
+        dependencies: [
+            "Mockable",
+            "MockableTesting",
+            "TestingShared",
+            .product(name: "IssueReportingTestSupport", package: "xctest-dynamic-overlay")
+        ],
         swiftSettings: [
             .define("MOCKING"),
             .enableExperimentalFeature("StrictConcurrency"),
