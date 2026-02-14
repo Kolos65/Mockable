@@ -5,6 +5,8 @@
 //  Created by Kolos Foltanyi on 2023. 11. 25..
 //
 
+import IssueReporting
+
 extension Parameter {
     private func match(_ parameter: Parameter<Value>, using comparator: Matcher.Comparator<Value>?) -> Bool {
         switch (self, parameter) {
@@ -14,6 +16,7 @@ extension Parameter {
         case (.matching(let matcher), .value(let value)): return matcher(value)
         case (.value(let value1), .value(let value2)):
             guard let comparator else {
+                reportIssue(noComparatorMessage)
                 fatalError(noComparatorMessage)
             }
             return comparator(value1, value2)

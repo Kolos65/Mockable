@@ -5,6 +5,8 @@
 //  Created by Kolos Foltanyi on 2023. 11. 13..
 //
 
+import IssueReporting
+
 /// An enumeration representing different types of parameters used in mocking.
 public enum Parameter<Value>: @unchecked Sendable {
     /// Matches any value.
@@ -37,6 +39,7 @@ extension Parameter {
                       let right = right as? Value else { return false }
 
                 guard let comparator = Matcher.comparator(for: Value.self) else {
+                    reportIssue(noComparatorMessage)
                     fatalError(noComparatorMessage)
                 }
                 return comparator(left, right)

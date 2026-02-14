@@ -8,7 +8,7 @@ on:
 jobs:
   update_docs:
     name: Update Documentation
-    runs-on: macOS-13
+    runs-on: macos-latest
     env:
       MOCKABLE_DOC: true
     steps:

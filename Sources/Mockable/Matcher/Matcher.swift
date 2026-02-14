@@ -59,7 +59,7 @@ public final class Matcher: Sendable {
 
     // MARK: Private Properties
 
-    private let matchers = Matchers()
+    private let matchers = LockedValue<[MatcherType]>([])
 
     #if swift(>=5.5)
     @TaskLocal public static var current = Matcher()
@@ -165,7 +165,7 @@ public final class Matcher: Sendable {
 extension Matcher {
     public func register<T>(_ valueType: T.Type, match: @escaping Comparator<T>) {
         let mirror = Mirror(reflecting: valueType)
-        matchers.append((mirror, match as Any))
+        matchers.withValue { $0.append((mirror, match as Any)) }
     }
 
     public func register<T>(_ valueType: T.Type.Type) {
@@ -175,7 +175,7 @@ extension Matcher {
     public func register<T>(_ valueType: T.Type) where T: Equatable {
         let mirror = Mirror(reflecting: valueType)
         let comparator = comparator(for: T.self)
-        matchers.append((mirror, comparator as Any))
+        matchers.withValue { $0.append((mirror, comparator as Any)) }
     }
 }
 
@@ -213,7 +213,8 @@ extension Matcher {
 
 extension Matcher {
     private func comparator(by mirror: Mirror) -> Any? {
-        matchers.reversed().first { matcher -> Bool in
+        let snapshot = matchers.withValue { $0 }
+        return snapshot.reversed().first { matcher -> Bool in
             matcher.mirror.subjectType == mirror.subjectType
         }?.comparator
     }

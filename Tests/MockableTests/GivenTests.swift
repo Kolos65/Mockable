@@ -284,7 +284,7 @@ final class GivenTests: XCTestCase {
 
         given(mock)
             .getUser(for: .any)
-            .willHandleResult(result)
+            .willHandle(result)
 
         let actual = try mock.getUser(for: .init())
 
@@ -297,7 +297,7 @@ final class GivenTests: XCTestCase {
 
         given(mock)
             .getUser(for: .any)
-            .willHandleResult(result)
+            .willHandle(result)
 
         XCTAssertThrowsError(try mock.getUser(for: .init()))
     }

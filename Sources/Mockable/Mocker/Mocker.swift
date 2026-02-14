@@ -241,7 +241,9 @@ extension Mocker {
                 if case .value(let value) = fallback {
                     return value
                 } else {
-                    fatalError(notMockedMessage(member, value: V.self))
+                    let message = notMockedMessage(member, value: V.self)
+                    reportIssue(message)
+                    fatalError(message)
                 }
             }
 
@@ -275,8 +277,9 @@ extension Mocker {
                     }
                 }
             }
-
-            fatalError(genericNotMockedMessage(member, value: V.self))
+            let message = genericNotMockedMessage(member, value: V.self)
+            reportIssue(message)
+            fatalError(message)
         }
     }
 }
