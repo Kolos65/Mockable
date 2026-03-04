@@ -117,7 +117,10 @@ extension FunctionRequirement {
     private var defaultErrorType: some TypeSyntaxProtocol {
         SomeOrAnyTypeSyntax(
             someOrAnySpecifier: .keyword(.any),
-            constraint: IdentifierTypeSyntax(name: NS.Error)
+            constraint: MemberTypeSyntax(
+                baseType: IdentifierTypeSyntax(name: NS.Swift),
+                name: NS.Error
+            )
         )
     }
 
