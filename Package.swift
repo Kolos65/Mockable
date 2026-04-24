@@ -59,7 +59,7 @@ let package = Package(
         )
     ],
     dependencies: devDependencies + [
-        .package(url: "https://github.com/swiftlang/swift-syntax.git", "509.0.0"..<"603.0.0"),
+        .package(url: "https://github.com/swiftlang/swift-syntax.git", "509.0.0"..<"604.0.0"),
         // xctest-dynamic-overlay 1.10.0 switched to `public import Foundation`, which Swift <6
         // rejects when mixed with plain `import Foundation` in the same target.
         .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay", xctestDynamicOverlayVersion)
