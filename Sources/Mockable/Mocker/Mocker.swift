@@ -28,22 +28,14 @@ public class Mocker<Service: MockableService>: @unchecked Sendable {
     // MARK: Private Properties
 
     /// Dictionary to store expected return values for each member.
-    private var returns = LockedValue<[Member: [Return]]>([:])
+    private let returns = LockedValue<[Member: [Return]]>([:])
     /// Dictionary to store actions to be performed on each member.
-    private var actions = LockedValue<[Member: [Action]]>([:])
+    private let actions = LockedValue<[Member: [Action]]>([:])
     /// Array to store invocations of members.
-    private lazy var invocations = LockedValue<[Member]>([]) { [invocationsSubject] newValue in
-        Task {
-            #if swift(>=6.0) && !swift(>=6.1)
-            invocationsSubject.send(newValue)
-            #else
-            await invocationsSubject.send(newValue)
-            #endif
-        }
-    }
+    private let invocations: LockedValue<[Member]>
 
     /// Subject to track invocations.
-    private var invocationsSubject = AsyncSubject<[Member]>([])
+    private let invocationsSubject: AsyncSubject<[Member]>
 
     /// Resolved relaxation policy to use when missing return values.
     private var currentPolicy: MockerPolicy {
@@ -55,6 +47,10 @@ public class Mocker<Service: MockableService>: @unchecked Sendable {
     /// Initializes a new instance of `Mocker`.
     public init(policy: MockerPolicy? = nil) {
         self.policy = policy
+        self.invocationsSubject = AsyncSubject<[Member]>([])
+        self.invocations = LockedValue([]) { [invocationsSubject] newValue in
+            Task { await invocationsSubject.send(newValue) }
+        }
     }
 
     // MARK: Public Methods
