@@ -21,13 +21,23 @@ extension FunctionParameterSyntax {
             return TypeSyntax(ArrayTypeSyntax(element: type))
         }
 
-        guard role != .parameter else { return type }
-
-        if let attributeType = type.as(AttributedTypeSyntax.self) {
-            return TypeSyntax(attributeType.baseType)
+        let baseType: TypeSyntax
+        if role == .parameter {
+            baseType = type
+        } else if let attributeType = type.as(AttributedTypeSyntax.self) {
+            baseType = TypeSyntax(attributeType.baseType)
         } else {
-            return TypeSyntax(type)
+            baseType = TypeSyntax(type)
         }
+
+        // Implicitly unwrapped optionals (`T!`) are only valid in a narrow set of
+        // declaration positions. Once we embed the type inside a generic argument
+        // (e.g. `Parameter<T!>`) or a closure type (e.g. `(T!) -> Void`), it
+        // becomes invalid Swift. Rewrite to a regular Optional in those cases.
+        if let iuo = baseType.as(ImplicitlyUnwrappedOptionalTypeSyntax.self) {
+            return TypeSyntax(OptionalTypeSyntax(wrappedType: iuo.wrappedType))
+        }
+        return baseType
     }
 
     var isInout: Bool {
