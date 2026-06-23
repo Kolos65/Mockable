@@ -127,3 +127,8 @@ protocol AttributedRequirementProtocol {
     #endif
     func foo()
 }
+
+@Mockable
+protocol ImplicitlyUnwrappedOptionalProtocol {
+    func demo(string: String!)
+}
