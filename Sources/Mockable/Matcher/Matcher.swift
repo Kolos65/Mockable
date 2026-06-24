@@ -8,7 +8,7 @@
 import Foundation
 
 /// A utility for defining matchers used in mock assertions.
-public class Matcher {
+public final class Matcher: Sendable {
 
     // MARK: Public Types
 
@@ -36,24 +36,31 @@ public class Matcher {
 
     private let matchers = LockedValue<[MatcherType]>([])
 
-    #if swift(>=6)
-    nonisolated(unsafe) private static var `default` = Matcher()
+    #if swift(>=5.5)
+    @TaskLocal public static var current = Matcher()
     #else
-    private static var `default` = Matcher()
+    public static var current = Matcher()
     #endif
 
     // MARK: Init
 
-    private init() {
+    @_spi(Matcher_Internal)
+    public init() {
         registerDefaultTypes()
         registerCustomTypes()
     }
 
     // MARK: - Reset
 
+    public func reset() {
+        matchers.withValue { $0 = [] }
+        registerDefaultTypes()
+        registerCustomTypes()
+    }
+
     /// Reset the default state of the matcher by removing all registered types.
     public static func reset() {
-        `default` = Matcher()
+        Self.current.reset()
     }
 
     // MARK: - Register
@@ -69,21 +76,21 @@ public class Matcher {
     ///   - valueType: compared type
     ///   - match: comparator closure
     public static func register<T>(_ valueType: T.Type, match: @escaping Comparator<T>) {
-        Self.default.register(valueType, match: match)
+        Self.current.register(valueType, match: match)
     }
 
     /// Registers comparator for type, like comparing Int.self to Int.self. These types of comparators always returns true. Register like: `Matcher.default.register(CustomType.Type.self)`
     ///
     /// - Parameter valueType: Type.Type.self
     public static func register<T>(_ valueType: T.Type.Type) {
-        Self.default.register(valueType)
+        Self.current.register(valueType)
     }
 
     /// Register default comparator for Equatable types. Required for generic mocks to work.
     ///
     /// - Parameter valueType: Equatable type
     public static func register<T>(_ valueType: T.Type) where T: Equatable {
-        Self.default.register(valueType)
+        Self.current.register(valueType)
     }
 
     // MARK: - Comparator
@@ -98,7 +105,7 @@ public class Matcher {
     /// - Parameter valueType: compared type
     /// - Returns: comparator closure
     public static func comparator<T>(for valueType: T.Type) -> Comparator<T>? {
-        Self.default.comparator(for: valueType)
+        Self.current.comparator(for: valueType)
     }
 
     /// Default Equatable comparator, compares if elements are equal.
@@ -106,7 +113,7 @@ public class Matcher {
     /// - Parameter valueType: Equatable type
     /// - Returns: comparator closure
     public static func comparator<T>(for valueType: T.Type) -> Comparator<T>? where T: Equatable {
-        Self.default.comparator(for: valueType)
+        Self.current.comparator(for: valueType)
     }
 
     /// Default Equatable Sequence comparator, compares count, and then for every element equal element.
@@ -114,7 +121,7 @@ public class Matcher {
     /// - Parameter valueType: Equatable Sequence type
     /// - Returns: comparator closure
     public static func comparator<T>(for valueType: T.Type) -> Comparator<T>? where T: Equatable, T: Sequence {
-        Self.default.comparator(for: valueType)
+        Self.current.comparator(for: valueType)
     }
 
     /// Default Sequence comparator, compares count, and then depending on sequence type:
@@ -124,23 +131,23 @@ public class Matcher {
     /// - Parameter valueType: Sequence type
     /// - Returns: comparator closure
     public static func comparator<T>(for valueType: T.Type) -> Comparator<T>? where T: Sequence {
-        Self.default.comparator(for: valueType)
+        Self.current.comparator(for: valueType)
     }
 }
 
 // MARK: - Register
 
 extension Matcher {
-    private func register<T>(_ valueType: T.Type, match: @escaping Comparator<T>) {
+    public func register<T>(_ valueType: T.Type, match: @escaping Comparator<T>) {
         let mirror = Mirror(reflecting: valueType)
         matchers.withValue { $0.append((mirror, match as Any)) }
     }
 
-    private func register<T>(_ valueType: T.Type.Type) {
+    public func register<T>(_ valueType: T.Type.Type) {
         register(valueType, match: { _, _ in true })
     }
 
-    private func register<T>(_ valueType: T.Type) where T: Equatable {
+    public func register<T>(_ valueType: T.Type) where T: Equatable {
         let mirror = Mirror(reflecting: valueType)
         let comparator = comparator(for: T.self)
         matchers.withValue { $0.append((mirror, comparator as Any)) }

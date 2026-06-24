@@ -9,12 +9,6 @@ let doc = Context.environment["MOCKABLE_DOC"].flatMap(Bool.init) ?? false
 
 func when<T>(_ condition: Bool, _ list: [T]) -> [T] { condition ? list : [] }
 
-#if swift(>=6.0)
-let xctestDynamicOverlayVersion: Range<Version> = "1.6.1"..<"2.0.0"
-#else
-let xctestDynamicOverlayVersion: Range<Version> = "1.6.1"..<"1.10.0"
-#endif
-
 let devDependencies: [Package.Dependency] = when(test, [
     .package(url: "https://github.com/pointfreeco/swift-macro-testing", exact: "0.6.4")
 ]) + when(lint, [
@@ -89,10 +83,8 @@ let package = Package(
         ),
     ],
     dependencies: devDependencies + [
-        .package(url: "https://github.com/swiftlang/swift-syntax.git", "509.0.0"..<"604.0.0"),
-        // xctest-dynamic-overlay 1.10.0 switched to `public import Foundation`, which Swift <6
-        // rejects when mixed with plain `import Foundation` in the same target.
-        .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay", xctestDynamicOverlayVersion)
+        .package(url: "https://github.com/swiftlang/swift-syntax.git", "509.0.0"..<"603.0.0"),
+        .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay", .upToNextMajor(from: "1.6.0"))
     ],
     targets: devTargets + [
         .target(
@@ -131,5 +123,5 @@ let package = Package(
             plugins: devPlugins
         ),
     ],
-    swiftLanguageVersions: [.v5, .v6]
+    swiftLanguageVersions: [.v5, .version("6")]
 )
