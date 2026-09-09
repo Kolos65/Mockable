@@ -72,7 +72,7 @@ let package = Package(
         )
     ],
     dependencies: devDependencies + [
-        .package(url: "https://github.com/swiftlang/swift-syntax.git", "509.0.0"..<"605.0.0"),
+        .package(url: "https://github.com/swiftlang/swift-syntax.git", "600.0.0"..<"605.0.0"),
         issueReportingPackage
     ],
     targets: devTargets + [
