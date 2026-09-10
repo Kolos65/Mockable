@@ -7,7 +7,6 @@
 
 import SwiftSyntax
 import SwiftSyntaxMacros
-import SwiftDiagnostics
 
 public enum MockableMacro: PeerMacro {
     public static func expansion(
@@ -18,10 +17,6 @@ public enum MockableMacro: PeerMacro {
         guard let protocolDecl = declaration.as(ProtocolDeclSyntax.self) else {
             throw MockableMacroError.notAProtocol
         }
-
-        #if swift(>=6) && !canImport(SwiftSyntax600)
-        context.diagnose(Diagnostic(node: node, message: MockableMacroWarning.versionMismatch))
-        #endif
 
         let requirements = try Requirements(protocolDecl)
         let declaration = try MockFactory.build(from: requirements)

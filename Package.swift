@@ -1,4 +1,4 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.0
 
 import PackageDescription
 import CompilerPluginSupport
@@ -9,14 +9,27 @@ let doc = Context.environment["MOCKABLE_DOC"].flatMap(Bool.init) ?? false
 
 func when<T>(_ condition: Bool, _ list: [T]) -> [T] { condition ? list : [] }
 
-#if swift(>=6.0)
-let xctestDynamicOverlayVersion: Range<Version> = "1.6.1"..<"2.0.0"
+// The split prescribed by xctest-dynamic-overlay's README. The two URLs each declare an
+// `IssueReporting` target and cannot coexist in one graph, and the ecosystem only moves to the
+// new one from Swift 6.4 on.
+#if compiler(>=6.4)
+let issueReportingPackage: Package.Dependency = .package(
+    url: "https://github.com/pointfreeco/swift-issue-reporting", from: "2.1.0"
+)
+let issueReportingProduct: Target.Dependency = .product(
+    name: "IssueReporting", package: "swift-issue-reporting"
+)
 #else
-let xctestDynamicOverlayVersion: Range<Version> = "1.6.1"..<"1.10.0"
+let issueReportingPackage: Package.Dependency = .package(
+    url: "https://github.com/pointfreeco/xctest-dynamic-overlay", "1.13.0"..<"2.0.0"
+)
+let issueReportingProduct: Target.Dependency = .product(
+    name: "IssueReporting", package: "xctest-dynamic-overlay"
+)
 #endif
 
 let devDependencies: [Package.Dependency] = when(test, [
-    .package(url: "https://github.com/pointfreeco/swift-macro-testing", exact: "0.6.4")
+    .package(url: "https://github.com/pointfreeco/swift-macro-testing", exact: "0.7.0")
 ]) + when(lint, [
     .package(url: "https://github.com/realm/SwiftLint", exact: "0.57.1"),
 ]) + when(doc, [
@@ -59,17 +72,15 @@ let package = Package(
         )
     ],
     dependencies: devDependencies + [
-        .package(url: "https://github.com/swiftlang/swift-syntax.git", "509.0.0"..<"604.0.0"),
-        // xctest-dynamic-overlay 1.10.0 switched to `public import Foundation`, which Swift <6
-        // rejects when mixed with plain `import Foundation` in the same target.
-        .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay", xctestDynamicOverlayVersion)
+        .package(url: "https://github.com/swiftlang/swift-syntax.git", "600.0.0"..<"605.0.0"),
+        issueReportingPackage
     ],
     targets: devTargets + [
         .target(
             name: "Mockable",
             dependencies: [
                 "MockableMacro",
-                .product(name: "IssueReporting", package: "xctest-dynamic-overlay")
+                issueReportingProduct
             ],
             swiftSettings: [
                 .enableExperimentalFeature("StrictConcurrency"),
@@ -90,6 +101,6 @@ let package = Package(
             plugins: devPlugins
         )
     ],
-    swiftLanguageVersions: [.v5, .version("6")]
+    swiftLanguageModes: [.v6]
 )
 

@@ -196,7 +196,6 @@ public class Mocker<Service: MockableService>: @unchecked Sendable {
         return try mock(member, producerResolver, .none)
     }
 
-    #if swift(>=6)
     /// Mocks a throwing member, performing associated actions and providing the expected return value.
     ///
     /// - Parameters:
@@ -213,7 +212,6 @@ public class Mocker<Service: MockableService>: @unchecked Sendable {
             throw error as! E // swiftlint:disable:this force_cast
         }
     }
-    #endif
 }
 
 // MARK: - Helpers
@@ -328,7 +326,6 @@ extension Mocker {
         return try mock(member, producerResolver, relaxed ? .value(()) : .none)
     }
 
-    #if swift(>=6)
     /// Mocks a throwing member, performing associated actions and providing the expected return value.
     ///
     /// - Parameters:
@@ -345,7 +342,6 @@ extension Mocker {
             throw error as! E // swiftlint:disable:this force_cast
         }
     }
-    #endif
 }
 
 // MARK: - Optional
@@ -382,7 +378,6 @@ extension Mocker {
         return try mock(member, producerResolver, relaxed ? .value(nil) : .none)
     }
 
-    #if swift(>=6)
     /// Mocks a throwing member, performing associated actions and providing the expected return value.
     ///
     /// - Parameters:
@@ -402,7 +397,6 @@ extension Mocker {
             throw error as! E // swiftlint:disable:this force_cast
         }
     }
-    #endif
 }
 
 // MARK: - Mockable
@@ -439,7 +433,6 @@ extension Mocker {
         return try mock(member, producerResolver, relaxed ? .value(.mock) : .none)
     }
 
-    #if swift(>=6)
     /// Mocks a throwing member, performing associated actions and providing the expected return value.
     ///
     /// - Parameters:
@@ -459,7 +452,6 @@ extension Mocker {
             throw error as! E // swiftlint:disable:this force_cast
         }
     }
-    #endif
 }
 
 // MARK: - Mockable + Optional
@@ -507,7 +499,6 @@ extension Mocker {
         }
     }
 
-    #if swift(>=6)
     /// Mocks a throwing member, performing associated actions and providing the expected return value.
     ///
     /// - Parameters:
@@ -532,5 +523,4 @@ extension Mocker {
             throw error as! E // swiftlint:disable:this force_cast
         }
     }
-    #endif
 }
