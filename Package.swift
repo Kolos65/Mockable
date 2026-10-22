@@ -9,7 +9,7 @@ let doc = Context.environment["MOCKABLE_DOC"].flatMap(Bool.init) ?? false
 
 func when<T>(_ condition: Bool, _ list: [T]) -> [T] { condition ? list : [] }
 
-#if swift(>=6.0)
+#if compiler(>=6.0)
 let xctestDynamicOverlayVersion: Range<Version> = "1.6.1"..<"2.0.0"
 #else
 let xctestDynamicOverlayVersion: Range<Version> = "1.6.1"..<"1.10.0"
