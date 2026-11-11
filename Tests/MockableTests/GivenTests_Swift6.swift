@@ -7,6 +7,7 @@
 
 import XCTest
 import Mockable
+@testable import TestingShared
 
 #if swift(>=6)
 final class GivenTests_Swift6: XCTestCase {

@@ -1,4 +1,4 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.0
 
 import PackageDescription
 import CompilerPluginSupport
@@ -28,9 +28,20 @@ let devPlugins: [Target.PluginUsage] = when(lint, [
 ])
 
 let devTargets: [Target] = when(test, [
+    .target(
+        name: "TestingShared",
+        dependencies: ["Mockable"],
+        path: "Tests/TestingShared",
+        swiftSettings: [
+            .define("MOCKING"),
+            .enableExperimentalFeature("StrictConcurrency"),
+            .enableUpcomingFeature("ExistentialAny")
+        ],
+        plugins: devPlugins
+    ),
     .testTarget(
         name: "MockableTests",
-        dependencies: ["Mockable"],
+        dependencies: ["Mockable", "TestingShared"],
         swiftSettings: [
             .define("MOCKING"),
             .enableExperimentalFeature("StrictConcurrency"),
@@ -46,7 +57,22 @@ let devTargets: [Target] = when(test, [
             .product(name: "MacroTesting", package: "swift-macro-testing"),
         ],
         swiftSettings: [.define("MOCKING")]
-    )
+    ),
+    .testTarget(
+        name: "MockableTestingTests",
+        dependencies: [
+            "Mockable",
+            "MockableTesting",
+            "TestingShared",
+            .product(name: "IssueReportingTestSupport", package: "xctest-dynamic-overlay")
+        ],
+        swiftSettings: [
+            .define("MOCKING"),
+            .enableExperimentalFeature("StrictConcurrency"),
+            .enableUpcomingFeature("ExistentialAny")
+        ],
+        plugins: devPlugins
+    ),
 ])
 
 let package = Package(
@@ -56,7 +82,11 @@ let package = Package(
         .library(
             name: "Mockable",
             targets: ["Mockable"]
-        )
+        ),
+        .library(
+            name: "MockableTesting",
+            targets: ["MockableTesting"]
+        ),
     ],
     dependencies: devDependencies + [
         .package(url: "https://github.com/swiftlang/swift-syntax.git", "509.0.0"..<"604.0.0"),
@@ -88,8 +118,18 @@ let package = Package(
                 .enableUpcomingFeature("ExistentialAny")
             ],
             plugins: devPlugins
-        )
+        ),
+        .target(
+            name: "MockableTesting",
+            dependencies: [
+                "Mockable",
+            ],
+            swiftSettings: [
+                .enableExperimentalFeature("StrictConcurrency"),
+                .enableUpcomingFeature("ExistentialAny")
+            ],
+            plugins: devPlugins
+        ),
     ],
-    swiftLanguageVersions: [.v5, .version("6")]
+    swiftLanguageVersions: [.v5, .v6]
 )
-
