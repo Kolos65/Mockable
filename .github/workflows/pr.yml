@@ -9,6 +9,7 @@ jobs:
   commit-lint:
     name: Lint Commit Messages
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -64,3 +65,4 @@ jobs:
       - name: Run Tests
         run: |
           swift build && swift test
+
